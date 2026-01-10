@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider               = "prisma-client"
+  output                 = "../generated/prisma"
+  generatedFileExtension = "ts"
+  moduleFormat           = "esm"
+  importFileExtension    = "ts"
+  runtime                = "nodejs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Shift {
+  MORNING
+  NOON
+  NIGHT
+}
+
+enum Role {
+  ADMIN
+  OWNER
+  PHARMACIST
+  CASHIER
+}
+
+model User {
+  id            String   @id @default(uuid()) @db.Uuid
+  name          String
+  empId         String   @map("emp_id")
+  email         String   @unique
+  password      String   @unique
+  role          Role
+  shift         Shift
+  dateOfBirth   DateTime @map("date_of_birth")
+  alamat        String
+  profileAvatar String   @map("profile_avatar")
+  salary        Int
+  startDate     Int      @map("start_date")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamp()
+}
