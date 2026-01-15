@@ -6,6 +6,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { useContainer } from 'class-validator';
+import { ResponseInterceptors } from './common/interceptors/response-interceptors.interceptor';
+import { ErrorReponseInterceptor } from './common/interceptors/error-reponse.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -16,6 +18,11 @@ async function bootstrap() {
   useContainer(app.select(AppModule, { abortOnError: true }), {
     fallbackOnErrors: true,
   });
+
+  app.useGlobalInterceptors(
+    new ResponseInterceptors(),
+    new ErrorReponseInterceptor(),
+  );
 
   app.useGlobalPipes(
     new ValidationPipe({
