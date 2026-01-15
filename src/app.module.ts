@@ -2,7 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './database/database.module';
+import { DatabaseModule } from './common/database/database.module';
+import { RouterModule } from '@nestjs/core';
+import { MainAppModule } from './module/main-app.module';
 
 @Module({
   imports: [
@@ -10,6 +12,8 @@ import { DatabaseModule } from './database/database.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
+    RouterModule.register([]),
+    MainAppModule,
     DatabaseModule,
   ],
   controllers: [AppController],
