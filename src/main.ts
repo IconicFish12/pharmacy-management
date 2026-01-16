@@ -1,13 +1,13 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from './app.module.js';
 import {
   BadRequestException,
   ValidationError,
   ValidationPipe,
 } from '@nestjs/common';
 import { useContainer } from 'class-validator';
-import { ResponseInterceptors } from './common/interceptors/response-interceptors.interceptor';
-import { ErrorReponseInterceptor } from './common/interceptors/error-reponse.interceptor';
+import { ResponseInterceptors } from './common/interceptors/response-interceptors.interceptor.js';
+import { ErrorReponseInterceptor } from './common/interceptors/error-reponse.interceptor.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

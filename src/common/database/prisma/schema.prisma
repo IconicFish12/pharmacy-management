@@ -17,6 +17,11 @@ datasource db {
   provider = "postgresql"
 }
 
+enum ActiveStatus {
+  ACTIVE
+  INACTIVE
+}
+
 enum Shift {
   MORNING
   NOON
@@ -30,19 +35,134 @@ enum Role {
   CASHIER
 }
 
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
 model User {
-  id            String   @id @default(uuid()) @db.Uuid
-  name          String
-  empId         String   @map("emp_id")
-  email         String   @unique
-  password      String   @unique
-  role          Role
-  shift         Shift
-  dateOfBirth   DateTime @map("date_of_birth")
-  alamat        String
-  profileAvatar String   @map("profile_avatar")
-  salary        Int
-  startDate     Int      @map("start_date")
-  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamp()
+  id             String          @id @default(uuid()) @db.Uuid
+  name           String
+  empId          String          @map("emp_id")
+  email          String          @unique
+  password       String          @unique
+  role           Role
+  shift          Shift
+  status         ActiveStatus    @default(ACTIVE)
+  dateOfBirth    DateTime        @map("date_of_birth")
+  alamat         String
+  profileAvatar  String          @map("profile_avatar")
+  salary         Int
+  startDate      Int             @map("start_date")
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamp()
+  medicineOrders MedicineOrder[]
+  transactions   Transaction[]
+
+  @@map("users")
+}
+
+model Supplier {
+  id                  String          @id @default(uuid()) @db.Uuid
+  supplierName        String          @map("supplier_name")
+  phoneNumber         String          @map("phone_number")
+  contactPerson       String?         @map("contact_person")
+  contactPersonNumber String?         @map("contact_person_number")
+  status              ActiveStatus    @default(ACTIVE)
+  address             String
+  createdAt           DateTime        @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt           DateTime        @updatedAt @map("updated_at") @db.Timestamp()
+  medicines           Medicine[]
+  medicineOrders      MedicineOrder[]
+
+  @@map("suppliers")
+}
+
+model MedicineCategory {
+  id           String     @id @default(uuid()) @db.Uuid
+  categoryName String     @map("category_name")
+  description  String?
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt    DateTime   @updatedAt @map("updated_at") @db.Timestamp()
+  medicines    Medicine[]
+
+  @@map("medicine_categories")
+}
+
+model Medicine {
+  id           String           @id @default(uuid()) @db.Uuid
+  medicineName String           @map("medicine_name")
+  sku          String           @unique
+  description  String?
+  categoryId   String           @map("category_id") @db.Uuid
+  category     MedicineCategory @relation(fields: [categoryId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  supplierId   String           @map("supplier_id") @db.Uuid
+  supplier     Supplier         @relation(fields: [supplierId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  createdAt    DateTime         @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt    DateTime         @updatedAt @map("updated_at") @db.Timestamp()
+  orderDetails OrderDetail[]
+
+  @@map("medicines")
+  transactionDetails TransactionDetail[] @relation("medicine")
+}
+
+model MedicineOrder {
+  id           String        @id @default(uuid()) @db.Uuid
+  medicineName String        @map("medicine_name")
+  orderCode    String        @unique @map("order_code")
+  orderDate    DateTime      @map("order_date") @db.Timestamp()
+  userId       String        @map("user_id") @db.Uuid
+  user         User          @relation(fields: [userId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  supplierId   String        @map("supplier_id") @db.Uuid
+  supplier     Supplier      @relation(fields: [supplierId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  totalPrice   Decimal       @map("total_price")
+  status       OrderStatus   @default(PENDING)
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt    DateTime      @updatedAt @map("updated_at") @db.Timestamp()
+  orderDetails OrderDetail[]
+}
+
+model OrderDetail {
+  orderId    String        @map("order_id") @db.Uuid
+  order      MedicineOrder @relation(fields: [orderId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  medicineId String        @map("medicine_id") @db.Uuid
+  medicine   Medicine      @relation(fields: [medicineId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  createdAt  DateTime      @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt  DateTime      @updatedAt @map("updated_at") @db.Timestamp()
+  quantity   Int
+  unitPrice  Float         @map("unit_price")
+  subtotal   Float
+
+  @@id([orderId, medicineId])
+  @@map("order_details")
+}
+
+model Transaction {
+  id              String   @id @default(uuid()) @db.Uuid
+  medicineName    String   @map("medicine_name")
+  transactionCode String   @unique @map("transaction_code")
+  totalPrice      Decimal  @map("total_price")
+  userId          String   @map("user_id") @db.Uuid
+  user            User     @relation(fields: [userId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  transactionDate DateTime @map("transaction_date") @db.Timestamp()
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamp()
+
+  transactionDetails TransactionDetail[]
+}
+
+model TransactionDetail {
+  transactionId String      @map("transaction_id") @db.Uuid
+  transaction   Transaction @relation(fields: [transactionId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  medicineId    String      @map("medicine_id") @db.Uuid
+  medicine      Medicine    @relation("medicine",fields: [medicineId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt     DateTime    @updatedAt @map("updated_at") @db.Timestamp()
+  quantity      Int
+  unitPrice     Float       @map("unit_price")
+  subtotal      Float
+
+  @@id([transactionId, medicineId])
+  @@map("transaction_details")
 }

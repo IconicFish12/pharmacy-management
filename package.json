@@ -5,6 +5,7 @@
   "author": "holly-snail",
   "private": true,
   "license": "UNLICENSED",
+  "type": "module",
   "scripts": {
     "prisma:pull": "npx prisma db pull",
     "prisma:migrate": "npx prisma migrate dev",
