@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ActivityLogService } from './activity-log.service';
-import { CreateActivityLogDto } from './dto/create-activity-log.dto';
-import { UpdateActivityLogDto } from './dto/update-activity-log.dto';
+import { ActivityLogService } from './activity-log.service.js';
+import { CreateActivityLogDto } from './dto/create-activity-log.dto.js';
+import { UpdateActivityLogDto } from './dto/update-activity-log.dto.js';
 
 @Controller('activity-log')
 export class ActivityLogController {

@@ -7,9 +7,9 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { TransactionModuleService } from './transaction-module.service';
-import { CreateTransactionModuleDto } from './dto/create-transaction-module.dto';
-import { UpdateTransactionModuleDto } from './dto/update-transaction-module.dto';
+import { TransactionModuleService } from './transaction-module.service.js';
+import { CreateTransactionModuleDto } from './dto/create-transaction-module.dto.js';
+import { UpdateTransactionModuleDto } from './dto/update-transaction-module.dto.js';
 
 @Controller('transaction-module')
 export class TransactionModuleController {

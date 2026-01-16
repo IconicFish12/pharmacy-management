@@ -19,10 +19,10 @@ import { HelperModule } from './common/helpers/helper.module.js';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    RouterModule.register([]),
-    MailerModule.forRootAsync({}),
-    MulterModule.registerAsync({}),
-    ThrottlerModule.forRootAsync({}),
+    // RouterModule.register([]),
+    // MailerModule.forRootAsync({}),
+    // MulterModule.registerAsync({}),
+    // ThrottlerModule.forRootAsync({}),
   ],
 })
 export class AppModule {}

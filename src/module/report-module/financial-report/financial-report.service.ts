@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateFinancialReportDto } from './dto/create-financial-report.dto';
-import { UpdateFinancialReportDto } from './dto/update-financial-report.dto';
+import { CreateFinancialReportDto } from './dto/create-financial-report.dto.js';
+import { UpdateFinancialReportDto } from './dto/update-financial-report.dto.js';
 
 @Injectable()
 export class FinancialReportService {

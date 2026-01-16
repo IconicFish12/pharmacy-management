@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { OperationalReportService } from './operational-report.service';
-import { CreateOperationalReportDto } from './dto/create-operational-report.dto';
-import { UpdateOperationalReportDto } from './dto/update-operational-report.dto';
+import { OperationalReportService } from './operational-report.service.js';
+import { CreateOperationalReportDto } from './dto/create-operational-report.dto.js';
+import { UpdateOperationalReportDto } from './dto/update-operational-report.dto.js';
 
 @Controller('operational-report')
 export class OperationalReportController {

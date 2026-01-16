@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTransactionModuleDto } from './dto/create-transaction-module.dto';
-import { UpdateTransactionModuleDto } from './dto/update-transaction-module.dto';
+import { CreateTransactionModuleDto } from './dto/create-transaction-module.dto.js';
+import { UpdateTransactionModuleDto } from './dto/update-transaction-module.dto.js';
 
 @Injectable()
 export class TransactionModuleService {
   create(createTransactionModuleDto: CreateTransactionModuleDto) {
-    return 'This action adds a new transactionModule';
+    return 'This action adds a new transactio.module.js';
   }
 
   findAll() {

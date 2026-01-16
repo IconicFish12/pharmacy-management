@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateOperationalReportDto } from './dto/create-operational-report.dto';
-import { UpdateOperationalReportDto } from './dto/update-operational-report.dto';
+import { CreateOperationalReportDto } from './dto/create-operational-report.dto.js';
+import { UpdateOperationalReportDto } from './dto/update-operational-report.dto.js';
 
 @Injectable()
 export class OperationalReportService {

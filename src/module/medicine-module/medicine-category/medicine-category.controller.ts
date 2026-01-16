@@ -7,9 +7,9 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { MedicineCategoryService } from './medicine-category.service';
-import { CreateMedicineCategoryDto } from './dto/create-medicine-category.dto';
-import { UpdateMedicineCategoryDto } from './dto/update-medicine-category.dto';
+import { MedicineCategoryService } from './medicine-category.service.js';
+import { CreateMedicineCategoryDto } from './dto/create-medicine-category.dto.js';
+import { UpdateMedicineCategoryDto } from './dto/update-medicine-category.dto.js';
 
 @Controller('medicine-category')
 export class MedicineCategoryController {

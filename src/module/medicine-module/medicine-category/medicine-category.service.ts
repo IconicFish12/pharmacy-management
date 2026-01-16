@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateMedicineCategoryDto } from './dto/create-medicine-category.dto';
-import { UpdateMedicineCategoryDto } from './dto/update-medicine-category.dto';
+import { CreateMedicineCategoryDto } from './dto/create-medicine-category.dto.js';
+import { UpdateMedicineCategoryDto } from './dto/update-medicine-category.dto.js';
 
 @Injectable()
 export class MedicineCategoryService {

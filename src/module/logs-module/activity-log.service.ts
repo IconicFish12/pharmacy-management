@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateActivityLogDto } from './dto/create-activity-log.dto';
-import { UpdateActivityLogDto } from './dto/update-activity-log.dto';
+import { CreateActivityLogDto } from './dto/create-activity-log.dto.js';
+import { UpdateActivityLogDto } from './dto/update-activity-log.dto.js';
 
 @Injectable()
 export class ActivityLogService {
