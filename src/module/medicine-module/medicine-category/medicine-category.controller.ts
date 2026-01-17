@@ -12,7 +12,7 @@ import { MedicineCategoryService } from './medicine-category.service.js';
 import { CreateMedicineCategoryDto } from './dto/create-medicine-category.dto.js';
 import { UpdateMedicineCategoryDto } from './dto/update-medicine-category.dto.js';
 
-@Controller('medicine-category')
+@Controller()
 export class MedicineCategoryController {
   constructor(
     private readonly medicineCategoryService: MedicineCategoryService,

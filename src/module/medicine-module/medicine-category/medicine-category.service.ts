@@ -1,45 +1,71 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  ExceptionFilter,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateMedicineCategoryDto } from './dto/create-medicine-category.dto.js';
 import { UpdateMedicineCategoryDto } from './dto/update-medicine-category.dto.js';
-import { PaginatedResult, paginator } from '../../../common/pagination/pagination.js';
-import { MedicineCategory } from '../../../common/database/generated/prisma/client.js';
+import {
+  PaginatedResult,
+  paginator,
+} from '../../../common/pagination/pagination.js';
+import {
+  MedicineCategory,
+  Prisma,
+} from '../../../common/database/generated/prisma/client.js';
 import { DatabaseService } from '../../../common/database/database.service.js';
-
 const paginate = paginator({ perPage: 10 });
+
+type MedicineCategoryWithMedicine = Prisma.MedicineCategoryGetPayload<{
+  include: {
+    medicines: true;
+  };
+}>;
 
 @Injectable()
 export class MedicineCategoryService {
   private readonly logger = new Logger(MedicineCategoryService.name);
   constructor(private prisma: DatabaseService) {}
 
-  async create(createMedicineCategoryDto: CreateMedicineCategoryDto) {
-    return 'This action adds a new medicineCategory';
+  async create(dto: CreateMedicineCategoryDto): Promise<MedicineCategory> {
+    return this.prisma.medicineCategory.create({
+      data: dto,
+    });
   }
 
-  async findAll(page: number, perPage: number): Promise<PaginatedResult<MedicineCategory>>{
-    return await paginate(
+  async findAll(page: number, perPage: number): Promise<PaginatedResult<MedicineCategory>> {
+    return paginate(
       this.prisma.medicineCategory,
-      {
-        orderBy: {
-          createdAt: 'desc'
-        }
-      },
-      {
-        page,
-        perPage
-      }
+      { orderBy: { createdAt: 'desc' } },
+      { page, perPage },
     );
   }
 
-  async findOne(id: string) {
-    return `This action returns a #${id} medicineCategory`;
+  async findOne(id: string): Promise<MedicineCategoryWithMedicine> {
+    const category = await this.prisma.medicineCategory.findUnique({
+      where: { id },
+      include: { medicines: { orderBy: { createdAt: 'desc' } } },
+    });
+
+    if (!category) {
+      throw new NotFoundException(`Category with ID ${id} not found`);
+    }
+
+    return category;
   }
 
-  async update(id: string, updateMedicineCategoryDto: UpdateMedicineCategoryDto) {
-    return `This action updates a #${id} medicineCategory`;
+  async update(id: string, dto: UpdateMedicineCategoryDto): Promise<MedicineCategory> {
+    return this.prisma.medicineCategory.update({
+      where: { id },
+      data: dto,
+    });
   }
 
-  async remove(id: string) {
-    return `This action removes a #${id} medicineCategory`;
+  async remove(id: string): Promise<MedicineCategory> {
+    return this.prisma.medicineCategory.delete({
+      where: { id },
+    });
   }
 }
