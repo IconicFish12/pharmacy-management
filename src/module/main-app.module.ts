@@ -16,6 +16,6 @@ import { DatabaseModule } from '../common/database/database.module.js';
     ActivityLogModule, 
     TransactionModule,
     SupplierModule
-  ]
+  ],
 })
 export class MainAppModule {}

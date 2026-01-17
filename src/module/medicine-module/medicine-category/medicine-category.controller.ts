@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { MedicineCategoryService } from './medicine-category.service.js';
 import { CreateMedicineCategoryDto } from './dto/create-medicine-category.dto.js';
@@ -23,8 +24,8 @@ export class MedicineCategoryController {
   }
 
   @Get()
-  findAll() {
-    return this.medicineCategoryService.findAll();
+  findAll(@Query('page') page?: number, @Query('perPage') perPage?: number) {
+    return this.medicineCategoryService.findAll(page!, perPage!);
   }
 
   @Get(':id')

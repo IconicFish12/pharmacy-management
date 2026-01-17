@@ -8,6 +8,7 @@ import { DatabaseModule } from './common/database/database.module.js';
 import { MainAppModule } from './module/main-app.module.js';
 import { SecurityModule } from './common/security/security.module.js';
 import { HelperModule } from './common/helpers/helper.module.js';
+import { MedicineMainModule } from './module/medicine-module/medicine-main.module.js';
 
 @Module({
   imports: [
@@ -19,7 +20,18 @@ import { HelperModule } from './common/helpers/helper.module.js';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    // RouterModule.register([]),
+    RouterModule.register([
+      {
+        path: 'api', 
+        module: MainAppModule, 
+        children: [
+          {
+            path: 'medicines-data',
+            module: MedicineMainModule,
+          }
+        ]
+      }
+    ]),
     // MailerModule.forRootAsync({}),
     // MulterModule.registerAsync({}),
     // ThrottlerModule.forRootAsync({}),
