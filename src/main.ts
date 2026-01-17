@@ -14,7 +14,7 @@ async function bootstrap() {
   const app = await NestFactory.create<INestApplication>(AppModule, {
     cors: true,
     bodyParser: true,
-    logger: ['error', 'warn', 'debug', 'verbose'],
+    logger: ['error', 'warn', 'debug', 'verbose', 'log'],
   });
   useContainer(app.select(AppModule, { abortOnError: true }), {
     fallbackOnErrors: true,
@@ -63,6 +63,6 @@ async function bootstrap() {
     // new CostumeValidationPipe(),
   );
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.BACKEND_PORT ?? 3000);
 }
 void bootstrap();
