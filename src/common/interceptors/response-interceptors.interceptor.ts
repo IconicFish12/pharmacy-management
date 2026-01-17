@@ -4,12 +4,14 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Request, Response as ExpressResponse } from 'express';
 
 export interface Response<T> {
   message: string;
   data: T;
+  meta: any;
 }
 
 @Injectable()
@@ -46,11 +48,18 @@ export class ResponseInterceptors<T> implements NestInterceptor<
     }
 
     return next.handle().pipe(
-      map((data: T) => ({
-        status: statusCode,
-        message: defaultMessage,
-        data: data,
-      })),
+      map((data) => {
+        const message = data?.message || null;
+        const meta = data?.meta || null;
+        const finalData = data?.data || data;
+
+        return {
+          status: statusCode,
+          message: message ?? defaultMessage,
+          data: finalData,
+          meta: meta
+        };
+      }),
     );
   }
 }
