@@ -11,7 +11,7 @@ import { MedicineOrderService } from './medicine-order.service.js';
 import { CreateMedicineOrderDto } from './dto/create-medicine-order.dto.js';
 import { UpdateMedicineOrderDto } from './dto/update-medicine-order.dto.js';
 
-@Controller('medicine-order')
+@Controller()
 export class MedicineOrderController {
   constructor(private readonly medicineOrderService: MedicineOrderService) {}
 

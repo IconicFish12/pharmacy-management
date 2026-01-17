@@ -9,6 +9,9 @@ import { MainAppModule } from './module/main-app.module.js';
 import { SecurityModule } from './common/security/security.module.js';
 import { HelperModule } from './common/helpers/helper.module.js';
 import { MedicineMainModule } from './module/medicine-module/medicine-main.module.js';
+import { MedicineModule } from './module/medicine-module/medicine/medicine.module.js';
+import { MedicineCategoryModule } from './module/medicine-module/medicine-category/medicine-category.module.js';
+import { MedicineOrderModule } from './module/medicine-module/medicine-order/medicine-order.module.js';
 
 @Module({
   imports: [
@@ -26,8 +29,22 @@ import { MedicineMainModule } from './module/medicine-module/medicine-main.modul
         module: MainAppModule, 
         children: [
           {
-            path: 'medicines-data',
+            path: 'medicine-data',
             module: MedicineMainModule,
+            children: [
+              {
+                path: 'medicines',
+                module: MedicineModule
+              }, 
+              {
+                path: 'medicine-categories',
+                module: MedicineCategoryModule
+              }, 
+              {
+                path: 'medicine-orders',
+                module: MedicineOrderModule,
+              }
+            ]
           }
         ]
       }
