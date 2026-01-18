@@ -1,7 +1,9 @@
-import { NestFactory } from '@nestjs/core';
+import 'reflect-metadata';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 import {
   BadRequestException,
+  ClassSerializerInterceptor,
   INestApplication,
   ValidationError,
   ValidationPipe,
@@ -23,6 +25,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(
     new ResponseInterceptors(),
     new ErrorReponseInterceptor(),
+    new ClassSerializerInterceptor(app.get(Reflector)),
   );
 
   app.useGlobalPipes(

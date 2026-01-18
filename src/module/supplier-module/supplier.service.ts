@@ -1,26 +1,72 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateSupplierDto } from './dto/create-supplier.dto.js';
 import { UpdateSupplierDto } from './dto/update-supplier.dto.js';
+import { DatabaseService } from '../../common/database/database.service.js';
+import {
+  Prisma,
+  Supplier,
+} from '../../common/database/generated/prisma/client.js';
+import {
+  PaginatedResult,
+  paginator,
+} from '../../common/pagination/pagination.js';
 
+const paginate = paginator({ perPage: 1 });
+
+type SupplierWithRelation = Prisma.SupplierGetPayload<{
+  include: {
+    medicines: true;
+    medicineOrders: true;
+  };
+}>;
 @Injectable()
 export class SupplierService {
-  create(createSupplierDto: CreateSupplierDto) {
-    return 'This action adds a new supplier';
+  private readonly logger = new Logger(SupplierService.name);
+  constructor(private prisma: DatabaseService) {}
+
+  async create(dto: CreateSupplierDto): Promise<Supplier> {
+    return this.prisma.supplier.create({
+      data: dto,
+    });
   }
 
-  findAll() {
-    return `This action returns all supplier`;
+  async findAll(
+    page: number,
+    perPage: number,
+  ): Promise<PaginatedResult<Supplier>> {
+    return paginate(
+      this.prisma.medicineCategory,
+      { orderBy: { createdAt: 'desc' } },
+      { page, perPage },
+    );
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} supplier`;
+  async findOne(id: string): Promise<SupplierWithRelation> {
+    const supplier = await this.prisma.supplier.findUnique({
+      where: { id },
+      include: {
+        medicines: { orderBy: { createdAt: 'desc' } },
+        medicineOrders: { orderBy: { createdAt: 'desc' } },
+      },
+    });
+
+    if (!supplier) {
+      throw new NotFoundException(`supplier with ID ${id} not found`);
+    }
+
+    return supplier;
   }
 
-  update(id: string, updateSupplierDto: UpdateSupplierDto) {
-    return `This action updates a #${id} supplier`;
+  async update(id: string, dto: UpdateSupplierDto): Promise<Supplier> {
+    return this.prisma.supplier.update({
+      where: { id },
+      data: dto,
+    });
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} supplier`;
+  async remove(id: string): Promise<Supplier> {
+    return this.prisma.supplier.delete({
+      where: { id },
+    });
   }
 }
