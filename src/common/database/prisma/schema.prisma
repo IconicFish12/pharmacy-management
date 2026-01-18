@@ -46,11 +46,11 @@ model User {
   role           Role
   shift          Shift
   status         ActiveStatus    @default(ACTIVE)
-  dateOfBirth    DateTime        @map("date_of_birth")
-  alamat         String
-  profileAvatar  String          @map("profile_avatar")
+  dateOfBirth    DateTime?        @map("date_of_birth")
+  alamat         String?
+  profileAvatar  String?          @map("profile_avatar")
   salary         Int
-  startDate      Int             @map("start_date")
+  startDate      DateTime            @map("start_date")
   createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamp()
   updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamp()
   medicineOrders MedicineOrder[]
