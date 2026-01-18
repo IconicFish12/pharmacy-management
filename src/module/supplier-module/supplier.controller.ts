@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { SupplierService } from './supplier.service.js';
 import { CreateSupplierDto } from './dto/create-supplier.dto.js';
 import { UpdateSupplierDto } from './dto/update-supplier.dto.js';
@@ -13,8 +13,8 @@ export class SupplierController {
   }
 
   @Get()
-  findAll() {
-    return this.supplierService.findAll();
+  findAll(@Query('page') page?: number, @Query('perPage') perPage?: number) {
+    return this.supplierService.findAll(page!, perPage!);
   }
 
   @Get(':id')
