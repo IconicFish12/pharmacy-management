@@ -33,6 +33,7 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
+      enableDebugMessages: true,
       exceptionFactory: (validationErrors: ValidationError[] = []) => {
         interface FormattedError {
           property: string;
