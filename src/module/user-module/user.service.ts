@@ -7,8 +7,13 @@ import {
   paginator,
 } from '../../common/pagination/pagination.js';
 import { Prisma, User } from '../../common/database/generated/prisma/client.js';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as bcrypt from 'bcrypt';
 
 const paginate = paginator({ perPage: 10, page: 1 });
+
+const saltRounds = 10;
 
 type UserDataWithRelation = Prisma.UserGetPayload<{
   include: {
@@ -21,9 +26,27 @@ type UserDataWithRelation = Prisma.UserGetPayload<{
 export class UserService {
   private logger = new Logger(UserService.name);
   constructor(private prisma: DatabaseService) {}
-  async create(dto: CreateUserDto): Promise<User> {
+  async create(dto: CreateUserDto, file: Express.Multer.File): Promise<User> {
+    const hash = await bcrypt.hash(dto.password, saltRounds);
+
+    if (file != null) {
+      const userData = {
+        ...dto,
+        password: hash,
+        provileAvatar: file.filename,
+      };
+
+      return await this.prisma.user.create({
+        data: userData,
+      });
+    }
+    const userData = {
+      ...dto,
+      password: hash,
+    };
+
     return await this.prisma.user.create({
-      data: dto,
+      data: userData,
     });
   }
 
@@ -52,10 +75,44 @@ export class UserService {
     return supplier;
   }
 
-  async update(id: string, dto: UpdateUserDto): Promise<User> {
+  async update(
+    id: string,
+    dto: UpdateUserDto,
+    file: Express.Multer.File,
+  ): Promise<User> {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { id: id },
+    });
+    const hash = await bcrypt.hash(dto.password!, saltRounds);
+
+    if (!existingUser) {
+      if (file) fs.unlinkSync(file.path);
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    const updatePayload = {
+      ...dto,
+      password: hash,
+    };
+
+    if (file) {
+      updatePayload.profileAvatar = file.filename;
+
+      if (existingUser.profileAvatar) {
+        const oldFilePath = path.join(
+          './uploads/images',
+          existingUser.profileAvatar,
+        );
+
+        if (fs.existsSync(oldFilePath)) {
+          fs.unlinkSync(oldFilePath);
+        }
+      }
+    }
+
     return this.prisma.user.update({
       where: { id },
-      data: dto,
+      data: updatePayload,
     });
   }
 

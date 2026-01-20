@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { RouterModule } from '@nestjs/core';
-import { MulterModule } from '@nestjs/platform-express';
-import { ThrottlerModule } from '@nestjs/throttler';
-import { MailerModule } from '@nestjs-modules/mailer';
+// import { ThrottlerModule } from '@nestjs/throttler';
+// import { MailerModule } from '@nestjs-modules/mailer';
 import { DatabaseModule } from './common/database/database.module.js';
 import { MainAppModule } from './module/main-app.module.js';
 import { SecurityModule } from './common/security/security.module.js';
@@ -27,8 +26,8 @@ import { UserModule } from './module/user-module/user.module.js';
     }),
     RouterModule.register([
       {
-        path: 'api', 
-        module: MainAppModule, 
+        path: 'api',
+        module: MainAppModule,
         children: [
           {
             path: 'medicine-data',
@@ -36,31 +35,30 @@ import { UserModule } from './module/user-module/user.module.js';
             children: [
               {
                 path: 'medicines',
-                module: MedicineModule
-              }, 
+                module: MedicineModule,
+              },
               {
                 path: 'medicine-categories',
-                module: MedicineCategoryModule
-              }, 
+                module: MedicineCategoryModule,
+              },
               {
                 path: 'medicine-orders',
                 module: MedicineOrderModule,
-              }
+              },
             ],
           },
           {
             path: 'suppliers',
-            module: SupplierModule
+            module: SupplierModule,
           },
           {
             path: 'users',
-            module: UserModule
-          }
-        ]
-      }
+            module: UserModule,
+          },
+        ],
+      },
     ]),
     // MailerModule.forRootAsync({}),
-    // MulterModule.registerAsync({}),
     // ThrottlerModule.forRootAsync({}),
   ],
 })

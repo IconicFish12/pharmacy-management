@@ -31,7 +31,7 @@ export class CreateSupplierDto {
     message: 'Active Status is Required',
   })
   @IsEnum(ActiveStatus, {
-    message: 'Active Status is not Valid Choose Between ACTIVE and INACTIVE',
+    message: 'Active Status is not valid choose between ACTIVE and INACTIVE',
   })
   readonly status: ActiveStatus;
   @IsNotEmpty({
