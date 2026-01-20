@@ -13,6 +13,7 @@ import { MedicineModule } from './module/medicine-module/medicine/medicine.modul
 import { MedicineCategoryModule } from './module/medicine-module/medicine-category/medicine-category.module.js';
 import { MedicineOrderModule } from './module/medicine-module/medicine-order/medicine-order.module.js';
 import { SupplierModule } from './module/supplier-module/supplier.module.js';
+import { UserModule } from './module/user-module/user.module.js';
 
 @Module({
   imports: [
@@ -48,9 +49,13 @@ import { SupplierModule } from './module/supplier-module/supplier.module.js';
             ],
           },
           {
-            path: 'suppliers-data',
+            path: 'suppliers',
             module: SupplierModule
           },
+          {
+            path: 'users',
+            module: UserModule
+          }
         ]
       }
     ]),

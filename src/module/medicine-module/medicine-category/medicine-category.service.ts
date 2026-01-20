@@ -1,10 +1,4 @@
-import {
-  ExceptionFilter,
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateMedicineCategoryDto } from './dto/create-medicine-category.dto.js';
 import { UpdateMedicineCategoryDto } from './dto/update-medicine-category.dto.js';
 import {
@@ -16,7 +10,8 @@ import {
   Prisma,
 } from '../../../common/database/generated/prisma/client.js';
 import { DatabaseService } from '../../../common/database/database.service.js';
-const paginate = paginator({ perPage: 10 });
+
+const paginate = paginator({ perPage: 10, page: 1 });
 
 type MedicineCategoryWithMedicine = Prisma.MedicineCategoryGetPayload<{
   include: {
@@ -35,7 +30,10 @@ export class MedicineCategoryService {
     });
   }
 
-  async findAll(page: number, perPage: number): Promise<PaginatedResult<MedicineCategory>> {
+  async findAll(
+    page: number,
+    perPage: number,
+  ): Promise<PaginatedResult<MedicineCategory>> {
     return paginate(
       this.prisma.medicineCategory,
       { orderBy: { createdAt: 'desc' } },
@@ -56,7 +54,10 @@ export class MedicineCategoryService {
     return category;
   }
 
-  async update(id: string, dto: UpdateMedicineCategoryDto): Promise<MedicineCategory> {
+  async update(
+    id: string,
+    dto: UpdateMedicineCategoryDto,
+  ): Promise<MedicineCategory> {
     return this.prisma.medicineCategory.update({
       where: { id },
       data: dto,

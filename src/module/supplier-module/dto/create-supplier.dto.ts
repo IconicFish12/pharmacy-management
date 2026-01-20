@@ -1,12 +1,8 @@
 import {
-  IsAlpha,
-  IsAlphanumeric,
   IsEnum,
   IsNotEmpty,
-  IsNumberString,
   IsOptional,
   IsPhoneNumber,
-  IsString,
   MinLength,
 } from 'class-validator';
 import { ActiveStatus } from '../../../common/database/generated/prisma/enums.js';

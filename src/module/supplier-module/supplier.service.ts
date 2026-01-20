@@ -11,7 +11,7 @@ import {
   paginator,
 } from '../../common/pagination/pagination.js';
 
-const paginate = paginator({ perPage: 1 });
+const paginate = paginator({ perPage: 10, page: 1 });
 
 type SupplierWithRelation = Prisma.SupplierGetPayload<{
   include: {
@@ -35,7 +35,7 @@ export class SupplierService {
     perPage: number,
   ): Promise<PaginatedResult<Supplier>> {
     return paginate(
-      this.prisma.medicineCategory,
+      this.prisma.supplier,
       { orderBy: { createdAt: 'desc' } },
       { page, perPage },
     );
