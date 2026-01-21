@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
 import { MedicineService } from './medicine.service.js';
 import { MedicineController } from './medicine.controller.js';
+import { DatabaseModule } from '../../../common/database/database.module.js';
+import { DatabaseService } from '../../../common/database/database.service.js';
 
 @Module({
   controllers: [MedicineController],
-  providers: [MedicineService],
+  providers: [MedicineService, DatabaseService],
+  imports: [DatabaseModule],
 })
 export class MedicineModule {}
