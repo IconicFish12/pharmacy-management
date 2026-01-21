@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { MedicineOrderService } from './medicine-order.service.js';
 import { CreateMedicineOrderDto } from './dto/create-medicine-order.dto.js';
@@ -21,8 +22,8 @@ export class MedicineOrderController {
   }
 
   @Get()
-  findAll() {
-    return this.medicineOrderService.findAll();
+  findAll(@Query() page?: number, @Query() perPage?: number) {
+    return this.medicineOrderService.findAll(page, perPage);
   }
 
   @Get(':id')
