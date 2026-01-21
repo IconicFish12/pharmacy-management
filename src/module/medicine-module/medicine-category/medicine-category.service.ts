@@ -10,6 +10,10 @@ import {
   Prisma,
 } from '../../../common/database/generated/prisma/client.js';
 import { DatabaseService } from '../../../common/database/database.service.js';
+import {
+  MedicineCategoryCreateInput,
+  MedicineCategoryUpdateInput,
+} from '../../../common/database/generated/prisma/models.js';
 
 const paginate = paginator({ perPage: 10, page: 1 });
 
@@ -24,7 +28,9 @@ export class MedicineCategoryService {
   private readonly logger = new Logger(MedicineCategoryService.name);
   constructor(private prisma: DatabaseService) {}
 
-  async create(dto: CreateMedicineCategoryDto): Promise<MedicineCategory> {
+  async create(
+    dto: CreateMedicineCategoryDto,
+  ): Promise<MedicineCategory | MedicineCategoryCreateInput> {
     return this.prisma.medicineCategory.create({
       data: dto,
     });
@@ -57,7 +63,7 @@ export class MedicineCategoryService {
   async update(
     id: string,
     dto: UpdateMedicineCategoryDto,
-  ): Promise<MedicineCategory> {
+  ): Promise<MedicineCategory | MedicineCategoryUpdateInput> {
     return this.prisma.medicineCategory.update({
       where: { id },
       data: dto,

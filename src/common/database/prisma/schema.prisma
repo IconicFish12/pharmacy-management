@@ -96,6 +96,9 @@ model Medicine {
   category           MedicineCategory    @relation(fields: [categoryId], onDelete: Cascade, onUpdate: Cascade, references: [id])
   supplierId         String              @map("supplier_id") @db.Uuid
   supplier           Supplier            @relation(fields: [supplierId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  stock              Int
+  price              Float
+  expiredDate        DateTime            @map("expired_date")
   createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp()
   updatedAt          DateTime            @updatedAt @map("updated_at") @db.Timestamp()
   orderDetails       OrderDetail[]
