@@ -1,26 +1,55 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateActivityLogDto } from './dto/create-activity-log.dto.js';
-import { UpdateActivityLogDto } from './dto/update-activity-log.dto.js';
+import {
+  PaginatedResult,
+  paginator,
+} from '../../common/pagination/pagination.js';
+import {
+  ActivityLog,
+  Prisma,
+} from '../../common/database/generated/prisma/client.js';
+import { DatabaseService } from '../../common/database/database.service.js';
+
+const paginate = paginator({ perPage: 10 });
+
+type ActivityLogsWithRelation = Prisma.ActivityLogGetPayload<{
+  include: { user: true };
+}>;
 
 @Injectable()
 export class ActivityLogService {
-  create(createActivityLogDto: CreateActivityLogDto) {
-    return 'This action adds a new activityLog';
+  private readonly logger = new Logger(ActivityLogService.name);
+  constructor(private prisma: DatabaseService) {}
+
+  async create(dto: CreateActivityLogDto): Promise<ActivityLog> {
+    return await this.prisma.activityLog.create({
+      data: dto,
+    });
   }
 
-  findAll() {
-    return `This action returns all activityLog`;
+  async findAll(
+    page?: number,
+    perPage?: number,
+  ): Promise<PaginatedResult<ActivityLog>> {
+    return await paginate(
+      this.prisma.activityLog,
+      { orderBy: { createdAt: 'desc' } },
+      { perPage, page },
+    );
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} activityLog`;
+  async findOne(id: string): Promise<ActivityLogsWithRelation> {
+    return await this.prisma.activityLog.findUniqueOrThrow({
+      where: { id },
+      include: {
+        user: true,
+      },
+    });
   }
 
-  update(id: string, updateActivityLogDto: UpdateActivityLogDto) {
-    return `This action updates a #${id} activityLog`;
-  }
-
-  remove(id: string) {
-    return `This action removes a #${id} activityLog`;
+  async remove(id: string): Promise<ActivityLog> {
+    return await this.prisma.activityLog.delete({
+      where: { id: id },
+    });
   }
 }

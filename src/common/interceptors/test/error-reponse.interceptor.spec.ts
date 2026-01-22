@@ -1,4 +1,4 @@
-import { ErrorReponseInterceptor } from './error-reponse.interceptor';
+import { ErrorReponseInterceptor } from '../error-reponse.interceptor.js';
 
 describe('ErrorReponseInterceptor', () => {
   it('should be defined', () => {
