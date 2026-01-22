@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   CallHandler,
   ExecutionContext,
@@ -57,7 +59,7 @@ export class ResponseInterceptors<T> implements NestInterceptor<
           status: statusCode,
           message: message ?? defaultMessage,
           data: finalData,
-          meta: meta
+          meta: meta,
         };
       }),
     );

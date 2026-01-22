@@ -13,6 +13,7 @@ import { MedicineCategoryModule } from './module/medicine-module/medicine-catego
 import { MedicineOrderModule } from './module/medicine-module/medicine-order/medicine-order.module.js';
 import { SupplierModule } from './module/supplier-module/supplier.module.js';
 import { UserModule } from './module/user-module/user.module.js';
+import { ActivityLogModule } from './module/logs-module/activity-log.module.js';
 
 @Module({
   imports: [
@@ -54,6 +55,10 @@ import { UserModule } from './module/user-module/user.module.js';
           {
             path: 'users',
             module: UserModule,
+          },
+          {
+            path: 'activity-logs',
+            module: ActivityLogModule,
           },
         ],
       },
