@@ -22,8 +22,8 @@ export class MedicineOrderController {
   }
 
   @Get()
-  findAll(@Query() page?: number, @Query() perPage?: number) {
-    return this.medicineOrderService.findAll(page, perPage);
+  findAll(@Query('page') page?: number, @Query('perPage') perPage?: number) {
+    return this.medicineOrderService.findAll(page!, perPage!);
   }
 
   @Get(':id')

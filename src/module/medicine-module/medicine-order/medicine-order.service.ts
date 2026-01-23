@@ -35,13 +35,13 @@ export class MedicineOrderService {
   }
 
   async findAll(
-    perPage?: number,
-    page?: number,
+    perPage: number,
+    page: number,
   ): Promise<PaginatedResult<MedicineOrder>> {
     return await paginate(
       this.prisma.medicineOrder,
       { orderBy: { createdAt: 'desc' } },
-      { perPage, page },
+      { page, perPage },
     );
   }
 
