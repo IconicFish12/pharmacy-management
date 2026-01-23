@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { RouterModule } from '@nestjs/core';
-// import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD, RouterModule } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 // import { MailerModule } from '@nestjs-modules/mailer';
 import { DatabaseModule } from './common/database/database.module.js';
 import { MainAppModule } from './module/main-app.module.js';
@@ -64,7 +64,17 @@ import { ActivityLogModule } from './module/logs-module/activity-log.module.js';
       },
     ]),
     // MailerModule.forRootAsync({}),
-    // ThrottlerModule.forRootAsync({}),
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 20000,
+          limit: 20,
+          setHeaders: true,
+        },
+      ],
+      errorMessage: 'Sorry you sending request to many times',
+    }),
   ],
+  providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule {}
