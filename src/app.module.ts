@@ -68,7 +68,7 @@ import { ActivityLogModule } from './module/logs-module/activity-log.module.js';
       throttlers: [
         {
           ttl: 20000,
-          limit: 20,
+          limit: 15,
           setHeaders: true,
         },
       ],
