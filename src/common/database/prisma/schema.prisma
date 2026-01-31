@@ -122,6 +122,8 @@ model MedicineOrder {
   createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamp()
   updatedAt    DateTime      @updatedAt @map("updated_at") @db.Timestamp()
   orderDetails OrderDetail[]
+
+  @@map("medicine_orders")
 }
 
 model OrderDetail {
@@ -177,4 +179,6 @@ model ActivityLog {
   resourceId   String?  @map("resource_id")
   payloadData  Json?    @map("payload_data")
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp()
+
+  @@map("activity_logs")
 }

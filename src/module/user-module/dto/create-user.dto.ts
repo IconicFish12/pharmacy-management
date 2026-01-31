@@ -43,7 +43,7 @@ export class CreateUserDto {
   readonly email: string;
 
   @IsNotEmpty({
-    message: '',
+    message: 'password is required',
   })
   @IsStrongPassword(
     {
