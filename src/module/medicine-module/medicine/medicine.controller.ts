@@ -7,12 +7,15 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { MedicineService } from './medicine.service.js';
 import { CreateMedicineDto } from './dto/create-medicine.dto.js';
 import { UpdateMedicineDto } from './dto//update-medicine.dto.js';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller()
+@UseGuards(AuthGuard('jwt'))
 export class MedicineController {
   constructor(private readonly medicineService: MedicineService) {}
 

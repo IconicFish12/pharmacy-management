@@ -11,6 +11,10 @@ import {
 import { useContainer } from 'class-validator';
 import { ResponseInterceptors } from './common/interceptors/response-interceptors.interceptor.js';
 import { ErrorReponseInterceptor } from './common/interceptors/error-reponse.interceptor.js';
+import { ActivityTrackingInterceptor } from './common/interceptors/activity-tracking.interceptor.js';
+import { ActivityLogService } from './module/logs-module/activity-log.service.js';
+import { DatabaseService } from './common/database/database.service.js';
+import { RolesGuard } from './common/security/guards/roles.guard.js';
 
 async function bootstrap() {
   const app = await NestFactory.create<INestApplication>(AppModule, {
@@ -22,9 +26,12 @@ async function bootstrap() {
     fallbackOnErrors: true,
   });
 
+  const logService = new ActivityLogService(new DatabaseService());
+
   app.useGlobalInterceptors(
     new ResponseInterceptors(),
     new ErrorReponseInterceptor(),
+    new ActivityTrackingInterceptor(logService),
     new ClassSerializerInterceptor(app.get(Reflector)),
   );
 
@@ -64,8 +71,9 @@ async function bootstrap() {
         });
       },
     }),
-    // new CostumeValidationPipe(),
   );
+
+  app.useGlobalGuards(new RolesGuard(new Reflector()));
 
   await app.listen(process.env.BACKEND_PORT ?? 3000);
 }
