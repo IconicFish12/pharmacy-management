@@ -28,13 +28,13 @@ export class ActivityLogService {
   }
 
   async findAll(
-    page?: number,
-    perPage?: number,
+    page: number,
+    perPage: number,
   ): Promise<PaginatedResult<ActivityLog>> {
     return await paginate(
       this.prisma.activityLog,
       { orderBy: { createdAt: 'desc' } },
-      { perPage, page },
+      { page, perPage },
     );
   }
 
