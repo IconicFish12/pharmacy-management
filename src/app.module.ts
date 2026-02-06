@@ -14,6 +14,8 @@ import { MedicineOrderModule } from './module/medicine-module/medicine-order/med
 import { SupplierModule } from './module/supplier-module/supplier.module.js';
 import { UserModule } from './module/user-module/user.module.js';
 import { ActivityLogModule } from './module/logs-module/activity-log.module.js';
+import { AuthModule } from './common/security/auth/auth.module.js';
+import { RolesGuard } from './common/security/guards/roles.guard.js';
 
 @Module({
   imports: [
@@ -30,6 +32,10 @@ import { ActivityLogModule } from './module/logs-module/activity-log.module.js';
         path: 'api',
         module: MainAppModule,
         children: [
+          {
+            path: 'authenticate',
+            module: AuthModule,
+          },
           {
             path: 'medicine-data',
             module: MedicineMainModule,
@@ -75,6 +81,9 @@ import { ActivityLogModule } from './module/logs-module/activity-log.module.js';
       errorMessage: 'Sorry you sending request to many times',
     }),
   ],
-  providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
+  providers: [
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
+  ],
 })
 export class AppModule {}

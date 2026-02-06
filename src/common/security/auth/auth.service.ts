@@ -1,9 +1,7 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { UserService } from '../../../module/user-module/user.service.js';
 import { JwtService } from '@nestjs/jwt';
-import { LocalStrategy } from './helper/local-strategy.strategy.js';
 import { User } from '../../database/generated/prisma/client.js';
-import { AuthDto } from './dto/auth.dto.js';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -12,28 +10,25 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private jwtService: JwtService,
-    private localStrategy: LocalStrategy,
   ) {}
 
-  async validateUser(authRequest: AuthDto): Promise<User | null> {
-    const user = await this.userService.findByEmail(authRequest.email);
+  async validateUser(email: string, password: string): Promise<User | null> {
+    const user = await this.userService.findByEmail(email);
     if (!user) {
-      throw new BadRequestException('User not found');
+      return null;
     }
-    const isMatch: boolean = bcrypt.compareSync(
-      authRequest.password,
-      user.password,
-    );
+
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      throw new BadRequestException('Password does not match');
+      return null;
     }
     return user;
   }
 
-  login(authRequest: AuthDto) {
-    const tokenAccess = this.jwtService.sign(authRequest);
+  login(user: User) {
+    const payload = { email: user.email, sub: user.id };
     return {
-      access_token: tokenAccess,
+      access_token: this.jwtService.sign(payload),
     };
   }
 }

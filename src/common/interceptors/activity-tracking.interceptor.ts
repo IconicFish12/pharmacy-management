@@ -39,6 +39,8 @@ export class ActivityTrackingInterceptor implements NestInterceptor {
             payloadData: body as Record<string, any>,
           };
 
+          this.logger.debug(createPayload);
+
           this.logService.create(createPayload).catch((err) => {
             this.logger.error('Failed to write activity log', err);
           });
