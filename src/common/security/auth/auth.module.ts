@@ -8,9 +8,12 @@ import { UserService } from '../../../module/user-module/user.service.js';
 import { LocalStrategy } from './helper/local-strategy.strategy.js';
 import { JwtStrategy } from './helper/jwt-strategy.strategy.js';
 import { PassportModule } from '@nestjs/passport';
+import { DatabaseModule } from '../../database/database.module.js';
+import { DatabaseService } from '../../database/database.service.js';
 
 @Module({
   imports: [
+    DatabaseModule,
     UserModule,
     PassportModule,
     JwtModule.register({
@@ -21,6 +24,13 @@ import { PassportModule } from '@nestjs/passport';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtService, UserService, LocalStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    JwtService,
+    UserService,
+    DatabaseService,
+    LocalStrategy,
+    JwtStrategy,
+  ],
 })
 export class AuthModule {}
