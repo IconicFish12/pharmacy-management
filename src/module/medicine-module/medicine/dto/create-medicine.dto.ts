@@ -12,40 +12,40 @@ export class CreateMedicineDto {
   @IsNotEmpty({
     message: 'medicine name is required',
   })
-  readonly medicineName: string;
+  readonly medicineName!: string;
 
   @IsNotEmpty({
     message: 'store keeping unit code is required',
   })
-  readonly sku: string;
+  readonly sku!: string;
 
   @IsOptional({
     message: 'Description field is optional',
   })
-  readonly description: string;
+  readonly description!: string;
 
   @IsNotEmpty({
     message: 'medicine category is required',
   })
-  @IsUUID('7')
-  readonly categoryId: string;
+  @IsUUID('all')
+  readonly categoryId!: string;
 
   @IsNotEmpty({
-    message: 'supplier ',
+    message: 'medicine supplier is required',
   })
-  @IsUUID('7')
-  readonly supplierId: string;
+  @IsUUID('all')
+  readonly supplierId!: string;
 
   @IsNotEmpty({
     message: 'medicine stock is required',
   })
-  readonly stock: number;
+  readonly stock!: number;
 
   @IsNotEmpty({
     message: 'medicine price is required',
   })
   @IsNumber()
-  readonly price: number;
+  readonly price!: number;
 
   @IsNotEmpty({
     message: 'medicine expired date is required',
@@ -53,5 +53,5 @@ export class CreateMedicineDto {
   @IsDate()
   @Type(() => Date)
   @MinDate(new Date())
-  readonly expiredDate: Date;
+  readonly expiredDate!: Date;
 }

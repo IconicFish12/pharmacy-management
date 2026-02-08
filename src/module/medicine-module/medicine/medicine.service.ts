@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateMedicineDto } from './dto/create-medicine.dto.js';
 import { UpdateMedicineDto } from './dto//update-medicine.dto.js';
 import {
@@ -14,6 +14,8 @@ import {
   MedicineCreateInput,
   MedicineUpdateInput,
 } from '../../../common/database/generated/prisma/models.js';
+import { MedicineCategoryService } from '../medicine-category/medicine-category.service.js';
+import { SupplierService } from '../../supplier-module/supplier.service.js';
 
 const paginate = paginator({ perPage: 10, page: 1 });
 
@@ -28,13 +30,37 @@ type MedicineWithRelations = Prisma.MedicineGetPayload<{
 @Injectable()
 export class MedicineService {
   private readonly logger = new Logger(MedicineService.name);
-  constructor(private prisma: DatabaseService) {}
+  constructor(
+    private prisma: DatabaseService,
+    private medicineCategoryService: MedicineCategoryService,
+    private supplierService: SupplierService,
+  ) {}
 
   async create(
     dto: CreateMedicineDto,
   ): Promise<Medicine | MedicineCreateInput> {
+    const category = await this.medicineCategoryService.findOne(dto.categoryId);
+    const supplier = await this.supplierService.findOne(dto.supplierId);
+
+    if (!category && !supplier) {
+      throw new NotFoundException('Category or Supplier data is not found');
+    }
+
+    const { supplierId, categoryId, ...restData } = dto;
     return await this.prisma.medicine.create({
-      data: dto,
+      data: {
+        ...restData,
+        supplier: {
+          connect: {
+            id: supplierId,
+          },
+        },
+        category: {
+          connect: {
+            id: categoryId,
+          },
+        },
+      },
     });
   }
 
@@ -44,7 +70,21 @@ export class MedicineService {
   ): Promise<PaginatedResult<Medicine>> {
     return paginate(
       this.prisma.medicine,
-      { orderBy: { createdAt: 'desc' } },
+      {
+        include: {
+          category: {
+            omit: { id: true },
+          },
+          supplier: {
+            omit: { id: true },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        omit: {
+          categoryId: true,
+          supplierId: true,
+        },
+      },
       { page, perPage },
     );
   }

@@ -8,5 +8,6 @@ import { DatabaseService } from '../../common/database/database.service.js';
   imports: [DatabaseModule],
   controllers: [SupplierController],
   providers: [SupplierService, DatabaseService],
+  exports: [SupplierService],
 })
 export class SupplierModule {}
