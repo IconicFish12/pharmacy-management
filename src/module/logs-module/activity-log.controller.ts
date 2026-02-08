@@ -1,7 +1,16 @@
-import { Controller, Get, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Delete,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ActivityLogService } from './activity-log.service.js';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller()
+@UseGuards(AuthGuard('jwt'))
 export class ActivityLogController {
   constructor(private readonly activityLogService: ActivityLogService) {}
 

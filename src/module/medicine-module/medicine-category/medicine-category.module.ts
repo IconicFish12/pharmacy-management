@@ -6,5 +6,6 @@ import { DatabaseService } from '../../../common/database/database.service.js';
 @Module({
   controllers: [MedicineCategoryController],
   providers: [MedicineCategoryService, DatabaseService],
+  exports: [MedicineCategoryService],
 })
 export class MedicineCategoryModule {}

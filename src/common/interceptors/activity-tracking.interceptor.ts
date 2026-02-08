@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
@@ -29,12 +30,12 @@ export class ActivityTrackingInterceptor implements NestInterceptor {
       tap(() => {
         if (isMutating && user) {
           const resourceId = params?.id ? String(params.id) : 'unknown';
-          const resourceType = url.split || 'unknown';
+          const resourceType = url.split('/') || 'unknown';
 
           const createPayload: CreateActivityLogDto = {
             action: method,
             userId: user.id,
-            resourceType: resourceType,
+            resourceType: resourceType[3] ?? resourceType[2],
             resourceId: resourceId,
             payloadData: body as Record<string, any>,
           };
