@@ -110,14 +110,13 @@ model Medicine {
 
 model MedicineOrder {
   id           String        @id @default(uuid()) @db.Uuid
-  medicineName String        @map("medicine_name")
   orderCode    String        @unique @map("order_code")
   orderDate    DateTime      @map("order_date") @db.Timestamp()
   userId       String        @map("user_id") @db.Uuid
   user         User          @relation(fields: [userId], onDelete: Cascade, onUpdate: Cascade, references: [id])
   supplierId   String        @map("supplier_id") @db.Uuid
   supplier     Supplier      @relation(fields: [supplierId], onDelete: Cascade, onUpdate: Cascade, references: [id])
-  totalPrice   Decimal       @map("total_price")
+  totalPrice   Float         @map("total_price")
   status       OrderStatus   @default(PENDING)
   createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamp()
   updatedAt    DateTime      @updatedAt @map("updated_at") @db.Timestamp()
@@ -131,11 +130,11 @@ model OrderDetail {
   order      MedicineOrder @relation(fields: [orderId], onDelete: Cascade, onUpdate: Cascade, references: [id])
   medicineId String        @map("medicine_id") @db.Uuid
   medicine   Medicine      @relation(fields: [medicineId], onDelete: Cascade, onUpdate: Cascade, references: [id])
-  createdAt  DateTime      @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt  DateTime      @updatedAt @map("updated_at") @db.Timestamp()
   quantity   Int
   unitPrice  Float         @map("unit_price")
   subtotal   Float
+  createdAt  DateTime      @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt  DateTime      @updatedAt @map("updated_at") @db.Timestamp()
 
   @@id([orderId, medicineId])
   @@map("order_details")

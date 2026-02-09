@@ -1,58 +1,45 @@
 import {
-  IsAlphanumeric,
   IsDate,
   IsEnum,
   IsNotEmpty,
-  IsPositive,
+  IsOptional,
   IsUUID,
 } from 'class-validator';
 import { OrderStatus } from '../../../../common/database/generated/prisma/enums.js';
 import { Type } from 'class-transformer';
+import { Medicines } from '../interfaces/medicines.interface.js';
 
 export class CreateMedicineOrderDto {
-  @IsNotEmpty({
-    message: 'medicine name is required',
-  })
-  medicineName: string;
-
-  @IsNotEmpty({
-    message: 'medicine order code is required',
-  })
-  @IsAlphanumeric('en-US', {
-    message: 'medicine ordr code mus contain letter and number',
-  })
-  orderCode: string;
-
   @IsNotEmpty({
     message: 'medicine order date is required',
   })
   @Type(() => Date)
   @IsDate()
-  orderDate: Date;
+  readonly orderDate!: Date;
 
-  @IsNotEmpty({
-    message: 'medicine orderer is required',
+  @IsOptional({
+    message: 'medicine orderer is optional',
   })
-  @IsUUID('7')
-  userId: string;
+  @IsUUID('all')
+  userId!: string;
 
   @IsNotEmpty({
-    message: 'medicie supplier is required',
+    message: 'medicine supplier is required',
   })
-  supplierId: string;
+  @IsUUID('all')
+  readonly supplierId!: string;
 
-  @IsNotEmpty({
-    message: 'total price is required',
-  })
-  @IsPositive()
-  totalPrice: number;
-
-  @IsNotEmpty({
-    message: 'order status is required',
+  @IsOptional({
+    message: 'order status is optional',
   })
   @IsEnum(OrderStatus, {
     message:
       'order status not valid choose between PENDING, COMPLETED, and CANCELLED',
   })
-  status: OrderStatus;
+  readonly status!: OrderStatus;
+
+  @IsNotEmpty({
+    message: 'medicines to order is required',
+  })
+  medicines!: Array<Medicines>;
 }

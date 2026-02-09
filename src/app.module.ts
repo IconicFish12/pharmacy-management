@@ -16,6 +16,7 @@ import { UserModule } from './module/user-module/user.module.js';
 import { ActivityLogModule } from './module/logs-module/activity-log.module.js';
 import { AuthModule } from './common/security/auth/auth.module.js';
 import { RolesGuard } from './common/security/guards/roles.guard.js';
+import { OrderDetailModule } from './module/medicine-module/medicine-order/order-detail/order-detail.module.js';
 
 @Module({
   imports: [
@@ -48,10 +49,6 @@ import { RolesGuard } from './common/security/guards/roles.guard.js';
                 path: 'medicine-categories',
                 module: MedicineCategoryModule,
               },
-              {
-                path: 'medicine-orders',
-                module: MedicineOrderModule,
-              },
             ],
           },
           {
@@ -65,6 +62,19 @@ import { RolesGuard } from './common/security/guards/roles.guard.js';
           {
             path: 'activity-logs',
             module: ActivityLogModule,
+          },
+          {
+            path: 'orders',
+            children: [
+              {
+                path: 'medicine-orders',
+                module: MedicineOrderModule,
+              },
+              {
+                path: 'order-details',
+                module: OrderDetailModule,
+              },
+            ],
           },
         ],
       },
