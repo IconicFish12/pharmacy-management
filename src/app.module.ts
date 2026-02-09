@@ -17,6 +17,8 @@ import { ActivityLogModule } from './module/logs-module/activity-log.module.js';
 import { AuthModule } from './common/security/auth/auth.module.js';
 import { RolesGuard } from './common/security/guards/roles.guard.js';
 import { OrderDetailModule } from './module/medicine-module/medicine-order/order-detail/order-detail.module.js';
+import { TransactionModule } from './module/transaction-module/transaction.module.js';
+import { TransactionDetailModule } from './module/transaction-module/transaction-detail/transaction-detail.module.js';
 
 @Module({
   imports: [
@@ -64,7 +66,7 @@ import { OrderDetailModule } from './module/medicine-module/medicine-order/order
             module: ActivityLogModule,
           },
           {
-            path: 'orders',
+            path: 'finances',
             children: [
               {
                 path: 'medicine-orders',
@@ -73,6 +75,14 @@ import { OrderDetailModule } from './module/medicine-module/medicine-order/order
               {
                 path: 'order-details',
                 module: OrderDetailModule,
+              },
+              {
+                path: 'transactions',
+                module: TransactionModule,
+              },
+              {
+                path: 'transaction-details',
+                module: TransactionDetailModule,
               },
             ],
           },

@@ -111,6 +111,10 @@ export class TransactionService {
       this.prisma.transaction,
       {
         orderBy: { createdAt: 'desc' },
+        include: {
+          user: { omit: { id: true, password: true } },
+          transactionDetails: { omit: { id: true } },
+        },
       },
       { perPage, page },
     );
