@@ -10,5 +10,6 @@ import { SupplierModule } from '../../supplier-module/supplier.module.js';
   controllers: [MedicineController],
   providers: [MedicineService, DatabaseService],
   imports: [DatabaseModule, MedicineCategoryModule, SupplierModule],
+  exports: [MedicineService],
 })
 export class MedicineModule {}

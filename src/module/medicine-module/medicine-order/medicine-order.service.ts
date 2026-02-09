@@ -37,7 +37,7 @@ export class MedicineOrderService {
         return await tx.medicineOrder.create({
           data: {
             ...request,
-            orderCode: `ORD-${Date.now()}`,
+            orderCode: `ORD-${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
             totalPrice: totalOrderPrice,
             user: {
               connect: { id: id ?? userId },
