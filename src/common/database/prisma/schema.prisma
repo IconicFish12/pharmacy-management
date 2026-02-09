@@ -142,9 +142,8 @@ model OrderDetail {
 
 model Transaction {
   id              String   @id @default(uuid()) @db.Uuid
-  medicineName    String   @map("medicine_name")
   transactionCode String   @unique @map("transaction_code")
-  totalPrice      Decimal  @map("total_price")
+  totalPrice      Float    @map("total_price")
   userId          String   @map("user_id") @db.Uuid
   user            User     @relation(fields: [userId], onDelete: Cascade, onUpdate: Cascade, references: [id])
   transactionDate DateTime @map("transaction_date") @db.Timestamp()
@@ -159,11 +158,11 @@ model TransactionDetail {
   transaction   Transaction @relation(fields: [transactionId], onDelete: Cascade, onUpdate: Cascade, references: [id])
   medicineId    String      @map("medicine_id") @db.Uuid
   medicine      Medicine    @relation("medicine", fields: [medicineId], onDelete: Cascade, onUpdate: Cascade, references: [id])
-  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt     DateTime    @updatedAt @map("updated_at") @db.Timestamp()
   quantity      Int
   unitPrice     Float       @map("unit_price")
   subtotal      Float
+  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt     DateTime    @updatedAt @map("updated_at") @db.Timestamp()
 
   @@id([transactionId, medicineId])
   @@map("transaction_details")
