@@ -5,16 +5,12 @@ import {
   MedicineOrder,
   Prisma,
 } from '../../../common/database/generated/prisma/client.js';
-import {
-  MedicineOrderCreateInput,
-  MedicineUpdateInput,
-} from '../../../common/database/generated/prisma/models.js';
+import { MedicineUpdateInput } from '../../../common/database/generated/prisma/models.js';
 import {
   PaginatedResult,
   paginator,
 } from '../../../common/pagination/pagination.js';
 import { DatabaseService } from '../../../common/database/database.service.js';
-
 const paginate = paginator({ perPage: 10, page: 1 });
 
 type MedicineOrderWithRelations = Prisma.MedicineOrderGetPayload<{
@@ -28,10 +24,49 @@ export class MedicineOrderService {
 
   async create(
     dto: CreateMedicineOrderDto,
-  ): Promise<MedicineOrder | MedicineOrderCreateInput> {
-    return await this.prisma.medicineOrder.create({
-      data: dto,
-    });
+    id?: string,
+  ): Promise<MedicineOrder> {
+    const { supplierId, userId, medicines, ...request } = dto;
+
+    const totalOrderPrice = medicines.reduce((acc, item) => {
+      return item.unit_price * item.quantity;
+    }, 0);
+
+    return await this.prisma.$transaction(
+      async (tx) => {
+        return await tx.medicineOrder.create({
+          data: {
+            ...request,
+            orderCode: `ORD-${Date.now()}`,
+            totalPrice: totalOrderPrice,
+            user: {
+              connect: { id: id ?? userId },
+            },
+            supplier: {
+              connect: { id: supplierId },
+            },
+            orderDetails: {
+              create: medicines.map((item) => ({
+                medicine: {
+                  connect: { id: item.medicineId },
+                },
+                quantity: item.quantity,
+                unitPrice: item.unit_price,
+                subtotal: item.unit_price * item.quantity,
+              })),
+            },
+          },
+          include: {
+            orderDetails: true,
+          },
+        });
+      },
+      {
+        maxWait: 10000,
+        timeout: 20000,
+        isolationLevel: Prisma.TransactionIsolationLevel.ReadCommitted,
+      },
+    );
   }
 
   async findAll(
@@ -40,7 +75,14 @@ export class MedicineOrderService {
   ): Promise<PaginatedResult<MedicineOrder>> {
     return await paginate(
       this.prisma.medicineOrder,
-      { orderBy: { createdAt: 'desc' } },
+      {
+        orderBy: { createdAt: 'desc' },
+        include: {
+          supplier: { omit: { id: true } },
+          user: { omit: { id: true } },
+        },
+        omit: { userId: true, supplierId: true },
+      },
       { page, perPage },
     );
   }
