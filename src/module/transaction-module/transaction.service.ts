@@ -29,13 +29,14 @@ export class TransactionService {
   ) {}
 
   async create(dto: CreateTransactionDto, id?: string): Promise<Transaction> {
-    const { userId, medicines, ...request } = dto;
+    const { userId, medicines, transactionDate } = dto;
 
     return await this.prisma.$transaction(async (tx) => {
       let grandTotal = 0;
       const orderItemsData: TransactionData[] = [];
 
       for (const item of medicines) {
+        this.logger.debug(item.medicineId);
         const medicine = await tx.medicine.findUnique({
           where: { id: item.medicineId },
         });
@@ -86,7 +87,7 @@ export class TransactionService {
 
       return await tx.transaction.create({
         data: {
-          ...request,
+          transactionDate: transactionDate,
           transactionCode: `TRC-${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
           totalPrice: grandTotal,
           user: {
@@ -113,7 +114,7 @@ export class TransactionService {
         orderBy: { createdAt: 'desc' },
         include: {
           user: { omit: { id: true, password: true } },
-          transactionDetails: { omit: { id: true } },
+          transactionDetails: true,
         },
       },
       { perPage, page },
