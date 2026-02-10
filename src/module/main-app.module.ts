@@ -10,12 +10,12 @@ import { DatabaseModule } from '../common/database/database.module.js';
 @Module({
   imports: [
     DatabaseModule,
-    MedicineMainModule, 
-    ReportMainModule, 
-    UserModule, 
-    ActivityLogModule, 
+    MedicineMainModule,
+    ReportMainModule,
+    UserModule,
+    ActivityLogModule,
     TransactionModule,
-    SupplierModule
+    SupplierModule,
   ],
 })
 export class MainAppModule {}

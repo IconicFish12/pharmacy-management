@@ -19,6 +19,7 @@ import { RolesGuard } from './common/security/guards/roles.guard.js';
 import { OrderDetailModule } from './module/medicine-module/medicine-order/order-detail/order-detail.module.js';
 import { TransactionModule } from './module/transaction-module/transaction.module.js';
 import { TransactionDetailModule } from './module/transaction-module/transaction-detail/transaction-detail.module.js';
+import { AppController } from './app.controller.js';
 
 @Module({
   imports: [
@@ -105,5 +106,6 @@ import { TransactionDetailModule } from './module/transaction-module/transaction
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

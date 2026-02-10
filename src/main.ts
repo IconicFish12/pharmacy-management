@@ -4,7 +4,6 @@ import { AppModule } from './app.module.js';
 import {
   BadRequestException,
   ClassSerializerInterceptor,
-  INestApplication,
   ValidationError,
   ValidationPipe,
 } from '@nestjs/common';
@@ -15,18 +14,40 @@ import { ActivityTrackingInterceptor } from './common/interceptors/activity-trac
 import { ActivityLogService } from './module/logs-module/activity-log.service.js';
 import { DatabaseService } from './common/database/database.service.js';
 import { RolesGuard } from './common/security/guards/roles.guard.js';
+import {
+  ExpressAdapter,
+  NestExpressApplication,
+} from '@nestjs/platform-express';
+import { Request, Response } from 'express';
 
-async function bootstrap() {
-  const app = await NestFactory.create<INestApplication>(AppModule, {
-    cors: true,
-    bodyParser: true,
-    logger: ['error', 'warn', 'debug', 'verbose', 'log'],
-  });
+async function bootstrap(): Promise<NestExpressApplication> {
+  const app = await NestFactory.create<NestExpressApplication>(
+    AppModule,
+    new ExpressAdapter(),
+    {
+      cors: true,
+      bodyParser: true,
+    },
+  );
+
   useContainer(app.select(AppModule, { abortOnError: true }), {
     fallbackOnErrors: true,
   });
 
   const logService = new ActivityLogService(new DatabaseService());
+
+  app.enableCors({
+    origin: '*',
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: [
+      'Origin',
+      'X-Requested-With',
+      'Content-Type',
+      'Accept',
+      'Authorization',
+    ],
+  });
 
   app.useGlobalInterceptors(
     new ResponseInterceptors(),
@@ -75,6 +96,25 @@ async function bootstrap() {
 
   app.useGlobalGuards(new RolesGuard(new Reflector()));
 
-  await app.listen(process.env.BACKEND_PORT ?? 3000);
+  await app.init();
+
+  return app;
 }
-void bootstrap();
+
+export default async function handler(
+  req: Request,
+  res: Response,
+): Promise<void> {
+  try {
+    const nestApp = await bootstrap();
+    const expressApp = nestApp.getHttpAdapter().getInstance();
+
+    expressApp(req, res);
+  } catch (error) {
+    console.error('Handler error:', error);
+    res.status(500).json({
+      error: 'Internal server error',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+}
