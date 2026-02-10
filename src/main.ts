@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import 'reflect-metadata';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module.js';
@@ -109,7 +110,7 @@ export default async function handler(
     const nestApp = await bootstrap();
     const expressApp = nestApp.getHttpAdapter().getInstance();
 
-    expressApp(req, res);
+    return expressApp(req, res);
   } catch (error) {
     console.error('Handler error:', error);
     res.status(500).json({
