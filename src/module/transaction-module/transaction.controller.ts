@@ -14,13 +14,16 @@ import { CreateTransactionDto } from './dto/create-transaction.dto.js';
 import { UpdateTransactionDto } from './dto/update-transaction.dto.js';
 import { User } from '../../common/security/guards/user.decorator.js';
 import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../../common/security/guards/roles.decorator.js';
 
 @Controller()
+@Roles('OWNER')
 @UseGuards(AuthGuard('jwt'))
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Post()
+  @Roles('CASHIER')
   create(
     @Body() createTransactionDto: CreateTransactionDto,
     @User('id') userId: string,
@@ -29,6 +32,7 @@ export class TransactionController {
   }
 
   @Get()
+  @Roles('CASHIER', 'ADMIN', 'OWNER')
   findAll(@Query('page') page?: number, @Query('perPage') perPage?: number) {
     return this.transactionService.findAll(perPage!, page!);
   }
@@ -39,6 +43,7 @@ export class TransactionController {
   }
 
   @Patch(':id')
+  @Roles('CASHIER')
   update(
     @Param('id') id: string,
     @Body() updateTransactionDto: UpdateTransactionDto,
@@ -47,6 +52,7 @@ export class TransactionController {
   }
 
   @Delete(':id')
+  @Roles('CASHIER')
   remove(@Param('id') id: string) {
     return this.transactionService.remove(id);
   }
