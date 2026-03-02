@@ -16,6 +16,7 @@ import { ActivityLogService } from './module/logs-module/activity-log.service.js
 import { DatabaseService } from './common/database/database.service.js';
 import { RolesGuard } from './common/security/guards/roles.guard.js';
 import { ExpressAdapter } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<INestApplication>(
@@ -31,6 +32,15 @@ async function bootstrap() {
   useContainer(app.select(AppModule, { abortOnError: true }), {
     fallbackOnErrors: true,
   });
+
+  const swagger = new DocumentBuilder()
+    .setTitle('Pharma-ease backend')
+    .setDescription('API for Pharmacy Management System')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  const document = () => SwaggerModule.createDocument(app, swagger);
+  SwaggerModule.setup('main api', app, document);
 
   const logService = new ActivityLogService(new DatabaseService());
 
