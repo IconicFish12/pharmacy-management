@@ -1,17 +1,14 @@
-/*
-  Warnings:
-
-  - You are about to drop the `User` table. If the table is not empty, all the data it contains will be lost.
-
-*/
 -- CreateEnum
 CREATE TYPE "ActiveStatus" AS ENUM ('ACTIVE', 'INACTIVE');
 
 -- CreateEnum
-CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'COMPLETED', 'CANCELLED');
+CREATE TYPE "Shift" AS ENUM ('MORNING', 'NOON', 'NIGHT');
 
--- DropTable
-DROP TABLE "User";
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('ADMIN', 'OWNER', 'PHARMACIST', 'CASHIER');
+
+-- CreateEnum
+CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'COMPLETED', 'CANCELLED');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -20,14 +17,15 @@ CREATE TABLE "users" (
     "emp_id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "phone_number" TEXT,
     "role" "Role" NOT NULL,
     "shift" "Shift" NOT NULL,
     "status" "ActiveStatus" NOT NULL DEFAULT 'ACTIVE',
-    "date_of_birth" TIMESTAMP(3) NOT NULL,
-    "alamat" TEXT NOT NULL,
-    "profile_avatar" TEXT NOT NULL,
+    "date_of_birth" TIMESTAMP(3),
+    "alamat" TEXT,
+    "profile_avatar" TEXT,
     "salary" INTEGER NOT NULL,
-    "start_date" INTEGER NOT NULL,
+    "start_date" TIMESTAMP(3) NOT NULL,
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP NOT NULL,
 
@@ -68,6 +66,9 @@ CREATE TABLE "medicines" (
     "description" TEXT,
     "category_id" UUID NOT NULL,
     "supplier_id" UUID NOT NULL,
+    "stock" INTEGER NOT NULL,
+    "price" DOUBLE PRECISION NOT NULL,
+    "expired_date" TIMESTAMP(3) NOT NULL,
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP NOT NULL,
 
@@ -75,30 +76,29 @@ CREATE TABLE "medicines" (
 );
 
 -- CreateTable
-CREATE TABLE "MedicineOrder" (
+CREATE TABLE "medicine_orders" (
     "id" UUID NOT NULL,
-    "medicine_name" TEXT NOT NULL,
     "order_code" TEXT NOT NULL,
     "order_date" TIMESTAMP NOT NULL,
     "user_id" UUID NOT NULL,
     "supplier_id" UUID NOT NULL,
-    "total_price" DECIMAL(65,30) NOT NULL,
+    "total_price" DOUBLE PRECISION NOT NULL,
     "status" "OrderStatus" NOT NULL DEFAULT 'PENDING',
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP NOT NULL,
 
-    CONSTRAINT "MedicineOrder_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "medicine_orders_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "order_details" (
     "order_id" UUID NOT NULL,
     "medicine_id" UUID NOT NULL,
-    "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP NOT NULL,
     "quantity" INTEGER NOT NULL,
     "unit_price" DOUBLE PRECISION NOT NULL,
     "subtotal" DOUBLE PRECISION NOT NULL,
+    "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP NOT NULL,
 
     CONSTRAINT "order_details_pkey" PRIMARY KEY ("order_id","medicine_id")
 );
@@ -106,9 +106,8 @@ CREATE TABLE "order_details" (
 -- CreateTable
 CREATE TABLE "Transaction" (
     "id" UUID NOT NULL,
-    "medicine_name" TEXT NOT NULL,
     "transaction_code" TEXT NOT NULL,
-    "total_price" DECIMAL(65,30) NOT NULL,
+    "total_price" DOUBLE PRECISION NOT NULL,
     "user_id" UUID NOT NULL,
     "transaction_date" TIMESTAMP NOT NULL,
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -121,14 +120,30 @@ CREATE TABLE "Transaction" (
 CREATE TABLE "transaction_details" (
     "transaction_id" UUID NOT NULL,
     "medicine_id" UUID NOT NULL,
-    "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP NOT NULL,
     "quantity" INTEGER NOT NULL,
     "unit_price" DOUBLE PRECISION NOT NULL,
     "subtotal" DOUBLE PRECISION NOT NULL,
+    "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP NOT NULL,
 
     CONSTRAINT "transaction_details_pkey" PRIMARY KEY ("transaction_id","medicine_id")
 );
+
+-- CreateTable
+CREATE TABLE "activity_logs" (
+    "id" UUID NOT NULL,
+    "action" TEXT NOT NULL,
+    "user_id" UUID NOT NULL,
+    "resource_type" TEXT,
+    "resource_id" TEXT,
+    "payload_data" JSONB,
+    "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "activity_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_emp_id_key" ON "users"("emp_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
@@ -137,10 +152,13 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 CREATE UNIQUE INDEX "users_password_key" ON "users"("password");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "users_phone_number_key" ON "users"("phone_number");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "medicines_sku_key" ON "medicines"("sku");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "MedicineOrder_order_code_key" ON "MedicineOrder"("order_code");
+CREATE UNIQUE INDEX "medicine_orders_order_code_key" ON "medicine_orders"("order_code");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Transaction_transaction_code_key" ON "Transaction"("transaction_code");
@@ -152,13 +170,13 @@ ALTER TABLE "medicines" ADD CONSTRAINT "medicines_category_id_fkey" FOREIGN KEY 
 ALTER TABLE "medicines" ADD CONSTRAINT "medicines_supplier_id_fkey" FOREIGN KEY ("supplier_id") REFERENCES "suppliers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MedicineOrder" ADD CONSTRAINT "MedicineOrder_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "medicine_orders" ADD CONSTRAINT "medicine_orders_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MedicineOrder" ADD CONSTRAINT "MedicineOrder_supplier_id_fkey" FOREIGN KEY ("supplier_id") REFERENCES "suppliers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "medicine_orders" ADD CONSTRAINT "medicine_orders_supplier_id_fkey" FOREIGN KEY ("supplier_id") REFERENCES "suppliers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "order_details" ADD CONSTRAINT "order_details_order_id_fkey" FOREIGN KEY ("order_id") REFERENCES "MedicineOrder"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "order_details" ADD CONSTRAINT "order_details_order_id_fkey" FOREIGN KEY ("order_id") REFERENCES "medicine_orders"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "order_details" ADD CONSTRAINT "order_details_medicine_id_fkey" FOREIGN KEY ("medicine_id") REFERENCES "medicines"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -171,3 +189,6 @@ ALTER TABLE "transaction_details" ADD CONSTRAINT "transaction_details_transactio
 
 -- AddForeignKey
 ALTER TABLE "transaction_details" ADD CONSTRAINT "transaction_details_medicine_id_fkey" FOREIGN KEY ("medicine_id") REFERENCES "medicines"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "activity_logs" ADD CONSTRAINT "activity_logs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
