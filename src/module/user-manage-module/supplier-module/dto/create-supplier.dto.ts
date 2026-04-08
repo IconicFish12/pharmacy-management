@@ -5,13 +5,13 @@ import {
   IsPhoneNumber,
   MinLength,
 } from 'class-validator';
-import { ActiveStatus } from '../../../common/database/generated/prisma/enums.js';
+import { ActiveStatus } from '../../../../common/database/generated/prisma/enums.js';
 
 export class CreateSupplierDto {
   @IsNotEmpty({
     message: 'Supplier Name is required',
   })
-  readonly supplierName: string;
+  readonly supplierName!: string;
 
   @IsNotEmpty({
     message: 'Phone Number is required',
@@ -19,13 +19,13 @@ export class CreateSupplierDto {
   @IsPhoneNumber('ID', {
     message: 'Phone Number must be an valid indonesia phone number',
   })
-  readonly phoneNumber: string;
+  readonly phoneNumber!: string;
 
   @IsOptional()
-  readonly contactPerson: string;
+  readonly contactPerson!: string;
 
   @IsOptional()
-  readonly contactPersonNumber: string;
+  readonly contactPersonNumber!: string;
 
   @IsNotEmpty({
     message: 'Active Status is Required',
@@ -33,12 +33,12 @@ export class CreateSupplierDto {
   @IsEnum(ActiveStatus, {
     message: 'Active Status is not valid choose between ACTIVE and INACTIVE',
   })
-  readonly status: ActiveStatus;
+  readonly status!: ActiveStatus;
   @IsNotEmpty({
     message: 'Address is Required',
   })
   @MinLength(7, {
     message: 'Address is must greater than 7 Character',
   })
-  readonly address: string;
+  readonly address!: string;
 }

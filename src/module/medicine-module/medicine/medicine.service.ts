@@ -4,7 +4,7 @@ import { UpdateMedicineDto } from './dto//update-medicine.dto.js';
 import {
   PaginatedResult,
   paginator,
-} from '../../../common/pagination/pagination.js';
+} from '../../../common/helpers/pagination/pagination.js';
 import {
   Medicine,
   Prisma,
@@ -15,8 +15,9 @@ import {
   MedicineUpdateInput,
 } from '../../../common/database/generated/prisma/models.js';
 import { MedicineCategoryService } from '../medicine-category/medicine-category.service.js';
-import { SupplierService } from '../../supplier-module/supplier.service.js';
+
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { SupplierService } from '../../user-manage-module/supplier-module/supplier.service.js';
 
 const paginate = paginator({ perPage: 10, page: 1 });
 

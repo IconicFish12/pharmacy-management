@@ -5,7 +5,7 @@ import { DatabaseService } from '../../common/database/database.service.js';
 import {
   PaginatedResult,
   paginator,
-} from '../../common/pagination/pagination.js';
+} from '../../common/helpers/pagination/pagination.js';
 import {
   Prisma,
   Transaction,

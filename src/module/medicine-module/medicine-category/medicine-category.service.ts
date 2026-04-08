@@ -4,7 +4,7 @@ import { UpdateMedicineCategoryDto } from './dto/update-medicine-category.dto.js
 import {
   PaginatedResult,
   paginator,
-} from '../../../common/pagination/pagination.js';
+} from '../../../common/helpers/pagination/pagination.js';
 import {
   MedicineCategory,
   Prisma,
