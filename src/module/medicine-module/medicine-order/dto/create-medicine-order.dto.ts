@@ -21,7 +21,7 @@ export class CreateMedicineOrderDto {
     message: 'medicine orderer is optional',
   })
   @IsUUID('all')
-  userId!: string;
+  employeeId!: string;
 
   @IsNotEmpty({
     message: 'medicine supplier is required',

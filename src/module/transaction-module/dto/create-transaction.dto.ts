@@ -11,6 +11,7 @@ import { Medicines } from '../../medicine-module/medicine-order/interfaces/medic
 export class CreateTransactionDto {
   @IsNotEmpty({
     message: 'transaction date is required',
+  employeeId       String   @map("meployee_id") @db.Uuid
   })
   @Type(() => Date)
   @IsDate()
@@ -27,7 +28,7 @@ export class CreateTransactionDto {
     message: 'cashier is optional',
   })
   @IsUUID('all')
-  userId!: string;
+  employeeId!: string;
 
   @IsNotEmpty({
     message: 'medicines to sale is required',

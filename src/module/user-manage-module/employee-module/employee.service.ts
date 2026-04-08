@@ -8,7 +8,7 @@ import {
 } from '../../../common/helpers/pagination/pagination.js';
 import {
   Prisma,
-  User,
+  Employee,
 } from '../../../common/database/generated/prisma/client.js';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -18,7 +18,7 @@ const paginate = paginator({ perPage: 10, page: 1 });
 
 const saltRounds = 10;
 
-type UserDataWithRelation = Prisma.UserGetPayload<{
+type EmployeeDataWithRelation = Prisma.EmployeeGetPayload<{
   include: {
     medicineOrders: true;
     transactions: true;
@@ -33,18 +33,18 @@ export class EmployeeService {
   async create(
     dto: CreateEmployeeDto,
     file: Express.Multer.File,
-  ): Promise<User> {
+  ): Promise<Employee> {
     const hash = await bcrypt.hash(dto.password, saltRounds);
 
     if (file != null) {
-      const userData = {
+      const employeeData = {
         ...dto,
         password: hash,
         provileAvatar: file.filename,
       };
 
-      return await this.prisma.user.create({
-        data: userData,
+      return await this.prisma.employee.create({
+        data: employeeData,
       });
     }
     const userData = {
@@ -52,21 +52,21 @@ export class EmployeeService {
       password: hash,
     };
 
-    return await this.prisma.user.create({
+    return await this.prisma.employee.create({
       data: userData,
     });
   }
 
-  async findAll(page: number, perPage: number): Promise<PaginatedResult<User>> {
+  async findAll(page: number, perPage: number): Promise<PaginatedResult<Employee>> {
     return await paginate(
-      this.prisma.user,
+      this.prisma.employee,
       { orderBy: { createdAt: 'desc' } },
       { page, perPage },
     );
   }
 
-  async findOne(id: string): Promise<UserDataWithRelation> {
-    const supplier = await this.prisma.user.findUnique({
+  async findOne(id: string): Promise<EmployeeDataWithRelation> {
+    const employee = await this.prisma.employee.findUnique({
       where: { id },
       include: {
         _count: true,
@@ -75,26 +75,26 @@ export class EmployeeService {
       },
     });
 
-    if (!supplier) {
-      throw new NotFoundException(`user with ID ${id} not found`);
+    if (!employee) {
+      throw new NotFoundException(`employee with ID ${id} not found`);
     }
 
-    return supplier;
+    return employee;
   }
 
   async update(
     id: string,
     dto: UpdateEmployeeDto,
     file: Express.Multer.File,
-  ): Promise<User> {
-    const existingUser = await this.prisma.user.findUnique({
+  ): Promise<Employee> {
+    const existingEmployee = await this.prisma.employee.findUnique({
       where: { id: id },
     });
     const hash = await bcrypt.hash(dto.password!, saltRounds);
 
-    if (!existingUser) {
+    if (!existingEmployee) {
       if (file) fs.unlinkSync(file.path);
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`Employee with ID ${id} not found`);
     }
 
     const updatePayload = {
@@ -105,10 +105,10 @@ export class EmployeeService {
     if (file) {
       updatePayload.profileAvatar = file.filename;
 
-      if (existingUser.profileAvatar) {
+      if (existingEmployee.profileAvatar) {
         const oldFilePath = path.join(
           './uploads/images',
-          existingUser.profileAvatar,
+          existingEmployee.profileAvatar,
         );
 
         if (fs.existsSync(oldFilePath)) {
@@ -117,20 +117,20 @@ export class EmployeeService {
       }
     }
 
-    return this.prisma.user.update({
+    return this.prisma.employee.update({
       where: { id },
       data: updatePayload,
     });
   }
 
-  async remove(id: string): Promise<User> {
-    return this.prisma.user.delete({
+  async remove(id: string): Promise<Employee> {
+    return this.prisma.employee.delete({
       where: { id },
     });
   }
 
-  async findByEmail(email: string): Promise<User | null> {
-    return this.prisma.user.findUnique({
+  async findByEmail(email: string): Promise<Employee | null> {
+    return this.prisma.employee.findUnique({
       where: { email: email },
     });
   }

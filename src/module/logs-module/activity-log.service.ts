@@ -13,7 +13,7 @@ import { DatabaseService } from '../../common/database/database.service.js';
 const paginate = paginator({ perPage: 10 });
 
 type ActivityLogsWithRelation = Prisma.ActivityLogGetPayload<{
-  include: { user: true };
+  include: { employee: true };
 }>;
 
 @Injectable()

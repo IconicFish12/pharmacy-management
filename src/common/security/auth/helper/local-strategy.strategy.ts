@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
-import { User } from '../../../database/generated/prisma/client.js';
+import { Employee } from '../../../database/generated/prisma/client.js';
 import { AuthService } from '../auth.service.js';
 
 @Injectable()
@@ -21,13 +21,13 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       session: false,
     });
   }
-  async validate(email: string, password: string): Promise<User> {
-    const user = await this.authService.validateUser(email, password);
+  async validate(email: string, password: string): Promise<Employee> {
+    const employee = await this.authService.validateUser(email, password);
 
-    if (!user) {
+    if (!employee) {
       throw new UnauthorizedException('credential is not valid');
     }
 
-    return user;
+    return employee;
   }
 }

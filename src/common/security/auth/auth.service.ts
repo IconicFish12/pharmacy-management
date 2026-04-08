@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../../database/generated/prisma/client.js';
+import { Employee } from '../../database/generated/prisma/client.js';
 import * as bcrypt from 'bcrypt';
 import { EmployeeService } from '../../../module/user-manage-module/employee-module/employee.service.js';
 
@@ -12,21 +12,21 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<User | null> {
-    const user = await this.employeeService.findByEmail(email);
-    if (!user) {
+  async validateUser(email: string, password: string): Promise<Employee | null> {
+    const employee = await this.employeeService.findByEmail(email);
+    if (!employee) {
       return null;
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, employee.password);
     if (!isMatch) {
       return null;
     }
-    return user;
+    return employee;
   }
 
-  login(user: User) {
-    const payload = { email: user.email, sub: user.id };
+  login(employee: Employee) {
+    const payload = { email: employee.email, sub: employee.id };
     return {
       access_token: this.jwtService.sign(payload),
     };

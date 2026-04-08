@@ -1,6 +1,6 @@
 export class CreateActivityLogDto {
   action: string;
-  userId: string;
+  employeeId: string;
   resourceType: string;
   resourceId: string;
   payloadData: Record<string, any>;

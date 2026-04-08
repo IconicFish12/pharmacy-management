@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthDto } from '../dto/auth.dto.js';
-import { User } from '../../../database/generated/prisma/client.js';
+import { Employee } from '../../../database/generated/prisma/client.js';
 import { AuthService } from '../auth.service.js';
 import { EmployeeService } from '../../../../module/user-manage-module/employee-module/employee.service.js';
 
@@ -13,7 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly configService: ConfigService,
     private authService: AuthService,
-    private employeeModule: EmployeeService,
+    private employeeService: EmployeeService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -22,13 +22,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: AuthDto): Promise<User> {
-    const user = await this.employeeModule.findByEmail(payload.email);
+  async validate(payload: AuthDto): Promise<Employee> {
+    const employee = await this.employeeService.findByEmail(payload.email);
 
-    if (!user) {
+    if (!employee) {
       throw new UnauthorizedException('user is not found');
     }
 
-    return user;
+    return employee;
   }
 }
