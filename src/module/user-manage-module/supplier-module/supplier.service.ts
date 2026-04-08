@@ -9,7 +9,7 @@ import {
 import {
   PaginatedResult,
   paginator,
-} from '../../../common/pagination/pagination.js';
+} from '../../../common/helpers/pagination/pagination.js';
 
 const paginate = paginator({ perPage: 10, page: 1 });
 

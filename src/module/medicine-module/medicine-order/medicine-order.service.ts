@@ -9,7 +9,7 @@ import { MedicineUpdateInput } from '../../../common/database/generated/prisma/m
 import {
   PaginatedResult,
   paginator,
-} from '../../../common/pagination/pagination.js';
+} from '../../../common/helpers/pagination/pagination.js';
 import { DatabaseService } from '../../../common/database/database.service.js';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Medicines } from './interfaces/medicines.interface.js';

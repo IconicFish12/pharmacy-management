@@ -17,5 +17,6 @@ import { DatabaseService } from '../../../common/database/database.service.js';
   ],
   controllers: [EmployeeController],
   providers: [EmployeeService, DatabaseService, UploadService],
+  exports: [EmployeeService],
 })
 export class EmployeeModule {}

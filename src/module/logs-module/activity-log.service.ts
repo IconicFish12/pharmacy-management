@@ -3,7 +3,7 @@ import { CreateActivityLogDto } from './dto/create-activity-log.dto.js';
 import {
   PaginatedResult,
   paginator,
-} from '../../common/pagination/pagination.js';
+} from '../../common/helpers/pagination/pagination.js';
 import {
   ActivityLog,
   Prisma,
