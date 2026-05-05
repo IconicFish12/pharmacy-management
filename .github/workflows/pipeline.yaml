@@ -1,22 +1,42 @@
-name: Pharma ease CI pipeline
+name: backend CI pipeline
 on: 
   push:
-    branches: [main,staging,production]
+    branches:
+      - main
+      - staging
+      - production
   pull_request:
-    branches: [main,staging]
+    branches: 
+      - main
+      - staging
 
 jobs: 
-  test: 
-    runs-on: ubuntuu-latest
-    step: 
-    -
-    -
-    -
-
-  build: 
+  code-lint:
     runs-on: ubuntu-latest
-    step: 
-    -
-    -
-    -
-  
+    steps: 
+      - name: 
+        uses:
+      - name:
+        uses:
+      - name:
+        uses:
+    
+  code-scan-and-review:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: 
+        uses:    
+      - name:
+        uses:
+      - name:
+        uses:
+ 
+  code-test: 
+    runs-on: ubuntu-latest
+    steps:  
+      - name:
+        uses:
+      - name:
+        uses:
+      - name: 
+        uses:
