@@ -40,7 +40,7 @@ COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules/prisma ./node_modules/prisma
 
 # Running the application
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]
 
 # Exposing application main port
 EXPOSE 5000
