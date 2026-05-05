@@ -10,11 +10,11 @@ import {
 } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import { ResponseInterceptors } from './common/interceptors/response-interceptors.interceptor.js';
-import { ErrorReponseInterceptor } from './common/interceptors/error-reponse.interceptor.js';
+import { ErrorStatusInterceptor } from './common/interceptors/error-status.interceptor.js'
 import { ActivityTrackingInterceptor } from './common/interceptors/activity-tracking.interceptor.js';
 import { ActivityLogService } from './module/logs-module/activity-log.service.js';
-import { DatabaseService } from './common/database/database.service.js';
-import { RolesGuard } from './common/security/guards/roles.guard.js';
+import { DatabaseService } from './database/database.service.js';
+import { RolesGuard } from './common/guards/roles.guard.js';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
@@ -49,7 +49,7 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(
     new ResponseInterceptors(),
-    new ErrorReponseInterceptor(),
+    new ErrorStatusInterceptor(),
     new ActivityTrackingInterceptor(logService),
     new ClassSerializerInterceptor(app.get(Reflector)),
   );

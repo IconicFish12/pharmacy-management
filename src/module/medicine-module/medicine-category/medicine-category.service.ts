@@ -8,12 +8,12 @@ import {
 import {
   MedicineCategory,
   Prisma,
-} from '../../../common/database/generated/prisma/client.js';
-import { DatabaseService } from '../../../common/database/database.service.js';
+} from '../../../database/generated/prisma/client.js';
+import { DatabaseService } from '../../../database/database.service.js';
 import {
   MedicineCategoryCreateInput,
   MedicineCategoryUpdateInput,
-} from '../../../common/database/generated/prisma/models.js';
+} from '../../../database/generated/prisma/models.js';
 
 const paginate = paginator({ perPage: 10, page: 1 });
 

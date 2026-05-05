@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateEmployeeDto } from './dto/create-employee.dto.js';
 import { UpdateEmployeeDto } from './dto/update-employee.dto.js';
-import { DatabaseService } from '../../../common/database/database.service.js';
+import { DatabaseService } from '../../../database/database.service.js';
 import {
   PaginatedResult,
   paginator,
@@ -9,7 +9,7 @@ import {
 import {
   Prisma,
   Employee,
-} from '../../../common/database/generated/prisma/client.js';
+} from '../../../database/generated/prisma/client.js';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as bcrypt from 'bcrypt';
@@ -130,7 +130,7 @@ export class EmployeeService {
   }
 
   async findByEmail(email: string): Promise<Employee | null> {
-    return this.prisma.employee.findUnique({
+    return this.prisma.employee.findFirst({
       where: { email: email },
     });
   }

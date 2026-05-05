@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthDto } from '../dto/auth.dto.js';
-import { Employee } from '../../../database/generated/prisma/client.js';
+import { Employee } from '../../../../database/generated/prisma/client.js';
 import { AuthService } from '../auth.service.js';
 import { EmployeeService } from '../../../../module/user-manage-module/employee-module/employee.service.js';
 

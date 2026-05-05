@@ -13,7 +13,7 @@ import { MedicineCategoryService } from './medicine-category.service.js';
 import { CreateMedicineCategoryDto } from './dto/create-medicine-category.dto.js';
 import { UpdateMedicineCategoryDto } from './dto/update-medicine-category.dto.js';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from '../../../common/security/guards/roles.decorator.js';
+import { Roles } from '../../../common/guards/roles.decorator.js';
 
 @Controller()
 @UseGuards(AuthGuard('jwt'))

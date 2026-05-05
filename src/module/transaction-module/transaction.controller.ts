@@ -12,9 +12,9 @@ import {
 import { TransactionService } from './transaction.service.js';
 import { CreateTransactionDto } from './dto/create-transaction.dto.js';
 import { UpdateTransactionDto } from './dto/update-transaction.dto.js';
-import { User } from '../../common/security/guards/user.decorator.js';
+import { User } from '../../common/guards/user.decorator.js';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from '../../common/security/guards/roles.decorator.js';
+import { Roles } from '../../common/guards/roles.decorator.js';
 
 @Controller()
 @Roles('OWNER')

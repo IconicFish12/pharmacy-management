@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { DatabaseService } from '../../../../common/database/database.service.js';
+import { DatabaseService } from '../../../../database/database.service.js';
 import {
   PaginatedResult,
   paginator,
 } from '../../../../common/helpers/pagination/pagination.js';
-import { OrderDetail } from '../../../../common/database/generated/prisma/client.js';
+import { OrderDetail } from '../../../../database/generated/prisma/client.js';
 
 const paginate = paginator({ perPage: 10, page: 1 });
 

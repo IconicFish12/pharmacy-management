@@ -13,7 +13,7 @@ import { SupplierService } from './supplier.service.js';
 import { CreateSupplierDto } from './dto/create-supplier.dto.js';
 import { UpdateSupplierDto } from './dto/update-supplier.dto.js';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from '../../../common/security/guards/roles.decorator.js';
+import { Roles } from '../../../common/guards/roles.decorator.js';
 
 @Controller()
 @UseGuards(AuthGuard('jwt'))

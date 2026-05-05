@@ -5,7 +5,7 @@ import {
   IsPhoneNumber,
   MinLength,
 } from 'class-validator';
-import { ActiveStatus } from '../../../../common/database/generated/prisma/enums.js';
+import { ActiveStatus } from '../../../../database/generated/prisma/enums.js';
 
 export class CreateSupplierDto {
   @IsNotEmpty({

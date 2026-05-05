@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateMedicineDto } from './dto/create-medicine.dto.js';
-import { UpdateMedicineDto } from './dto//update-medicine.dto.js';
+import { UpdateMedicineDto } from './dto/update-medicine.dto.js';
 import {
   PaginatedResult,
   paginator,
@@ -8,12 +8,12 @@ import {
 import {
   Medicine,
   Prisma,
-} from '../../../common/database/generated/prisma/client.js';
-import { DatabaseService } from '../../../common/database/database.service.js';
+} from '../../../database/generated/prisma/client.js';
+import { DatabaseService } from '../../../database/database.service.js';
 import {
   MedicineCreateInput,
   MedicineUpdateInput,
-} from '../../../common/database/generated/prisma/models.js';
+} from '../../../database/generated/prisma/models.js';
 import { MedicineCategoryService } from '../medicine-category/medicine-category.service.js';
 
 import { EventEmitter2 } from '@nestjs/event-emitter';

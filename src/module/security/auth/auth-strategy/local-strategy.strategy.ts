@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
-import { Employee } from '../../../database/generated/prisma/client.js';
+import { Employee } from '../../../../database/generated/prisma/client.js';
 import { AuthService } from '../auth.service.js';
 
 @Injectable()

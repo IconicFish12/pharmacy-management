@@ -1,0 +1,22 @@
+name: Pharma ease CI pipeline
+on: 
+  push:
+    branches: [main,staging,production]
+  pull_request:
+    branches: [main,staging]
+
+jobs: 
+  test: 
+    runs-on: ubuntuu-latest
+    step: 
+    -
+    -
+    -
+
+  build: 
+    runs-on: ubuntu-latest
+    step: 
+    -
+    -
+    -
+  

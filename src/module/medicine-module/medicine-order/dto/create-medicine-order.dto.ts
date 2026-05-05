@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsUUID,
 } from 'class-validator';
-import { OrderStatus } from '../../../../common/database/generated/prisma/enums.js';
+import { OrderStatus } from '../../../../database/generated/prisma/enums.js';
 import { Type } from 'class-transformer';
 import { Medicines } from '../interfaces/medicines.interface.js';
 

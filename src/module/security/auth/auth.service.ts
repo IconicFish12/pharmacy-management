@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Employee } from '../../database/generated/prisma/client.js';
+import { Employee } from '../../../database/generated/prisma/client.js';
 import * as bcrypt from 'bcrypt';
 import { EmployeeService } from '../../../module/user-manage-module/employee-module/employee.service.js';
 

@@ -4,19 +4,19 @@ import { UpdateMedicineOrderDto } from './dto/update-medicine-order.dto.js';
 import {
   MedicineOrder,
   Prisma,
-} from '../../../common/database/generated/prisma/client.js';
-import { MedicineUpdateInput } from '../../../common/database/generated/prisma/models.js';
+} from '../../../database/generated/prisma/client.js';
+import { MedicineUpdateInput } from '../../../database/generated/prisma/models.js';
 import {
   PaginatedResult,
   paginator,
 } from '../../../common/helpers/pagination/pagination.js';
-import { DatabaseService } from '../../../common/database/database.service.js';
+import { DatabaseService } from '../../../database/database.service.js';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Medicines } from './interfaces/medicines.interface.js';
 const paginate = paginator({ perPage: 10, page: 1 });
 
 type MedicineOrderWithRelations = Prisma.MedicineOrderGetPayload<{
-  include: { _count: true; supplier: true; user: true };
+  include: { _count: true; supplier: true; employee: true };
 }>;
 
 @Injectable()
@@ -28,7 +28,7 @@ export class MedicineOrderService {
   ) {}
 
   async create(dto: CreateMedicineOrderDto): Promise<MedicineOrder> {
-    const { supplierId, userId, medicines, ...request } = dto;
+    const { supplierId, employeeId, medicines, ...request } = dto;
 
     return await this.prisma.$transaction(async (tx) => {
       let grandTotal = 0;
@@ -92,8 +92,8 @@ export class MedicineOrderService {
           ...request,
           orderCode: `ORD-${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
           totalPrice: grandTotal,
-          user: {
-            connect: { id: userId },
+          employee: {
+            connect: { id: employeeId },
           },
           supplier: {
             connect: { id: supplierId },
@@ -121,7 +121,7 @@ export class MedicineOrderService {
           supplier: { omit: { id: true } },
           user: { omit: { id: true } },
         },
-        omit: { userId: true, supplierId: true },
+        omit: { employeeId: true, supplierId: true },
       },
       { page, perPage },
     );
@@ -133,7 +133,7 @@ export class MedicineOrderService {
       include: {
         _count: true,
         supplier: true,
-        user: true,
+        employee: true,
       },
     });
   }

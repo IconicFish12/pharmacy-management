@@ -20,7 +20,7 @@ export class ActivityTrackingInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
-    const { method, user, body, params, url } = request;
+    const { method, employee, body, params, url } = request;
 
     const isMutating = ['POST', 'PATCH', 'PUT', 'DELETE'].includes(
       <string>method,
@@ -28,13 +28,13 @@ export class ActivityTrackingInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       tap(() => {
-        if (isMutating && user) {
+        if (isMutating && employee) {
           const resourceId = params?.id ? String(params.id) : 'unknown';
           const resourceType = url.split('/') || 'unknown';
 
           const createPayload: CreateActivityLogDto = {
             action: method,
-            userId: user.id,
+            employeeId: employee.id,
             resourceType: resourceType[3] ?? resourceType[2],
             resourceId: resourceId,
             payloadData: body as Record<string, any>,

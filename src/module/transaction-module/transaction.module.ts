@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TransactionService } from './transaction.service.js';
 import { TransactionController } from './transaction.controller.js';
-import { DatabaseModule } from '../../common/database/database.module.js';
-import { DatabaseService } from '../../common/database/database.service.js';
+import { DatabaseModule } from '../../database/database.module.js';
+import { DatabaseService } from '../../database/database.service.js';
 import { MedicineModule } from '../medicine-module/medicine/medicine.module.js';
 import { TransactionDetailModule } from './transaction-detail/transaction-detail.module.js';
 import { EventEmitterModule } from '@nestjs/event-emitter';
