@@ -94,6 +94,6 @@ async function bootstrap() {
 
   app.useGlobalGuards(new RolesGuard(new Reflector()));
 
-  await app.listen(process.env.BACKEND_PORT ?? 3000);
+  await app.listen(process.env.BACKEND_PORT ?? 5000);
 }
 void bootstrap();

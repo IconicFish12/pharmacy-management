@@ -1,50 +1,49 @@
-# First Stage: --Build Stage
-
-# Image Base and workdir 
-# for pharma-ease build stage
+# Stage 1: Build Stage
 FROM node:24-alpine AS builder
-WORKDIR usr/src/app
+WORKDIR /usr/src/app
 
-# Copy package and package-lock json file
-# and application Dependencies installation 
+# Salin manifest dan install dependensi lengkap untuk build
 COPY package*.json ./
 RUN npm ci
 
-# Copy application source code
+# Copy prisma directory to root project
+COPY /src/database/prisma ./prisma
+
+# Pasang dummy URL agar prisma generate berhasil tanpa membocorkan kredensial asli
+ENV DATABASE_URL="postgresql://mock_user:mock_password@localhost:5432/mock_db"
+RUN npx prisma generate 
+
+# Salin semua source code aplikasi
 COPY . .
 
-# adding database url
-ENV DATABASE_URL="postgresql://mock_user:mock_password@localhost:5432/mock_db"
-
-# Running Generate Prisma
-RUN npx prisma generate --schema=./src/database/prisma/schema.prisma
-
-# Build and prune production trash
-# from node_modules
+# Build aplikasi NestJS
 RUN npm run build
+
+# Hapus dependensi development untuk menghemat ruang penyimpanan
 RUN npm prune --production
 
-# Second Stage: --Runner Stage
 
-# Image Base and workdir 
-# for pharma-ease runner stage
+# Stage 2: Runner Stage (Aman & Ringan)
 FROM node:24-alpine AS runner
-WORKDIR usr/src/app
+WORKDIR /usr/src/app
 
-# Take the prodcution Environment
+# Set lingkungan produksi
 ENV NODE_ENV=production
 
-COPY --from=builder /usr/src/app/package*.json ./
-COPY --from=builder /usr/src/app/node_modules ./node_modules
-COPY --from=builder /usr/src/app/dist ./dist
-COPY --from=builder /usr/src/app/node_modules/prisma ./node_modules/prisma
+# Pastikan kepemilikan direktori kerja diubah ke user 'node' sejak awal
+RUN chown -R node:node /usr/src/app
 
-# Running the application
-CMD ["node", "dist/src/main.js"]
-
-# Exposing application main port
-EXPOSE 5000
-
-# Define Default user for this image
+# Gunakan non-root user sebelum menyalin file untuk keamanan
 USER node
 
+# Salin manifest dan hasil kompilasi dari builder dengan hak akses user node
+COPY --chown=node:node --from=builder /usr/src/app/package*.json ./
+COPY --chown=node:node --from=builder /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=builder /usr/src/app/dist ./dist
+COPY --chown=node:node --from=builder /usr/src/app/prisma ./prisma
+COPY --chown=node:node --from=builder /usr/src/app/prisma.config.ts ./prisma.config.ts
+
+# Jalankan aplikasi menggunakan node langsung (lebih ringan daripada npm run)
+CMD ["sh", "-c", "sleep 5 && npx prisma migrate deploy && node dist/src/main"]
+
+EXPOSE 5000
