@@ -158,7 +158,7 @@ export type MedicineCategoryGroupByOutputType = {
   _max: MedicineCategoryMaxAggregateOutputType | null
 }
 
-type GetMedicineCategoryGroupByPayload<T extends MedicineCategoryGroupByArgs> = Prisma.PrismaPromise<
+export type GetMedicineCategoryGroupByPayload<T extends MedicineCategoryGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<MedicineCategoryGroupByOutputType, T['by']> &
       {

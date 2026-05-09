@@ -7,9 +7,9 @@
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {
-    "prisma:pull": "npx prisma db pull",
-    "prisma:migrate": "npx prisma migrate dev",
-    "prisma:generate": "npx prisma generate",
+    "prisma:pull": "npx prisma db pull --schema=./src/database/prisma/schema.prisma",
+    "prisma:migrate": "npx prisma migrate dev --schema=./src/database/prisma/schema.prisma",
+    "prisma:generate": "npx prisma generate --schema=./src/database/prisma/schema.prisma",
     "prisma:studio": "npx prisma studio",
     "build": "nest build",
     "build:dev": "nest build --webpack --webpackPath webpack-hmr.config.js",

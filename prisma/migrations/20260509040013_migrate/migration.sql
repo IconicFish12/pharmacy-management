@@ -11,7 +11,7 @@ CREATE TYPE "Role" AS ENUM ('ADMIN', 'OWNER', 'PHARMACIST', 'CASHIER');
 CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'COMPLETED', 'CANCELLED');
 
 -- CreateTable
-CREATE TABLE "users" (
+CREATE TABLE "employees" (
     "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "emp_id" TEXT NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE "users" (
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP NOT NULL,
 
-    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "employees_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -80,7 +80,7 @@ CREATE TABLE "medicine_orders" (
     "id" UUID NOT NULL,
     "order_code" TEXT NOT NULL,
     "order_date" TIMESTAMP NOT NULL,
-    "user_id" UUID NOT NULL,
+    "employee_id" UUID NOT NULL,
     "supplier_id" UUID NOT NULL,
     "total_price" DOUBLE PRECISION NOT NULL,
     "status" "OrderStatus" NOT NULL DEFAULT 'PENDING',
@@ -108,7 +108,7 @@ CREATE TABLE "Transaction" (
     "id" UUID NOT NULL,
     "transaction_code" TEXT NOT NULL,
     "total_price" DOUBLE PRECISION NOT NULL,
-    "user_id" UUID NOT NULL,
+    "employee_id" UUID NOT NULL,
     "transaction_date" TIMESTAMP NOT NULL,
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP NOT NULL,
@@ -133,7 +133,7 @@ CREATE TABLE "transaction_details" (
 CREATE TABLE "activity_logs" (
     "id" UUID NOT NULL,
     "action" TEXT NOT NULL,
-    "user_id" UUID NOT NULL,
+    "meployee_id" UUID NOT NULL,
     "resource_type" TEXT,
     "resource_id" TEXT,
     "payload_data" JSONB,
@@ -143,25 +143,43 @@ CREATE TABLE "activity_logs" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_emp_id_key" ON "users"("emp_id");
+CREATE INDEX "employee_index" ON "employees"("name", "emp_id", "email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+CREATE UNIQUE INDEX "employees_emp_id_email_phone_number_password_key" ON "employees"("emp_id", "email", "phone_number", "password");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_password_key" ON "users"("password");
+CREATE INDEX "supplier_index" ON "suppliers"("supplier_name", "phone_number", "contact_person");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_phone_number_key" ON "users"("phone_number");
+CREATE INDEX "medicine_category_index" ON "medicine_categories"("category_name", "created_at");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "medicines_sku_key" ON "medicines"("sku");
 
 -- CreateIndex
+CREATE INDEX "medicine_index" ON "medicines"("medicine_name", "sku", "stock", "price", "category_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "medicine_orders_order_code_key" ON "medicine_orders"("order_code");
 
 -- CreateIndex
+CREATE INDEX "order_index" ON "medicine_orders"("order_code", "order_date", "employee_id", "supplier_id");
+
+-- CreateIndex
+CREATE INDEX "order_detail_index" ON "order_details"("order_id", "medicine_id", "quantity");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Transaction_transaction_code_key" ON "Transaction"("transaction_code");
+
+-- CreateIndex
+CREATE INDEX "transaction_index" ON "Transaction"("transaction_code", "employee_id");
+
+-- CreateIndex
+CREATE INDEX "transaction_detail_index" ON "transaction_details"("transaction_id", "medicine_id", "quantity");
+
+-- CreateIndex
+CREATE INDEX "log_index" ON "activity_logs"("action", "meployee_id", "resource_type", "resource_id");
 
 -- AddForeignKey
 ALTER TABLE "medicines" ADD CONSTRAINT "medicines_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "medicine_categories"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -170,7 +188,7 @@ ALTER TABLE "medicines" ADD CONSTRAINT "medicines_category_id_fkey" FOREIGN KEY 
 ALTER TABLE "medicines" ADD CONSTRAINT "medicines_supplier_id_fkey" FOREIGN KEY ("supplier_id") REFERENCES "suppliers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "medicine_orders" ADD CONSTRAINT "medicine_orders_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "medicine_orders" ADD CONSTRAINT "medicine_orders_employee_id_fkey" FOREIGN KEY ("employee_id") REFERENCES "employees"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "medicine_orders" ADD CONSTRAINT "medicine_orders_supplier_id_fkey" FOREIGN KEY ("supplier_id") REFERENCES "suppliers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -182,7 +200,7 @@ ALTER TABLE "order_details" ADD CONSTRAINT "order_details_order_id_fkey" FOREIGN
 ALTER TABLE "order_details" ADD CONSTRAINT "order_details_medicine_id_fkey" FOREIGN KEY ("medicine_id") REFERENCES "medicines"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_employee_id_fkey" FOREIGN KEY ("employee_id") REFERENCES "employees"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "transaction_details" ADD CONSTRAINT "transaction_details_transaction_id_fkey" FOREIGN KEY ("transaction_id") REFERENCES "Transaction"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -191,4 +209,4 @@ ALTER TABLE "transaction_details" ADD CONSTRAINT "transaction_details_transactio
 ALTER TABLE "transaction_details" ADD CONSTRAINT "transaction_details_medicine_id_fkey" FOREIGN KEY ("medicine_id") REFERENCES "medicines"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "activity_logs" ADD CONSTRAINT "activity_logs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "activity_logs" ADD CONSTRAINT "activity_logs_meployee_id_fkey" FOREIGN KEY ("meployee_id") REFERENCES "employees"("id") ON DELETE CASCADE ON UPDATE CASCADE;

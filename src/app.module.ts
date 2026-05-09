@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD, RouterModule } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-// import { MailerModule } from '@nestjs-modules/mailer';
 import { DatabaseModule } from './database/database.module.js';
 import { MainAppModule } from './module/main-app.module.js';
 import { SecurityModule } from './module/security/security.module.js';
@@ -90,7 +89,6 @@ import { SupplierModule } from './module/user-manage-module/supplier-module/supp
         ],
       },
     ]),
-    // MailerModule.forRootAsync({}),
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

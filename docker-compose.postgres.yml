@@ -1,5 +1,4 @@
-version: "3.9"
-services: 
+services:
   psql: 
     image: postgres:17-alpine
     container_name: pharma-ease-db
@@ -19,24 +18,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
-  pharma-ease-backend:
-    container_name: pharma-ease-backend
-    build: 
-      context: .
-      dockerfile: ./Dockerfile
-    image: pharma-ease:early-backend-61c4633
-    ports:
-      - "5000:5000"
-    depends_on: 
-      psql:
-        condition: service_healthy
-    env_file: 
-      - ./.env
-    environment:
-    - DATABASE_URL=postgresql://${POSTGRE_USER}:${POSTGRE_PASSWORD}@pharma-ease-db:5432/${POSTGRE_DB}?schema=public 
-    networks: 
-      - prisma-network
 
 volumes:
   postgres_data:

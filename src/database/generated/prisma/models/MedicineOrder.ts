@@ -220,7 +220,7 @@ export type MedicineOrderGroupByOutputType = {
   _max: MedicineOrderMaxAggregateOutputType | null
 }
 
-type GetMedicineOrderGroupByPayload<T extends MedicineOrderGroupByArgs> = Prisma.PrismaPromise<
+export type GetMedicineOrderGroupByPayload<T extends MedicineOrderGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<MedicineOrderGroupByOutputType, T['by']> &
       {
