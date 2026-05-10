@@ -9,10 +9,12 @@ import {
 import { ActivityLogService } from './activity-log.service.js';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../../common/guards/roles.decorator.js';
+import { RolesGuard } from '../../common/guards/roles.guard.js'
+import { Role } from '../../database/generated/prisma/enums.js';
 
 @Controller()
-@UseGuards(AuthGuard('jwt'))
-@Roles('ADMIN', 'OWNER')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles(Role.ADMIN, Role.OWNER)
 export class ActivityLogController {
   constructor(private readonly activityLogService: ActivityLogService) {}
 
