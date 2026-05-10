@@ -6,10 +6,7 @@ import {
   PaginatedResult,
   paginator,
 } from '../../common/helpers/pagination/pagination.js';
-import {
-  Prisma,
-  Transaction,
-} from '../../database/generated/prisma/client.js';
+import { Prisma, Transaction } from '../../database/generated/prisma/client.js';
 import { TransactionUpdateInput } from '../../database/generated/prisma/models.js';
 import { MedicineService } from '../medicine-module/medicine/medicine.service.js';
 import { TransactionData } from './interface/transaction-data.interface.js';

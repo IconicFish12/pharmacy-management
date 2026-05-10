@@ -1,14 +1,14 @@
 -- CreateEnum
-CREATE TYPE "ActiveStatus" AS ENUM ('ACTIVE', 'INACTIVE');
+CREATE TYPE "user_status" AS ENUM ('ACTIVE', 'INACTIVE');
 
 -- CreateEnum
-CREATE TYPE "Shift" AS ENUM ('MORNING', 'NOON', 'NIGHT');
+CREATE TYPE "employee_work_shift" AS ENUM ('DAY', 'EVENING', 'NIGHT');
 
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('ADMIN', 'OWNER', 'PHARMACIST', 'CASHIER');
+CREATE TYPE "employee_roles" AS ENUM ('ADMIN', 'OWNER', 'PHARMACIST', 'CASHIER');
 
 -- CreateEnum
-CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'COMPLETED', 'CANCELLED');
+CREATE TYPE "medicine_order_status" AS ENUM ('PENDING', 'COMPLETED', 'CANCELLED');
 
 -- CreateTable
 CREATE TABLE "employees" (
@@ -18,9 +18,9 @@ CREATE TABLE "employees" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "phone_number" TEXT,
-    "role" "Role" NOT NULL,
-    "shift" "Shift" NOT NULL,
-    "status" "ActiveStatus" NOT NULL DEFAULT 'ACTIVE',
+    "role" "employee_roles" NOT NULL,
+    "shift" "employee_work_shift" NOT NULL,
+    "status" "user_status" NOT NULL DEFAULT 'ACTIVE',
     "date_of_birth" TIMESTAMP(3),
     "alamat" TEXT,
     "profile_avatar" TEXT,
@@ -35,12 +35,13 @@ CREATE TABLE "employees" (
 -- CreateTable
 CREATE TABLE "suppliers" (
     "id" UUID NOT NULL,
-    "supplier_name" TEXT NOT NULL,
+    "company_name" TEXT NOT NULL,
     "phone_number" TEXT NOT NULL,
-    "contact_person" TEXT,
-    "contact_person_number" TEXT,
-    "status" "ActiveStatus" NOT NULL DEFAULT 'ACTIVE',
+    "contact_name" TEXT,
+    "supplier_number" TEXT,
+    "status" "user_status" NOT NULL DEFAULT 'ACTIVE',
     "address" TEXT NOT NULL,
+    "supplier_license_number" INTEGER NOT NULL,
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP NOT NULL,
 
@@ -83,7 +84,7 @@ CREATE TABLE "medicine_orders" (
     "employee_id" UUID NOT NULL,
     "supplier_id" UUID NOT NULL,
     "total_price" DOUBLE PRECISION NOT NULL,
-    "status" "OrderStatus" NOT NULL DEFAULT 'PENDING',
+    "status" "medicine_order_status" NOT NULL DEFAULT 'PENDING',
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP NOT NULL,
 
@@ -149,7 +150,7 @@ CREATE INDEX "employee_index" ON "employees"("name", "emp_id", "email");
 CREATE UNIQUE INDEX "employees_emp_id_email_phone_number_password_key" ON "employees"("emp_id", "email", "phone_number", "password");
 
 -- CreateIndex
-CREATE INDEX "supplier_index" ON "suppliers"("supplier_name", "phone_number", "contact_person");
+CREATE INDEX "supplier_index" ON "suppliers"("company_name", "contact_name");
 
 -- CreateIndex
 CREATE INDEX "medicine_category_index" ON "medicine_categories"("category_name", "created_at");

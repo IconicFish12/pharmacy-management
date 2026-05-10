@@ -10,11 +10,10 @@ import {
 } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import { ResponseInterceptors } from './common/interceptors/response-interceptors.interceptor.js';
-import { ErrorStatusInterceptor } from './common/interceptors/error-status.interceptor.js'
+import { ErrorStatusInterceptor } from './common/interceptors/error-status.interceptor.js';
 import { ActivityTrackingInterceptor } from './common/interceptors/activity-tracking.interceptor.js';
 import { ActivityLogService } from './module/logs-module/activity-log.service.js';
 import { DatabaseService } from './database/database.service.js';
-import { RolesGuard } from './common/guards/roles.guard.js';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
@@ -91,8 +90,6 @@ async function bootstrap() {
       },
     }),
   );
-
-  app.useGlobalGuards(new RolesGuard(new Reflector()));
 
   await app.listen(process.env.BACKEND_PORT ?? 5000);
 }

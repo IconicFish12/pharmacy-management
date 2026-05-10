@@ -12,7 +12,10 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<Employee | null> {
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<Employee | null> {
     const employee = await this.employeeService.findByEmail(email);
     if (!employee) {
       return null;
@@ -26,7 +29,11 @@ export class AuthService {
   }
 
   login(employee: Employee) {
-    const payload = { email: employee.email, sub: employee.id };
+    const payload = {
+      email: employee.email,
+      sub: employee.id,
+      role: employee.role,
+    };
     return {
       access_token: this.jwtService.sign(payload),
     };

@@ -1,4 +1,3 @@
-// import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
@@ -7,6 +6,12 @@ import { AuthDto } from '../dto/auth.dto.js';
 import { Employee } from '../../../../database/generated/prisma/client.js';
 import { AuthService } from '../auth.service.js';
 import { EmployeeService } from '../../../../module/user-manage-module/employee-module/employee.service.js';
+
+interface JwtPayload {
+  email: string;
+  sub: string;
+  roles: string;
+}
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -22,7 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: AuthDto): Promise<Employee> {
+  async validate(payload: JwtPayload): Promise<Employee> {
     const employee = await this.employeeService.findByEmail(payload.email);
 
     if (!employee) {
