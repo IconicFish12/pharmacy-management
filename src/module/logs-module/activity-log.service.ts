@@ -4,10 +4,7 @@ import {
   PaginatedResult,
   paginator,
 } from '../../common/helpers/pagination/pagination.js';
-import {
-  ActivityLog,
-  Prisma,
-} from '../../database/generated/prisma/client.js';
+import { ActivityLog, Prisma } from '../../database/generated/prisma/client.js';
 import { DatabaseService } from '../../database/database.service.js';
 
 const paginate = paginator({ perPage: 10 });

@@ -18,8 +18,8 @@ export type ActiveStatus = (typeof ActiveStatus)[keyof typeof ActiveStatus]
 
 
 export const Shift = {
-  MORNING: 'MORNING',
-  NOON: 'NOON',
+  DAY: 'DAY',
+  EVENING: 'EVENING',
   NIGHT: 'NIGHT'
 } as const
 

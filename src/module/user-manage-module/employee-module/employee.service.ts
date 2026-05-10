@@ -6,10 +6,7 @@ import {
   PaginatedResult,
   paginator,
 } from '../../../common/helpers/pagination/pagination.js';
-import {
-  Prisma,
-  Employee,
-} from '../../../database/generated/prisma/client.js';
+import { Prisma, Employee } from '../../../database/generated/prisma/client.js';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as bcrypt from 'bcrypt';
@@ -57,7 +54,10 @@ export class EmployeeService {
     });
   }
 
-  async findAll(page: number, perPage: number): Promise<PaginatedResult<Employee>> {
+  async findAll(
+    page: number,
+    perPage: number,
+  ): Promise<PaginatedResult<Employee>> {
     return await paginate(
       this.prisma.employee,
       { orderBy: { createdAt: 'desc' } },

@@ -7,5 +7,6 @@ import { EmployeeModule } from '../../../../module/user-manage-module/employee-m
 @Module({
   imports: [forwardRef(() => AuthModule), EmployeeModule],
   providers: [JwtStrategy, LocalStrategy],
+  exports: [JwtStrategy, LocalStrategy],
 })
 export class AuthHelperModule {}

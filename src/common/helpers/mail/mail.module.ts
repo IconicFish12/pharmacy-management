@@ -6,7 +6,7 @@ import { PugAdapter } from '@nestjs-modules/mailer/adapters/pug.adapter';
 
 @Module({
   imports: [
-      MailerModule.forRootAsync({
+    MailerModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({
         transport: {
@@ -31,6 +31,6 @@ import { PugAdapter } from '@nestjs-modules/mailer/adapters/pug.adapter';
     }),
   ],
   providers: [MailService],
-  exports: [MailService]
+  exports: [MailService],
 })
 export class MailModule {}

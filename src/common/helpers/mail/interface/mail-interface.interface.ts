@@ -1,3 +1,3 @@
 export interface MailInterface {
-    supplierEmail: string;
+  supplierEmail: string;
 }

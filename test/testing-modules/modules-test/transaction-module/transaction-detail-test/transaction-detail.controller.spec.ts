@@ -11,7 +11,9 @@ describe('TransactionDetailController', () => {
       providers: [TransactionDetailService],
     }).compile();
 
-    controller = module.get<TransactionDetailController>(TransactionDetailController);
+    controller = module.get<TransactionDetailController>(
+      TransactionDetailController,
+    );
   });
 
   it('should be defined', () => {

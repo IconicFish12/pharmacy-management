@@ -5,10 +5,7 @@ import {
   PaginatedResult,
   paginator,
 } from '../../../common/helpers/pagination/pagination.js';
-import {
-  Medicine,
-  Prisma,
-} from '../../../database/generated/prisma/client.js';
+import { Medicine, Prisma } from '../../../database/generated/prisma/client.js';
 import { DatabaseService } from '../../../database/database.service.js';
 import {
   MedicineCreateInput,

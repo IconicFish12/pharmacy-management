@@ -9,13 +9,20 @@ import {
   UseInterceptors,
   UploadedFile,
   Query,
+  UseGuards
 } from '@nestjs/common';
 import { EmployeeService } from './employee.service.js';
 import { CreateEmployeeDto } from './dto/create-employee.dto.js';
 import { UpdateEmployeeDto } from './dto/update-employee.dto.js';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../../../common/guards/roles.decorator.js';
+import { RolesGuard } from '../../../common/guards/roles.guard.js';
+import { Role } from '../../../database/generated/prisma/enums.js';
 
 @Controller()
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles(Role.OWNER, Role.ADMIN)
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 

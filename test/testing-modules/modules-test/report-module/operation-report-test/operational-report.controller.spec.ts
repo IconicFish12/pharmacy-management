@@ -11,7 +11,9 @@ describe('OperationalReportController', () => {
       providers: [OperationalReportService],
     }).compile();
 
-    controller = module.get<OperationalReportController>(OperationalReportController);
+    controller = module.get<OperationalReportController>(
+      OperationalReportController,
+    );
   });
 
   it('should be defined', () => {

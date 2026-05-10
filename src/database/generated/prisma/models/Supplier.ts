@@ -20,80 +20,104 @@ export type SupplierModel = runtime.Types.Result.DefaultSelection<Prisma.$Suppli
 
 export type AggregateSupplier = {
   _count: SupplierCountAggregateOutputType | null
+  _avg: SupplierAvgAggregateOutputType | null
+  _sum: SupplierSumAggregateOutputType | null
   _min: SupplierMinAggregateOutputType | null
   _max: SupplierMaxAggregateOutputType | null
 }
 
+export type SupplierAvgAggregateOutputType = {
+  licenseNumber: number | null
+}
+
+export type SupplierSumAggregateOutputType = {
+  licenseNumber: number | null
+}
+
 export type SupplierMinAggregateOutputType = {
   id: string | null
-  supplierName: string | null
+  companyName: string | null
   phoneNumber: string | null
-  contactPerson: string | null
-  contactPersonNumber: string | null
+  contactName: string | null
+  supplierEmail: string | null
   status: $Enums.ActiveStatus | null
   address: string | null
+  licenseNumber: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type SupplierMaxAggregateOutputType = {
   id: string | null
-  supplierName: string | null
+  companyName: string | null
   phoneNumber: string | null
-  contactPerson: string | null
-  contactPersonNumber: string | null
+  contactName: string | null
+  supplierEmail: string | null
   status: $Enums.ActiveStatus | null
   address: string | null
+  licenseNumber: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type SupplierCountAggregateOutputType = {
   id: number
-  supplierName: number
+  companyName: number
   phoneNumber: number
-  contactPerson: number
-  contactPersonNumber: number
+  contactName: number
+  supplierEmail: number
   status: number
   address: number
+  licenseNumber: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
 
+export type SupplierAvgAggregateInputType = {
+  licenseNumber?: true
+}
+
+export type SupplierSumAggregateInputType = {
+  licenseNumber?: true
+}
+
 export type SupplierMinAggregateInputType = {
   id?: true
-  supplierName?: true
+  companyName?: true
   phoneNumber?: true
-  contactPerson?: true
-  contactPersonNumber?: true
+  contactName?: true
+  supplierEmail?: true
   status?: true
   address?: true
+  licenseNumber?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type SupplierMaxAggregateInputType = {
   id?: true
-  supplierName?: true
+  companyName?: true
   phoneNumber?: true
-  contactPerson?: true
-  contactPersonNumber?: true
+  contactName?: true
+  supplierEmail?: true
   status?: true
   address?: true
+  licenseNumber?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type SupplierCountAggregateInputType = {
   id?: true
-  supplierName?: true
+  companyName?: true
   phoneNumber?: true
-  contactPerson?: true
-  contactPersonNumber?: true
+  contactName?: true
+  supplierEmail?: true
   status?: true
   address?: true
+  licenseNumber?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -137,6 +161,18 @@ export type SupplierAggregateArgs<ExtArgs extends runtime.Types.Extensions.Inter
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: SupplierAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: SupplierSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: SupplierMinAggregateInputType
@@ -167,21 +203,26 @@ export type SupplierGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   _count?: SupplierCountAggregateInputType | true
+  _avg?: SupplierAvgAggregateInputType
+  _sum?: SupplierSumAggregateInputType
   _min?: SupplierMinAggregateInputType
   _max?: SupplierMaxAggregateInputType
 }
 
 export type SupplierGroupByOutputType = {
   id: string
-  supplierName: string
+  companyName: string
   phoneNumber: string
-  contactPerson: string | null
-  contactPersonNumber: string | null
+  contactName: string | null
+  supplierEmail: string | null
   status: $Enums.ActiveStatus
   address: string
+  licenseNumber: number
   createdAt: Date
   updatedAt: Date
   _count: SupplierCountAggregateOutputType | null
+  _avg: SupplierAvgAggregateOutputType | null
+  _sum: SupplierSumAggregateOutputType | null
   _min: SupplierMinAggregateOutputType | null
   _max: SupplierMaxAggregateOutputType | null
 }
@@ -206,12 +247,13 @@ export type SupplierWhereInput = {
   OR?: Prisma.SupplierWhereInput[]
   NOT?: Prisma.SupplierWhereInput | Prisma.SupplierWhereInput[]
   id?: Prisma.UuidFilter<"Supplier"> | string
-  supplierName?: Prisma.StringFilter<"Supplier"> | string
+  companyName?: Prisma.StringFilter<"Supplier"> | string
   phoneNumber?: Prisma.StringFilter<"Supplier"> | string
-  contactPerson?: Prisma.StringNullableFilter<"Supplier"> | string | null
-  contactPersonNumber?: Prisma.StringNullableFilter<"Supplier"> | string | null
+  contactName?: Prisma.StringNullableFilter<"Supplier"> | string | null
+  supplierEmail?: Prisma.StringNullableFilter<"Supplier"> | string | null
   status?: Prisma.EnumActiveStatusFilter<"Supplier"> | $Enums.ActiveStatus
   address?: Prisma.StringFilter<"Supplier"> | string
+  licenseNumber?: Prisma.IntFilter<"Supplier"> | number
   createdAt?: Prisma.DateTimeFilter<"Supplier"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Supplier"> | Date | string
   medicines?: Prisma.MedicineListRelationFilter
@@ -220,12 +262,13 @@ export type SupplierWhereInput = {
 
 export type SupplierOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  supplierName?: Prisma.SortOrder
+  companyName?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
-  contactPerson?: Prisma.SortOrderInput | Prisma.SortOrder
-  contactPersonNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactName?: Prisma.SortOrderInput | Prisma.SortOrder
+  supplierEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  licenseNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   medicines?: Prisma.MedicineOrderByRelationAggregateInput
@@ -237,12 +280,13 @@ export type SupplierWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.SupplierWhereInput | Prisma.SupplierWhereInput[]
   OR?: Prisma.SupplierWhereInput[]
   NOT?: Prisma.SupplierWhereInput | Prisma.SupplierWhereInput[]
-  supplierName?: Prisma.StringFilter<"Supplier"> | string
+  companyName?: Prisma.StringFilter<"Supplier"> | string
   phoneNumber?: Prisma.StringFilter<"Supplier"> | string
-  contactPerson?: Prisma.StringNullableFilter<"Supplier"> | string | null
-  contactPersonNumber?: Prisma.StringNullableFilter<"Supplier"> | string | null
+  contactName?: Prisma.StringNullableFilter<"Supplier"> | string | null
+  supplierEmail?: Prisma.StringNullableFilter<"Supplier"> | string | null
   status?: Prisma.EnumActiveStatusFilter<"Supplier"> | $Enums.ActiveStatus
   address?: Prisma.StringFilter<"Supplier"> | string
+  licenseNumber?: Prisma.IntFilter<"Supplier"> | number
   createdAt?: Prisma.DateTimeFilter<"Supplier"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Supplier"> | Date | string
   medicines?: Prisma.MedicineListRelationFilter
@@ -251,17 +295,20 @@ export type SupplierWhereUniqueInput = Prisma.AtLeast<{
 
 export type SupplierOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  supplierName?: Prisma.SortOrder
+  companyName?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
-  contactPerson?: Prisma.SortOrderInput | Prisma.SortOrder
-  contactPersonNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactName?: Prisma.SortOrderInput | Prisma.SortOrder
+  supplierEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  licenseNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SupplierCountOrderByAggregateInput
+  _avg?: Prisma.SupplierAvgOrderByAggregateInput
   _max?: Prisma.SupplierMaxOrderByAggregateInput
   _min?: Prisma.SupplierMinOrderByAggregateInput
+  _sum?: Prisma.SupplierSumOrderByAggregateInput
 }
 
 export type SupplierScalarWhereWithAggregatesInput = {
@@ -269,24 +316,26 @@ export type SupplierScalarWhereWithAggregatesInput = {
   OR?: Prisma.SupplierScalarWhereWithAggregatesInput[]
   NOT?: Prisma.SupplierScalarWhereWithAggregatesInput | Prisma.SupplierScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"Supplier"> | string
-  supplierName?: Prisma.StringWithAggregatesFilter<"Supplier"> | string
+  companyName?: Prisma.StringWithAggregatesFilter<"Supplier"> | string
   phoneNumber?: Prisma.StringWithAggregatesFilter<"Supplier"> | string
-  contactPerson?: Prisma.StringNullableWithAggregatesFilter<"Supplier"> | string | null
-  contactPersonNumber?: Prisma.StringNullableWithAggregatesFilter<"Supplier"> | string | null
+  contactName?: Prisma.StringNullableWithAggregatesFilter<"Supplier"> | string | null
+  supplierEmail?: Prisma.StringNullableWithAggregatesFilter<"Supplier"> | string | null
   status?: Prisma.EnumActiveStatusWithAggregatesFilter<"Supplier"> | $Enums.ActiveStatus
   address?: Prisma.StringWithAggregatesFilter<"Supplier"> | string
+  licenseNumber?: Prisma.IntWithAggregatesFilter<"Supplier"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Supplier"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Supplier"> | Date | string
 }
 
 export type SupplierCreateInput = {
   id?: string
-  supplierName: string
+  companyName: string
   phoneNumber: string
-  contactPerson?: string | null
-  contactPersonNumber?: string | null
+  contactName?: string | null
+  supplierEmail?: string | null
   status?: $Enums.ActiveStatus
   address: string
+  licenseNumber: number
   createdAt?: Date | string
   updatedAt?: Date | string
   medicines?: Prisma.MedicineCreateNestedManyWithoutSupplierInput
@@ -295,12 +344,13 @@ export type SupplierCreateInput = {
 
 export type SupplierUncheckedCreateInput = {
   id?: string
-  supplierName: string
+  companyName: string
   phoneNumber: string
-  contactPerson?: string | null
-  contactPersonNumber?: string | null
+  contactName?: string | null
+  supplierEmail?: string | null
   status?: $Enums.ActiveStatus
   address: string
+  licenseNumber: number
   createdAt?: Date | string
   updatedAt?: Date | string
   medicines?: Prisma.MedicineUncheckedCreateNestedManyWithoutSupplierInput
@@ -309,12 +359,13 @@ export type SupplierUncheckedCreateInput = {
 
 export type SupplierUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  supplierName?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactPersonNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supplierEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumActiveStatusFieldUpdateOperationsInput | $Enums.ActiveStatus
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseNumber?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.MedicineUpdateManyWithoutSupplierNestedInput
@@ -323,12 +374,13 @@ export type SupplierUpdateInput = {
 
 export type SupplierUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  supplierName?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactPersonNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supplierEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumActiveStatusFieldUpdateOperationsInput | $Enums.ActiveStatus
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseNumber?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.MedicineUncheckedUpdateManyWithoutSupplierNestedInput
@@ -337,74 +389,88 @@ export type SupplierUncheckedUpdateInput = {
 
 export type SupplierCreateManyInput = {
   id?: string
-  supplierName: string
+  companyName: string
   phoneNumber: string
-  contactPerson?: string | null
-  contactPersonNumber?: string | null
+  contactName?: string | null
+  supplierEmail?: string | null
   status?: $Enums.ActiveStatus
   address: string
+  licenseNumber: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type SupplierUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  supplierName?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactPersonNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supplierEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumActiveStatusFieldUpdateOperationsInput | $Enums.ActiveStatus
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseNumber?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SupplierUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  supplierName?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactPersonNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supplierEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumActiveStatusFieldUpdateOperationsInput | $Enums.ActiveStatus
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseNumber?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SupplierCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  supplierName?: Prisma.SortOrder
+  companyName?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
-  contactPerson?: Prisma.SortOrder
-  contactPersonNumber?: Prisma.SortOrder
+  contactName?: Prisma.SortOrder
+  supplierEmail?: Prisma.SortOrder
   status?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  licenseNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
+export type SupplierAvgOrderByAggregateInput = {
+  licenseNumber?: Prisma.SortOrder
+}
+
 export type SupplierMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  supplierName?: Prisma.SortOrder
+  companyName?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
-  contactPerson?: Prisma.SortOrder
-  contactPersonNumber?: Prisma.SortOrder
+  contactName?: Prisma.SortOrder
+  supplierEmail?: Prisma.SortOrder
   status?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  licenseNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type SupplierMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  supplierName?: Prisma.SortOrder
+  companyName?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
-  contactPerson?: Prisma.SortOrder
-  contactPersonNumber?: Prisma.SortOrder
+  contactName?: Prisma.SortOrder
+  supplierEmail?: Prisma.SortOrder
   status?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  licenseNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type SupplierSumOrderByAggregateInput = {
+  licenseNumber?: Prisma.SortOrder
 }
 
 export type SupplierScalarRelationFilter = {
@@ -442,12 +508,13 @@ export type SupplierUpdateOneRequiredWithoutMedicineOrdersNestedInput = {
 
 export type SupplierCreateWithoutMedicinesInput = {
   id?: string
-  supplierName: string
+  companyName: string
   phoneNumber: string
-  contactPerson?: string | null
-  contactPersonNumber?: string | null
+  contactName?: string | null
+  supplierEmail?: string | null
   status?: $Enums.ActiveStatus
   address: string
+  licenseNumber: number
   createdAt?: Date | string
   updatedAt?: Date | string
   medicineOrders?: Prisma.MedicineOrderCreateNestedManyWithoutSupplierInput
@@ -455,12 +522,13 @@ export type SupplierCreateWithoutMedicinesInput = {
 
 export type SupplierUncheckedCreateWithoutMedicinesInput = {
   id?: string
-  supplierName: string
+  companyName: string
   phoneNumber: string
-  contactPerson?: string | null
-  contactPersonNumber?: string | null
+  contactName?: string | null
+  supplierEmail?: string | null
   status?: $Enums.ActiveStatus
   address: string
+  licenseNumber: number
   createdAt?: Date | string
   updatedAt?: Date | string
   medicineOrders?: Prisma.MedicineOrderUncheckedCreateNestedManyWithoutSupplierInput
@@ -484,12 +552,13 @@ export type SupplierUpdateToOneWithWhereWithoutMedicinesInput = {
 
 export type SupplierUpdateWithoutMedicinesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  supplierName?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactPersonNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supplierEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumActiveStatusFieldUpdateOperationsInput | $Enums.ActiveStatus
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseNumber?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicineOrders?: Prisma.MedicineOrderUpdateManyWithoutSupplierNestedInput
@@ -497,12 +566,13 @@ export type SupplierUpdateWithoutMedicinesInput = {
 
 export type SupplierUncheckedUpdateWithoutMedicinesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  supplierName?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactPersonNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supplierEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumActiveStatusFieldUpdateOperationsInput | $Enums.ActiveStatus
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseNumber?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicineOrders?: Prisma.MedicineOrderUncheckedUpdateManyWithoutSupplierNestedInput
@@ -510,12 +580,13 @@ export type SupplierUncheckedUpdateWithoutMedicinesInput = {
 
 export type SupplierCreateWithoutMedicineOrdersInput = {
   id?: string
-  supplierName: string
+  companyName: string
   phoneNumber: string
-  contactPerson?: string | null
-  contactPersonNumber?: string | null
+  contactName?: string | null
+  supplierEmail?: string | null
   status?: $Enums.ActiveStatus
   address: string
+  licenseNumber: number
   createdAt?: Date | string
   updatedAt?: Date | string
   medicines?: Prisma.MedicineCreateNestedManyWithoutSupplierInput
@@ -523,12 +594,13 @@ export type SupplierCreateWithoutMedicineOrdersInput = {
 
 export type SupplierUncheckedCreateWithoutMedicineOrdersInput = {
   id?: string
-  supplierName: string
+  companyName: string
   phoneNumber: string
-  contactPerson?: string | null
-  contactPersonNumber?: string | null
+  contactName?: string | null
+  supplierEmail?: string | null
   status?: $Enums.ActiveStatus
   address: string
+  licenseNumber: number
   createdAt?: Date | string
   updatedAt?: Date | string
   medicines?: Prisma.MedicineUncheckedCreateNestedManyWithoutSupplierInput
@@ -552,12 +624,13 @@ export type SupplierUpdateToOneWithWhereWithoutMedicineOrdersInput = {
 
 export type SupplierUpdateWithoutMedicineOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  supplierName?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactPersonNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supplierEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumActiveStatusFieldUpdateOperationsInput | $Enums.ActiveStatus
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseNumber?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.MedicineUpdateManyWithoutSupplierNestedInput
@@ -565,12 +638,13 @@ export type SupplierUpdateWithoutMedicineOrdersInput = {
 
 export type SupplierUncheckedUpdateWithoutMedicineOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  supplierName?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactPersonNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supplierEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumActiveStatusFieldUpdateOperationsInput | $Enums.ActiveStatus
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseNumber?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.MedicineUncheckedUpdateManyWithoutSupplierNestedInput
@@ -618,12 +692,13 @@ export type SupplierCountOutputTypeCountMedicineOrdersArgs<ExtArgs extends runti
 
 export type SupplierSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  supplierName?: boolean
+  companyName?: boolean
   phoneNumber?: boolean
-  contactPerson?: boolean
-  contactPersonNumber?: boolean
+  contactName?: boolean
+  supplierEmail?: boolean
   status?: boolean
   address?: boolean
+  licenseNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   medicines?: boolean | Prisma.Supplier$medicinesArgs<ExtArgs>
@@ -633,41 +708,44 @@ export type SupplierSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
 
 export type SupplierSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  supplierName?: boolean
+  companyName?: boolean
   phoneNumber?: boolean
-  contactPerson?: boolean
-  contactPersonNumber?: boolean
+  contactName?: boolean
+  supplierEmail?: boolean
   status?: boolean
   address?: boolean
+  licenseNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["supplier"]>
 
 export type SupplierSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  supplierName?: boolean
+  companyName?: boolean
   phoneNumber?: boolean
-  contactPerson?: boolean
-  contactPersonNumber?: boolean
+  contactName?: boolean
+  supplierEmail?: boolean
   status?: boolean
   address?: boolean
+  licenseNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["supplier"]>
 
 export type SupplierSelectScalar = {
   id?: boolean
-  supplierName?: boolean
+  companyName?: boolean
   phoneNumber?: boolean
-  contactPerson?: boolean
-  contactPersonNumber?: boolean
+  contactName?: boolean
+  supplierEmail?: boolean
   status?: boolean
   address?: boolean
+  licenseNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SupplierOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "supplierName" | "phoneNumber" | "contactPerson" | "contactPersonNumber" | "status" | "address" | "createdAt" | "updatedAt", ExtArgs["result"]["supplier"]>
+export type SupplierOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "phoneNumber" | "contactName" | "supplierEmail" | "status" | "address" | "licenseNumber" | "createdAt" | "updatedAt", ExtArgs["result"]["supplier"]>
 export type SupplierInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   medicines?: boolean | Prisma.Supplier$medicinesArgs<ExtArgs>
   medicineOrders?: boolean | Prisma.Supplier$medicineOrdersArgs<ExtArgs>
@@ -684,12 +762,13 @@ export type $SupplierPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    supplierName: string
+    companyName: string
     phoneNumber: string
-    contactPerson: string | null
-    contactPersonNumber: string | null
+    contactName: string | null
+    supplierEmail: string | null
     status: $Enums.ActiveStatus
     address: string
+    licenseNumber: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["supplier"]>
@@ -1118,12 +1197,13 @@ export interface Prisma__SupplierClient<T, Null = never, ExtArgs extends runtime
  */
 export interface SupplierFieldRefs {
   readonly id: Prisma.FieldRef<"Supplier", 'String'>
-  readonly supplierName: Prisma.FieldRef<"Supplier", 'String'>
+  readonly companyName: Prisma.FieldRef<"Supplier", 'String'>
   readonly phoneNumber: Prisma.FieldRef<"Supplier", 'String'>
-  readonly contactPerson: Prisma.FieldRef<"Supplier", 'String'>
-  readonly contactPersonNumber: Prisma.FieldRef<"Supplier", 'String'>
+  readonly contactName: Prisma.FieldRef<"Supplier", 'String'>
+  readonly supplierEmail: Prisma.FieldRef<"Supplier", 'String'>
   readonly status: Prisma.FieldRef<"Supplier", 'ActiveStatus'>
   readonly address: Prisma.FieldRef<"Supplier", 'String'>
+  readonly licenseNumber: Prisma.FieldRef<"Supplier", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Supplier", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Supplier", 'DateTime'>
 }

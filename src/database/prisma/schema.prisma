@@ -5,8 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
   moduleFormat = "cjs"
 }
 
@@ -17,12 +17,16 @@ datasource db {
 enum ActiveStatus {
   ACTIVE
   INACTIVE
+
+  @@map("user_status")
 }
 
 enum Shift {
-  MORNING
-  NOON
+  DAY
+  EVENING
   NIGHT
+
+  @@map("employee_work_shift")
 }
 
 enum Role {
@@ -30,20 +34,24 @@ enum Role {
   OWNER
   PHARMACIST
   CASHIER
+
+  @@map("employee_roles")
 }
 
 enum OrderStatus {
   PENDING
   COMPLETED
   CANCELLED
+
+  @@map("medicine_order_status")
 }
 
 model Employee {
   id             String          @id @default(uuid()) @db.Uuid
   name           String
   empId          String          @map("emp_id")
-  email          String          
-  password       String 
+  email          String
+  password       String
   phoneNumber    String?         @map("phone_number")
   role           Role
   shift          Shift
@@ -59,26 +67,27 @@ model Employee {
   transactions   Transaction[]
   activityLogs   ActivityLog[]
 
+  @@unique([empId, email, phoneNumber, password])
+  @@index(fields: [name, empId, email], name: "employee_index")
   @@map("employees")
-  @@unique([empId,email,phoneNumber,password])
-  @@index(fields: [name,empId,email], name: "employee_index")
 }
 
 model Supplier {
-  id                  String          @id @default(uuid()) @db.Uuid
-  supplierName        String          @map("supplier_name")
-  phoneNumber         String          @map("phone_number")
-  contactPerson       String?         @map("contact_person")
-  contactPersonNumber String?         @map("contact_person_number")
-  status              ActiveStatus    @default(ACTIVE)
-  address             String
-  createdAt           DateTime        @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt           DateTime        @updatedAt @map("updated_at") @db.Timestamp()
-  medicines           Medicine[]
-  medicineOrders      MedicineOrder[]
+  id             String          @id @default(uuid()) @db.Uuid
+  companyName    String          @map("company_name")
+  phoneNumber    String          @map("phone_number")
+  contactName    String?         @map("contact_name")
+  supplierEmail  String?         @map("supplier_number")
+  status         ActiveStatus    @default(ACTIVE)
+  address        String
+  licenseNumber  Int             @map("supplier_license_number")
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamp()
+  medicines      Medicine[]
+  medicineOrders MedicineOrder[]
 
+  @@index(fields: [companyName, contactName], name: "supplier_index")
   @@map("suppliers")
-  @@index(fields: [supplierName,phoneNumber,contactPerson], name: "supplier_index")
 }
 
 model MedicineCategory {
@@ -89,8 +98,8 @@ model MedicineCategory {
   updatedAt    DateTime   @updatedAt @map("updated_at") @db.Timestamp()
   medicines    Medicine[]
 
+  @@index(fields: [categoryName, createdAt], name: "medicine_category_index")
   @@map("medicine_categories")
-  @@index(fields: [categoryName,createdAt], name: "medicine_category_index")
 }
 
 model Medicine {
@@ -110,8 +119,8 @@ model Medicine {
   orderDetails       OrderDetail[]
   transactionDetails TransactionDetail[] @relation("medicine")
 
+  @@index(fields: [medicineName, sku, stock, price, categoryId], name: "medicine_index")
   @@map("medicines")
-  @@index(fields: [medicineName,sku,stock,price,categoryId], name: "medicine_index")
 }
 
 model MedicineOrder {
@@ -128,8 +137,8 @@ model MedicineOrder {
   updatedAt    DateTime      @updatedAt @map("updated_at") @db.Timestamp()
   orderDetails OrderDetail[]
 
+  @@index(fields: [orderCode, orderDate, employeeId, supplierId], name: "order_index")
   @@map("medicine_orders")
-  @@index(fields: [orderCode,orderDate,employeeId,supplierId], name: "order_index")
 }
 
 model OrderDetail {
@@ -144,8 +153,8 @@ model OrderDetail {
   updatedAt  DateTime      @updatedAt @map("updated_at") @db.Timestamp()
 
   @@id([orderId, medicineId])
+  @@index(fields: [orderId, medicineId, quantity], name: "order_detail_index")
   @@map("order_details")
-  @@index(fields: [orderId,medicineId,quantity], name: "order_detail_index")
 }
 
 model Transaction {
@@ -159,7 +168,8 @@ model Transaction {
   updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamp()
 
   transactionDetails TransactionDetail[]
-  @@index(fields: [transactionCode,employeeId], name: "transaction_index")
+
+  @@index(fields: [transactionCode, employeeId], name: "transaction_index")
 }
 
 model TransactionDetail {
@@ -174,8 +184,8 @@ model TransactionDetail {
   updatedAt     DateTime    @updatedAt @map("updated_at") @db.Timestamp()
 
   @@id([transactionId, medicineId])
+  @@index(fields: [transactionId, medicineId, quantity], name: "transaction_detail_index")
   @@map("transaction_details")
-  @@index(fields: [transactionId,medicineId,quantity], name: "transaction_detail_index")
 }
 
 model ActivityLog {
@@ -188,6 +198,6 @@ model ActivityLog {
   payloadData  Json?    @map("payload_data")
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp()
 
+  @@index(fields: [action, employeeId, resourceType, resourceId], name: "log_index")
   @@map("activity_logs")
-  @@index(fields: [action,employeeId,resourceType,resourceId], name: "log_index")
 }
