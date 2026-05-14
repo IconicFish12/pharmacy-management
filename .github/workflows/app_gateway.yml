@@ -1,0 +1,56 @@
+name: security and auditing scanning pipeline
+on: 
+  workflow_call: 
+    inputs: 
+      output_name: 
+        required: false
+        type: string
+      sonar_host: 
+        required: true
+        type: string
+    secrets: 
+      sonar_token:
+          required: true
+    
+concurrency:
+  group: ${{ format('{0}-{1}-{2}-{3}-{4}', github.workflow, github.event_name, github.ref, github.base_ref, github.head_ref) }}
+  cancel-in-progress: true
+
+jobs:
+  auditing-and-scanninig: 
+    runs-on: ubuntu-latest
+    steps: 
+      - name: npm packages audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Secret credential scanning
+        id: gileaks
+        uses: DariuszPorowski/github-action-gitleaks@v2
+
+      - name: Code Static Analysis
+        uses: SonarSource/sonarqube-scan-action@v8
+        env: 
+          SONAR_TOKEN: ${{ secrets.sonar_token }}
+          SONAR_HOST: ${{ inputs.sonar_host }}
+        with: 
+          projectBaseDir: ./src 
+
+      - name: Manual Trivy Setup
+        uses: aquasecurity/setup-trivy@v0.2.0
+        with:
+          cache: true
+          version: v0.70.0
+
+      - name: Application Image and Container Scanning
+        uses: aquasecurity/trivy-action@master
+        with: 
+          scan_type: 'fs'
+          scan_ref: ['Dockerfile', 'docker-compose.yml']
+          format: json
+          output: ${{ inputs.output_name }}
+          severity: 'CRITICAL'
+          exit_code: 1
+
+      
+

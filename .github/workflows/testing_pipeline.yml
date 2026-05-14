@@ -1,0 +1,27 @@
+name: Development testing CI pipeline
+on: 
+  push:
+    branches: 
+      - staging
+      - feature/*
+  pull_request:
+    branches:
+      - staging
+
+jobs: 
+  call_default_workflow:
+    uses: IconicFish12/pharmacy-management/.github/workflows/default_ci.yml
+    with: 
+      node_version: '24.*'
+      cache_type: 'npm'
+    secrets: 
+      database_url: ${{ secrets.DATABASE_URL }}
+
+  call_app_gateway:
+    uses: IconicFish12/pharmacy-management/.github/workflows/app_gateway.yml
+    with:
+      output_name: 'scanning_result.json'
+      sonar_host: 'https://sonarcloud.io'
+    secrets:
+      sonar_token: ${{ secrets.SONAT_TOKEN }}
+

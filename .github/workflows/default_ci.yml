@@ -1,0 +1,67 @@
+name: Default CI pipeline
+on: 
+  workflow_call: 
+    inputs:
+      node_version: 
+        required: true
+        type: string
+      cache_type: 
+        required: true
+        type: string 
+    secrets: 
+      database_url:
+        required: true
+
+jobs: 
+  deps-and-checkouts: 
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Git Repository Checkout
+        uses: actions/checkout@v4
+          with: 
+          fetch-depth: 0
+
+      - name: Node Js Setup 
+        uses: actions/setup-node@v4
+        with: 
+          node-version: ${{ inputs.node_version }}
+          cache: ${{ inputs.cache_type }}
+
+      - name: Dependencies instaliing
+        run: npm ci
+
+      - uses: actions/cache@v5
+        id: npm-cache
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Prisma Generate
+        run: npx prisma generate --schema=./src/database/prisma/schema.prisma
+        env: 
+          DATABASE_URL: ${{ secrets.database_url }} 
+
+  code-lint:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Codebase Linting and formatting
+        uses: wearerequired/lint-action@v2
+          with: 
+            eslint: true
+            prettier: true
+  
+  build-test: 
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Application building
+        run: npm run build
+
+      - name: Application test
+        run: npm run test
+
+      - name: Applicaton test coverage
+        run: npm run test:cov
+        
+
