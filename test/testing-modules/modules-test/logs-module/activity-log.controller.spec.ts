@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ActivityLogController } from '../activity-log.controller.js';
-import { ActivityLogService } from '../activity-log.service.js';
+import { ActivityLogController } from 'src/module/logs-module/activity-log.controller.js';
+import { ActivityLogService } from 'src/module/logs-module/activity-log.service.js';
 
 describe('ActivityLogController', () => {
   let controller: ActivityLogController;

@@ -2,7 +2,6 @@ import { Type } from 'class-transformer';
 import {
   IsDate,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsUUID,
   MinDate,
@@ -39,12 +38,14 @@ export class CreateMedicineDto {
   @IsNotEmpty({
     message: 'medicine stock is required',
   })
+  @Type(() => Number)
   readonly stock!: number;
 
   @IsNotEmpty({
     message: 'medicine price is required',
   })
-  @IsNumber()
+  // @IsNumber()
+  @Type(() => Number)
   readonly price!: number;
 
   @IsNotEmpty({

@@ -6,7 +6,9 @@ import {
   MinLength,
   IsEmail,
   MaxLength,
+  Max,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ActiveStatus } from '../../../../database/generated/prisma/enums.js';
 
 export class CreateSupplierDto {
@@ -54,15 +56,17 @@ export class CreateSupplierDto {
     message: 'Address is Required',
   })
   @MinLength(7, {
-    message: 'Address is must greater than 7 Character',
+    message: 'Address is must lesser than 7 Character',
   })
   readonly address!: string;
 
   @IsNotEmpty({
     message: 'Supplier License number is required',
   })
-  @MaxLength(10, {
-    message: 'Suplier License Number is must lesser than 7 Character',
-  })
+  //@Max(10, {
+  //  message: 'Suplier License Number is must greater than 7 Character',
+  //})
+  @Type(() => Number)
+  //@IsNumber()
   readonly licenseNumber!: number;
 }
