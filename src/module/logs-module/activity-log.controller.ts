@@ -9,7 +9,7 @@ import {
 import { ActivityLogService } from './activity-log.service.js';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../../common/guards/roles.decorator.js';
-import { RolesGuard } from '../../common/guards/roles.guard.js'
+import { RolesGuard } from '../../common/guards/roles.guard.js';
 import { Role } from '../../database/generated/prisma/enums.js';
 
 @Controller()

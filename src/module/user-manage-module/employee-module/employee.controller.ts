@@ -9,7 +9,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Query,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { EmployeeService } from './employee.service.js';
 import { CreateEmployeeDto } from './dto/create-employee.dto.js';
