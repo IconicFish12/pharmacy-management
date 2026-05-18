@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MedicineController } from '../../../../src/module/medicine-module/medicine/medicine.controller';
-import { MedicineService } from '../../../../src/module/medicine-module/medicine/medicine.service';
+import { MedicineController } from 'src/module/medicine-module/medicine/medicine.controller';
+import { MedicineService } from 'src/module/medicine-module/medicine/medicine.service';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '../../../../src/common/guards/roles.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
 describe('MedicineController (Integration Testing - Gray Box)', () => {
   let controller: MedicineController;
@@ -44,7 +44,7 @@ describe('MedicineController (Integration Testing - Gray Box)', () => {
   });
 
   describe('POST /', () => {
-    it('harus meneruskan dto ke MedicineService.create', async () => {
+    it('should forward dto object input to MedicineService.create', async () => {
       const dto = {
         name: 'Amoxicillin',
         sku: 'SKU-90',
@@ -64,7 +64,7 @@ describe('MedicineController (Integration Testing - Gray Box)', () => {
   });
 
   describe('GET /', () => {
-    it('harus mengekstrak query parameter dan memanggil MedicineService.findAll', async () => {
+    it('should extract query patameter and call function MedicineService.findAll', async () => {
       const page = 1;
       const perPage = 10;
       mockMedicineService.findAll.mockResolvedValue({ data: [], meta: {} });
@@ -77,7 +77,7 @@ describe('MedicineController (Integration Testing - Gray Box)', () => {
   });
 
   describe('GET /:id', () => {
-    it('harus mengirimkan parameter ID dengan benar ke service', async () => {
+    it('should send id parameter to service', async () => {
       const id = 'uuid-string';
       mockMedicineService.findOne.mockResolvedValue({ id, name: 'Obat Batuk' });
 
@@ -89,7 +89,7 @@ describe('MedicineController (Integration Testing - Gray Box)', () => {
   });
 
   describe('PATCH /:id', () => {
-    it('harus menerima parameter id dan objek dto lalu meneruskannya ke MedicineService.update', async () => {
+    it('should receive parameter and send object dto to MedicineService.update', async () => {
       const id = 'med-uuid-123';
       const updateDto = { stock: 150 };
       const mockUpdatedResult = {
@@ -114,7 +114,7 @@ describe('MedicineController (Integration Testing - Gray Box)', () => {
   });
 
   describe('DELETE /:id', () => {
-    it('harus mengirimkan parameter id dengan benar ke MedicineService.remove dan mengembalikan data obat yang dihapus', async () => {
+    it('should send paratemer id to service (delete fucntion) and remove designated object data from database', async () => {
       const id = 'med-uuid-456';
       const mockDeletedResult = {
         id,

@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MedicineService } from '../../../../src/module/medicine-module/medicine/medicine.service';
-import { DatabaseService } from '../../../../src/database/database.service';
-import { MedicineCategoryService } from '../../../../src/module/medicine-module/medicine-category/medicine-category.service';
-import { SupplierService } from '../../../../src/module/user-manage-module/supplier-module/supplier.service';
+import { MedicineService } from 'src/module/medicine-module/medicine/medicine.service';
+import { DatabaseService } from 'src/database/database.service';
+import { MedicineCategoryService } from 'src/module/medicine-module/medicine-category/medicine-category.service';
+import { SupplierService } from 'src/module/user-manage-module/supplier-module/supplier.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { NotFoundException } from '@nestjs/common';
 
-describe('MedicineService (Unit Testing - White Box)', () => {
+describe('MedicineService (Unit Testing - White Box - Medicine Module)', () => {
   let service: MedicineService;
   let prisma: DatabaseService;
   let categoryService: MedicineCategoryService;
@@ -59,7 +59,7 @@ describe('MedicineService (Unit Testing - White Box)', () => {
       stock: 100,
     };
 
-    it('harus berhasil membuat data obat jika kategori dan supplier ditemukan', async () => {
+    it('should succeed create medicine data if medicine category and supplier is founded', async () => {
       categoryService.findOne = jest.fn().mockResolvedValue({ id: 'cat-1' });
       supplierService.findOne = jest.fn().mockResolvedValue({ id: 'sup-1' });
       mockPrisma.medicine.create.mockResolvedValue({
@@ -75,7 +75,7 @@ describe('MedicineService (Unit Testing - White Box)', () => {
       expect(result).toHaveProperty('id', 'med-1');
     });
 
-    it('harus melempar NotFoundException jika kategori dan supplier tidak ditemukan', async () => {
+    it('should throw NotFoundException if medicine category and supplier data is not found', async () => {
       categoryService.findOne = jest.fn().mockResolvedValue(null);
       supplierService.findOne = jest.fn().mockResolvedValue(null);
 
@@ -84,7 +84,7 @@ describe('MedicineService (Unit Testing - White Box)', () => {
       );
     });
   });
-
+  /*
   describe('findAll', () => {
     it('harus memicu event dan logger jika mendeteksi obat kedaluwarsa', async () => {
       mockPrisma.medicine.count.mockResolvedValue(5);
@@ -107,7 +107,7 @@ describe('MedicineService (Unit Testing - White Box)', () => {
   });
 */
   describe('findAll', () => {
-    it('harus memicu event dan logger jika mendeteksi obat kedaluwarsa', async () => {
+    it('should trigger event and shown logs if detects expired medicines', async () => {
       mockPrisma.medicine.count.mockResolvedValue(5);
       mockPrisma.medicine.findMany = jest.fn().mockResolvedValue([]);
 
@@ -120,7 +120,7 @@ describe('MedicineService (Unit Testing - White Box)', () => {
       );
     });
 
-    it('tidak boleh memicu event jika tidak ada obat yang kedaluwarsa', async () => {
+    it('should not triggering event if theres no expired medicine founded', async () => {
       mockPrisma.medicine.count.mockResolvedValue(0);
       mockPrisma.medicine.findMany = jest.fn().mockResolvedValue([]);
 
@@ -131,7 +131,7 @@ describe('MedicineService (Unit Testing - White Box)', () => {
   });
 
   describe('findOne', () => {
-    it('harus mengembalikan data obat beserta relasinya berdasarkan ID', async () => {
+    it('should return a medicine data with its relation', async () => {
       const mockResult = {
         id: 'med-123',
         name: 'Amoxicillin',
@@ -149,7 +149,7 @@ describe('MedicineService (Unit Testing - White Box)', () => {
       expect(result).toEqual(mockResult);
     });
 
-    it('harus meneruskan error jika Prisma melempar P2025 (Record not found)', async () => {
+    it('should throw error id prisma error code P2025 is triggered (Record not found)', async () => {
       mockPrisma.medicine.findUniqueOrThrow.mockRejectedValue(
         new Error('Record not found'),
       );
@@ -161,7 +161,7 @@ describe('MedicineService (Unit Testing - White Box)', () => {
   });
 
   describe('update', () => {
-    it('harus berhasil memperbarui data obat menggunakan data dari DTO', async () => {
+    it('should updating medicine data using dto object', async () => {
       const id = 'med-123';
       const updateDto = { stock: 80 };
       const mockUpdatedResult = { id, name: 'Amoxicillin', stock: 80 };
@@ -179,7 +179,7 @@ describe('MedicineService (Unit Testing - White Box)', () => {
   });
 
   describe('remove', () => {
-    it('harus memanggil fungsi delete Prisma dengan ID yang benar', async () => {
+    it('should call and execute delete function from service', async () => {
       const id = 'med-123';
       const mockDeletedResult = { id, name: 'Amoxicillin' };
 
