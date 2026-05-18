@@ -10,7 +10,7 @@ on:
 
 jobs: 
   call_default_workflow:
-    uses: IconicFish12/pharmacy-management/.github/workflows/default_ci.yml@v1
+    uses: ./.github/workflows/default_ci.yml@v1
     with: 
       node_version: '24.*'
       cache_type: 'npm'
@@ -18,7 +18,7 @@ jobs:
       database_url: ${{ secrets.DATABASE_URL }}
 
   call_app_gateway:
-    uses: IconicFish12/pharmacy-management/.github/workflows/app_gateway.yml@v1
+    uses: ./.github/workflows/app_gateway.yml@v1
     with:
       output_name: 'scanning_result.json'
       sonar_host: 'https://sonarcloud.io'
