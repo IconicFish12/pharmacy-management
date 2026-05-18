@@ -3,7 +3,7 @@ on:
   push:
     branches: 
       - staging
-      - feature/*
+      - 'feature/*'
   pull_request:
     branches:
       - staging
