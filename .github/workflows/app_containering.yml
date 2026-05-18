@@ -13,6 +13,7 @@ on:
         description: 'Docker Hub User PAT'
         required: true
 
+jobs:
   docker:
     runs-on: ubuntu-latest
     steps: 
@@ -22,8 +23,8 @@ on:
       - name: Docker Hub Login
         uses: docker/login-action@v4
         with: 
-          - username: ${{ secrets.docker_username }}
-          - password: ${{ secrets.docker_token }}
+          username: ${{ secrets.docker_username }}
+          password: ${{ secrets.docker_token }}
 
       - name: Qemu Virtl Set up
         uses: docker/setup-qemu-action@v4
@@ -39,9 +40,7 @@ on:
       - name: Build and push 
         uses: docker/build-push-action@v7
         with: 
-          contex: .
+          context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: ${{ secrets.docker_username }}/pharma-ease:${{ inputs.image_tag }} 
-
-
+          tags: ${{ secrets.docker_username }}/pharma-ease:${{ inputs.image_tag }}

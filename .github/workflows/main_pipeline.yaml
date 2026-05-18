@@ -9,7 +9,7 @@ on:
 
 jobs: 
   call_default_workflow:
-    uses: IconicFish12/pharmacy-management/.github/workflows/default_ci.yml
+    uses: IconicFish12/pharmacy-management/.github/workflows/default_ci.yml@v1
     with: 
       node_version: '24.*'
       cache_type: 'npm'
@@ -17,17 +17,19 @@ jobs:
       database_url: ${{ secrets.DATABASE_URL }}
 
   call_app_gateway_workflow:
-    uses: IconicFish12/pharmacy-management/.github/workflows/app_gateway.yml
+    needs: call_default_workflow
+    uses: IconicFish12/pharmacy-management/.github/workflows/app_gateway.yml@v1
     with:
       output_name: 'scanning_result.json'
       sonar_host: 'https://sonarcloud.io'
     secrets:
-      sonar_token: ${{ secrets.SONAT_TOKEN }}
+      sonar_token: ${{ secrets.SONAR_TOKEN }}
 
   call_app_container_workflow:
-    use: IconicFish12/pharmacy-management/.github/workflows/app_containering.yml
+    needs: call_app_gateway_workflow
+    uses: IconicFish12/pharmacy-management/.github/workflows/app_containering.yml@v1
     with:
-      image_tag: "early-backend-ver*1.0.1"
+      image_tag: "early-backend-ver-1.0.1"
     secrets: 
       docker_username: ${{ vars.DOCKER_HUB_USERNAME }}
       docker_token: ${{ secrets.DOCKER_HUB_PASSWORD }}

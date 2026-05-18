@@ -10,7 +10,7 @@ on:
         type: string
     secrets: 
       sonar_token:
-          required: true
+        required: true
     
 concurrency:
   group: ${{ format('{0}-{1}-{2}-{3}-{4}', github.workflow, github.event_name, github.ref, github.base_ref, github.head_ref) }}
@@ -20,6 +20,11 @@ jobs:
   auditing-and-scanninig: 
     runs-on: ubuntu-latest
     steps: 
+      - name: Github Repository checkout
+        uses: actions/checkout@v4
+        with: 
+          fetch-depth: 0
+
       - name: npm packages audit
         run: npm audit --audit-level=high
         continue-on-error: true
@@ -34,7 +39,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.sonar_token }}
           SONAR_HOST: ${{ inputs.sonar_host }}
         with: 
-          projectBaseDir: ./src 
+          projectBaseDir: .
 
       - name: Manual Trivy Setup
         uses: aquasecurity/setup-trivy@v0.2.0
@@ -46,11 +51,10 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with: 
           scan_type: 'fs'
-          scan_ref: ['Dockerfile', 'docker-compose.yml']
+          scan_ref: '.'
           format: json
           output: ${{ inputs.output_name }}
           severity: 'CRITICAL'
           exit_code: 1
-
       
 
