@@ -10,7 +10,7 @@ on:
 
 jobs: 
   call_default_workflow:
-    uses: ./.github/workflows/default_ci.yml
+    uses: ./.github/workflows/default_ci.yml    
     with: 
       node_version: '24.*'
       cache_type: 'npm'
