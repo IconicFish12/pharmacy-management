@@ -80,7 +80,7 @@ model Supplier {
   supplierEmail  String?         @map("supplier_number")
   status         ActiveStatus    @default(ACTIVE)
   address        String
-  licenseNumber  Int             @map("supplier_license_number")
+  licenseNumber  String          @map("supplier_license_number")
   createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamp()
   updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamp()
   medicines      Medicine[]

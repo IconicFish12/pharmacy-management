@@ -11,7 +11,7 @@ on:
     secrets: 
       sonar_token:
         required: true
-      github_token: 
+      gitleaks_token: 
         required: true
     
 concurrency:
@@ -34,7 +34,7 @@ jobs:
       - name: Secret credential scanning
         uses: gitleaks/gitleaks-action@v2
         env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+          GITHUB_TOKEN: ${{ secrets.gitleaks_token }}
 
       - name: Code Static Analysis
         uses: SonarSource/sonarqube-scan-action@v8

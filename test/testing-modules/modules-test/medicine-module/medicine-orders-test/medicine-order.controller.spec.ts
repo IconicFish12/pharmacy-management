@@ -135,5 +135,4 @@ describe('MedicineOrderController', () => {
       expect(result).not.toBeNull();
     });
   });
-
 });
