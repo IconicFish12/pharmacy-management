@@ -10,7 +10,7 @@ const mockDatabase = {
     findUnique: jest.fn(),
     count: jest.fn(),
     update: jest.fn(),
-   delete: jest.fn(),
+    delete: jest.fn(),
   },
 };
 
@@ -120,7 +120,7 @@ describe('MedicineCategoryService - Unit Testing - Medicine Module', () => {
     });
 
     it('should shown notFoundExeception when medicine category is not found', async () => {
-        const id ='invalid';
+      const id = 'invalid';
       mockDatabase.medicineCategory.findUnique.mockResolvedValue(null);
 
       await expect(service.findOne(id)).rejects.toThrow(

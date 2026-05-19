@@ -23,5 +23,6 @@ jobs:
       output_name: 'scanning_result.json'
       sonar_host: 'https://sonarcloud.io'
     secrets:
-      sonar_token: ${{ secrets.SONAT_TOKEN }}
+      sonar_token: ${{ secrets.SONAR_TOKEN }}
+      github_token: ${{ secrets.GITLEAKS_TOKEN }}
 

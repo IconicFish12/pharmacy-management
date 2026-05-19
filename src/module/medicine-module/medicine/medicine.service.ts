@@ -64,6 +64,7 @@ export class MedicineService {
     });
   }
 
+  // Fix Issue #1 A1 adding event trigger for low stock event
   async findAll(
     page: number,
     perPage: number,

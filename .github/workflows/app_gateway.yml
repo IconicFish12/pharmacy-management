@@ -11,6 +11,8 @@ on:
     secrets: 
       sonar_token:
         required: true
+      github_token: 
+        required: true
     
 concurrency:
   group: ${{ format('{0}-{1}-{2}-{3}-{4}', github.workflow, github.event_name, github.ref, github.base_ref, github.head_ref) }}
@@ -30,8 +32,9 @@ jobs:
         continue-on-error: true
 
       - name: Secret credential scanning
-        id: gileaks
-        uses: DariuszPorowski/github-action-gitleaks@v2
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
 
       - name: Code Static Analysis
         uses: SonarSource/sonarqube-scan-action@v8

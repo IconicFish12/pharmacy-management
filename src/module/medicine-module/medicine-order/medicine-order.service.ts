@@ -27,6 +27,7 @@ export class MedicineOrderService {
     private event: EventEmitter2,
   ) {}
 
+  // Issue #1
   async create(dto: CreateMedicineOrderDto): Promise<MedicineOrder> {
     const { supplierId, employeeId, medicines, ...request } = dto;
 
@@ -42,12 +43,6 @@ export class MedicineOrderService {
         if (!medicine) {
           throw new BadRequestException(
             `Medicine dengan ID ${item.medicineId} tidak ditemukan.`,
-          );
-        }
-
-        if (medicine.stock < item.quantity) {
-          throw new BadRequestException(
-            `Stok ${medicine.medicineName} tidak cukup. Sisa stok: ${medicine.stock}`,
           );
         }
 
@@ -70,6 +65,7 @@ export class MedicineOrderService {
           subtotal: subtotal,
         });
 
+        // Issue #1 - A1 this should be in function findAll in medicine Services
         if (updatedMedicine.stock <= 15) {
           this.event.emit('medicine.low-stock', {
             medicineName: medicine.medicineName,
@@ -82,10 +78,12 @@ export class MedicineOrderService {
         }
       }
 
-      // Validasi pembayaran
-      // if (dto.cashReceived < grandTotal) {
-      //   throw new BadRequestException(`Uang pembayaran kurang! Total: ${grandTotal}`);
-      // }
+      // Issue #1 - A2 This should be in function create transaction in transaction service
+      if (dto.cashReceived < grandTotal) {
+        throw new BadRequestException(
+          `Uang pembayaran kurang! Total: ${grandTotal}`,
+        );
+      }
 
       return await tx.medicineOrder.create({
         data: {

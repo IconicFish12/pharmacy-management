@@ -2,38 +2,38 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MedicineCategoryController } from 'src/module/medicine-module/medicine-category/medicine-category.controller';
 import { MedicineCategoryService } from 'src/module/medicine-module/medicine-category/medicine-category.service';
 import { RolesGuard } from 'src/common/guards/roles.guard';
-import { AuthGuard } from '@nestjs/passport'
+import { AuthGuard } from '@nestjs/passport';
 
 describe('MedicineCategoryController - integration testing - medicine module', () => {
   let controller: MedicineCategoryController;
   let service: MedicinCategoryService;
 
   const mockService = {
-   create: jest.fn(),
-   findAll: jest.fn(),
-   findOne: jest.fn(),
-   update: jest.fn(),
-   remove: jest.fn(),
-  }
+    create: jest.fn(),
+    findAll: jest.fn(),
+    findOne: jest.fn(),
+    update: jest.fn(),
+    remove: jest.fn(),
+  };
 
-  const mockAuthGuard = { canActivate: () => true};
+  const mockAuthGuard = { canActivate: () => true };
   const mockRolesGuard = { canActivate: () => true };
 
-  
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [MedicineCategoryController],
       providers: [
-          {
-              provide: MedicineCategoryService,
-              useValue: mockService,
-          }
+        {
+          provide: MedicineCategoryService,
+          useValue: mockService,
+        },
       ],
     })
       .overrideGuard(AuthGuard('jwt'))
       .useValue(mockAuthGuard)
       .overrideGuard(RolesGuard)
-      .useValue(mockRolesGuard).compile();
+      .useValue(mockRolesGuard)
+      .compile();
 
     controller = module.get<MedicineCategoryController>(
       MedicineCategoryController,
@@ -42,8 +42,8 @@ describe('MedicineCategoryController - integration testing - medicine module', (
   });
 
   afterEach(() => {
-      jest.clearAllMocks();
-  })
+    jest.clearAllMocks();
+  });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
@@ -58,12 +58,18 @@ describe('MedicineCategoryController - integration testing - medicine module', (
         updatedAt: new Date('2026-05-15T14:44:28.088Z'),
       };
 
-      mockService.create.mockResolvedValue({ id: '0d060b0c-2ef5-4425-984a-2974182c1731', ...dto });
+      mockService.create.mockResolvedValue({
+        id: '0d060b0c-2ef5-4425-984a-2974182c1731',
+        ...dto,
+      });
 
       const result = await controller.create(dto);
 
       expect(service.create).toHaveBeenCalledWith(dto);
-      expect(result).toHaveProperty('id', '0d060b0c-2ef5-4425-984a-2974182c1731');
+      expect(result).toHaveProperty(
+        'id',
+        '0d060b0c-2ef5-4425-984a-2974182c1731',
+      );
     });
   });
 
