@@ -16,21 +16,21 @@ jest.mock('bcrypt', () => {
 })
 */
 jest.mock('fs', () => {
-    return {
-        __esModule: true,
-        existsSync: jest.fn(),
-        unlinkSync: jest.fn(),
-    }
-})
+  return {
+    __esModule: true,
+    existsSync: jest.fn(),
+    unlinkSync: jest.fn(),
+  };
+});
 
 jest.mock('path', () => {
-    return {
-        __esModule: true,
-        join: jest.fn(),
-    }
-})
+  return {
+    __esModule: true,
+    join: jest.fn(),
+  };
+});
 
-// shared object 
+// shared object
 const employeeId = '';
 const employeeEmpId = '';
 const employeeEmail = '';
@@ -41,31 +41,31 @@ const mockCreateDto = {};
 
 const mockUpdateDto = {};
 
-const mockFile: Express.multer.file = {}
+const mockFile: Express.multer.file = {};
 
 describe('EmployeeService', () => {
   let service: EmployeeService;
   let database: DatabaseService;
 
   const mockDatabase = {
-      employee: {
-         create: jest.fn(),
-         findMany: jest.fn(),
-         findUnique: jest.fn(),
-         count: jest.fn(),
-         update: jest.fn(),
-         delete: jest.fn(),
-      }
-  }
+    employee: {
+      create: jest.fn(),
+      findMany: jest.fn(),
+      findUnique: jest.fn(),
+      count: jest.fn(),
+      update: jest.fn(),
+      delete: jest.fn(),
+    },
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-          EmployeeService,
-          {
-              provide: DatabaseService,
-              useValue: mockDatabase,
-          }
+        EmployeeService,
+        {
+          provide: DatabaseService,
+          useValue: mockDatabase,
+        },
       ],
     }).compile();
 
@@ -76,7 +76,7 @@ describe('EmployeeService', () => {
   });
 
   afterEach(() => {
-      jest.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   // Service Defined
@@ -85,11 +85,8 @@ describe('EmployeeService', () => {
   });
 
   it('should be defined', () => {
-      expect(mockDatabase.employee).toBeDefined();
-  })
+    expect(mockDatabase.employee).toBeDefined();
+  });
 
-  describe('Function create testing', () => {
-      
-  })
+  describe('Function create testing', () => {});
 });
-

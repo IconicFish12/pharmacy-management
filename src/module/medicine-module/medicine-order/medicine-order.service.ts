@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  NotFoundException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { CreateMedicineOrderDto } from './dto/create-medicine-order.dto.js';
 import { UpdateMedicineOrderDto } from './dto/update-medicine-order.dto.js';
 import {
@@ -33,69 +38,55 @@ export class MedicineOrderService {
 
     return await this.prisma.$transaction(async (tx) => {
       let grandTotal = 0;
-      const orderItemsData: Medicines[] = [];
+
+      const orderItemsData: {
+        medicineId: string;
+        quantity: number;
+        unitPrice: number;
+        subtotal: number;
+      }[] = [];
 
       for (const item of medicines) {
+        // 1. Validasi medicine exist
         const medicine = await tx.medicine.findUnique({
           where: { id: item.medicineId },
         });
 
         if (!medicine) {
-          throw new BadRequestException(
+          throw new NotFoundException(
             `Medicine dengan ID ${item.medicineId} tidak ditemukan.`,
           );
         }
 
-        const updatedMedicine = await tx.medicine.update({
+        await tx.medicine.update({
           where: { id: item.medicineId },
-          data: {
-            stock: {
-              decrement: item.quantity,
-            },
-          },
+          data: { stock: { increment: item.quantity } },
         });
 
-        const subtotal = medicine.price * item.quantity;
+        const subtotal = item.unitPrice * item.quantity;
         grandTotal += subtotal;
 
         orderItemsData.push({
           medicineId: item.medicineId,
           quantity: item.quantity,
-          unitPrice: medicine.price,
-          subtotal: subtotal,
+          unitPrice: item.unitPrice,
+          subtotal,
         });
-
-        // Issue #1 - A1 this should be in function findAll in medicine Services
-        if (updatedMedicine.stock <= 15) {
-          this.event.emit('medicine.low-stock', {
-            medicineName: medicine.medicineName,
-            medicineStock: medicine.stock,
-            orderOperation: Date.now(),
-          });
-          this.logger.warn(
-            `Peringatan: Stok obat ${medicine.medicineName} rendah (${updatedMedicine.stock}).`,
-          );
-        }
       }
 
-      // Issue #1 - A2 This should be in function create transaction in transaction service
-      if (dto.cashReceived < grandTotal) {
-        throw new BadRequestException(
-          `Uang pembayaran kurang! Total: ${grandTotal}`,
-        );
-      }
+      // Generate order code
+      const orderCode = `ORD-${Date.now().toString(36).toUpperCase()}-${Math.random()
+        .toString(36)
+        .substring(2, 6)
+        .toUpperCase()}`;
 
-      return await tx.medicineOrder.create({
+      const order = await tx.medicineOrder.create({
         data: {
           ...request,
-          orderCode: `ORD-${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
+          orderCode,
           totalPrice: grandTotal,
-          employee: {
-            connect: { id: employeeId },
-          },
-          supplier: {
-            connect: { id: supplierId },
-          },
+          employee: { connect: { id: employeeId } },
+          supplier: { connect: { id: supplierId } },
           orderDetails: {
             create: orderItemsData,
           },
@@ -104,6 +95,13 @@ export class MedicineOrderService {
           orderDetails: true,
         },
       });
+
+      this.logger.log(
+        `Purchase Order ${order.orderCode} dibuat. Total: ${grandTotal}. ` +
+          `${medicines.length} item obat di-restock.`,
+      );
+
+      return order;
     });
   }
 

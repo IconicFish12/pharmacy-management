@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MedicineCategoryController } from 'src/module/medicine-module/medicine-category/medicine-category.controller';
-import { MedicineCategoryService } from 'src/module/medicine-module/medicine-category/medicine-category.service';
-import { RolesGuard } from 'src/common/guards/roles.guard';
+import { vi, beforeEach, afterEach, describe, it, expect } from 'vitest';
+import { MedicineCategoryController } from '../../../../../src/module/medicine-module/medicine-category/medicine-category.controller.ts';
+import { MedicineCategoryService } from '../../../../../src/module/medicine-module/medicine-category/medicine-category.service.ts';
+import { RolesGuard } from '../../../../../src/common/guards/roles.guard.ts';
 import { AuthGuard } from '@nestjs/passport';
 
 describe('MedicineCategoryController - integration testing - medicine module', () => {
@@ -9,11 +10,11 @@ describe('MedicineCategoryController - integration testing - medicine module', (
   let service: MedicinCategoryService;
 
   const mockService = {
-    create: jest.fn(),
-    findAll: jest.fn(),
-    findOne: jest.fn(),
-    update: jest.fn(),
-    remove: jest.fn(),
+    create: vi.fn(),
+    findAll: vi.fn(),
+    findOne: vi.fn(),
+    update: vi.fn(),
+    remove: vi.fn(),
   };
 
   const mockAuthGuard = { canActivate: () => true };
@@ -42,7 +43,7 @@ describe('MedicineCategoryController - integration testing - medicine module', (
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {

@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SupplierController } from 'src/module/user-manage-module/supplier-module/supplier.controller';
-import { SupplierService } from 'src/module/user-manage-module/supplier-module/supplier.service';
-import { RolesGuard } from 'src/common/guards/roles.guard';
+import { vi, beforeEach, afterEach, expect, describe, it } from 'vitest';
+import { SupplierController } from '../../../../../src/module/user-manage-module/supplier-module/supplier.controller.ts';
+import { SupplierService } from '../../../../../src/module/user-manage-module/supplier-module/supplier.service.ts';
+import { RolesGuard } from '../../../../../src/common/guards/roles.guard.ts';
 import { AuthGuard } from '@nestjs/passport';
 
 describe('SupplierController', () => {
@@ -9,11 +10,11 @@ describe('SupplierController', () => {
   let service: SupplierService;
 
   const mockService = {
-    create: jest.fn(),
-    findAll: jest.fn(),
-    findOne: jest.fn(),
-    update: jest.fn(),
-    remove: jest.fn(),
+    create: vi.fn(),
+    findAll: vi.fn(),
+    findOne: vi.fn(),
+    update: vi.fn(),
+    remove: vi.fn(),
   };
 
   const mockRolesGuard = { canActivate: true };

@@ -1,8 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MedicineService } from 'src/module/medicine-module/medicine/medicine.service';
-import { DatabaseService } from 'src/database/database.service';
-import { MedicineCategoryService } from 'src/module/medicine-module/medicine-category/medicine-category.service';
-import { SupplierService } from 'src/module/user-manage-module/supplier-module/supplier.service';
+import { vi, beforeEach, afterEach, expect, describe, it } from 'vitest';
+import { MedicineService } from '../../../../src/module/medicine-module/medicine/medicine.service.ts';
+import { DatabaseService } from '../../../../src/database/database.service.ts';
+import { MedicineCategoryService } from '../../../../src/module/medicine-module/medicine-category/medicine-category.service.ts';
+import { SupplierService } from '../../../../src/module/user-manage-module/supplier-module/supplier.service.ts';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { NotFoundException } from '@nestjs/common';
 
@@ -15,17 +16,17 @@ describe('MedicineService (Unit Testing - White Box - Medicine Module)', () => {
 
   const mockPrisma = {
     medicine: {
-      create: jest.fn(),
-      count: jest.fn(),
-      findUniqueOrThrow: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
+      create: vi.fn(),
+      count: vi.fn(),
+      findUniqueOrThrow: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
     },
   };
 
-  const mockCategoryService = { findOne: jest.fn() };
-  const mockSupplierService = { findOne: jest.fn() };
-  const mockEventEmitter = { emit: jest.fn() };
+  const mockCategoryService = { findOne: vi.fn() };
+  const mockSupplierService = { findOne: vi.fn() };
+  const mockEventEmitter = { emit: vi.fn() };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -48,7 +49,7 @@ describe('MedicineService (Unit Testing - White Box - Medicine Module)', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('create', () => {
@@ -60,8 +61,8 @@ describe('MedicineService (Unit Testing - White Box - Medicine Module)', () => {
     };
 
     it('should succeed create medicine data if medicine category and supplier is founded', async () => {
-      categoryService.findOne = jest.fn().mockResolvedValue({ id: 'cat-1' });
-      supplierService.findOne = jest.fn().mockResolvedValue({ id: 'sup-1' });
+      categoryService.findOne = vi.fn().mockResolvedValue({ id: 'cat-1' });
+      supplierService.findOne = vi.fn().mockResolvedValue({ id: 'sup-1' });
       mockPrisma.medicine.create.mockResolvedValue({
         id: 'med-1',
         ...createDto,
@@ -76,8 +77,8 @@ describe('MedicineService (Unit Testing - White Box - Medicine Module)', () => {
     });
 
     it('should throw NotFoundException if medicine category and supplier data is not found', async () => {
-      categoryService.findOne = jest.fn().mockResolvedValue(null);
-      supplierService.findOne = jest.fn().mockResolvedValue(null);
+      categoryService.findOne = vi.fn().mockResolvedValue(null);
+      supplierService.findOne = vi.fn().mockResolvedValue(null);
 
       await expect(service.create(createDto)).rejects.toThrow(
         NotFoundException,
@@ -109,7 +110,7 @@ describe('MedicineService (Unit Testing - White Box - Medicine Module)', () => {
   describe('findAll', () => {
     it('should trigger event and shown logs if detects expired medicines', async () => {
       mockPrisma.medicine.count.mockResolvedValue(5);
-      mockPrisma.medicine.findMany = jest.fn().mockResolvedValue([]);
+      mockPrisma.medicine.findMany = vi.fn().mockResolvedValue([]);
 
       await service.findAll(1, 10);
 
@@ -122,7 +123,7 @@ describe('MedicineService (Unit Testing - White Box - Medicine Module)', () => {
 
     it('should not triggering event if theres no expired medicine founded', async () => {
       mockPrisma.medicine.count.mockResolvedValue(0);
-      mockPrisma.medicine.findMany = jest.fn().mockResolvedValue([]);
+      mockPrisma.medicine.findMany = vi.fn().mockResolvedValue([]);
 
       await service.findAll(1, 10);
 

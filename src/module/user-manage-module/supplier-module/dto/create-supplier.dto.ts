@@ -63,10 +63,8 @@ export class CreateSupplierDto {
   @IsNotEmpty({
     message: 'Supplier License number is required',
   })
-  //@Max(10, {
-  //  message: 'Suplier License Number is must greater than 7 Character',
-  //})
-  @Type(() => Number)
-  //@IsNumber()
-  readonly licenseNumber!: number;
+  @Max(10, {
+    message: 'Suplier License Number is must greater than 7 Character',
+  })
+  readonly licenseNumber!: string;
 }

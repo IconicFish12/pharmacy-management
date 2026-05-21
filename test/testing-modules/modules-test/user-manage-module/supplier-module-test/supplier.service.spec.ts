@@ -1,16 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SupplierService } from 'src/module/user-manage-module/supplier-module/supplier.service';
-import { DatabaseService } from 'src/database/database.service';
+import { vi, beforeEach, afterEach, expect, describe, it } from 'vitest';
+import { SupplierService } from '../../../../../src/module/user-manage-module/supplier-module/supplier.service.ts';
+import { DatabaseService } from '../../../../../src/database/database.service.ts';
 import { NotFoundException } from '@nestjs/common';
 
 const mockDatabase = {
   supplier: {
-    create: jest.fn(),
-    findMany: jest.fn(),
-    count: jest.fn(),
-    findUnique: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
+    create: vi.fn(),
+    findMany: vi.fn(),
+    count: vi.fn(),
+    findUnique: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
   },
 };
 
@@ -34,7 +35,7 @@ describe('SupplierService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {

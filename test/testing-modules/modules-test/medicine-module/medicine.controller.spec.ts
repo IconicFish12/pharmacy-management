@@ -1,19 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MedicineController } from 'src/module/medicine-module/medicine/medicine.controller';
-import { MedicineService } from 'src/module/medicine-module/medicine/medicine.service';
+import { vi, beforeEach, afterEach, expect, describe, it } from 'vitest';
+import { MedicineController } from '../../../../src/module/medicine-module/medicine/medicine.controller.ts';
+import { MedicineService } from '../../../../src/module/medicine-module/medicine/medicine.service.ts';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/common/guards/roles.guard';
+import { RolesGuard } from '../../../../src/common/guards/roles.guard.ts';
 
 describe('MedicineController (Integration Testing - Gray Box)', () => {
   let controller: MedicineController;
   let service: MedicineService;
 
   const mockMedicineService = {
-    create: jest.fn(),
-    findAll: jest.fn(),
-    findOne: jest.fn(),
-    update: jest.fn(),
-    remove: jest.fn(),
+    create: vi.fn(),
+    findAll: vi.fn(),
+    findOne: vi.fn(),
+    update: vi.fn(),
+    remove: vi.fn(),
   };
 
   const mockAuthGuard = { canActivate: () => true };
@@ -40,7 +41,7 @@ describe('MedicineController (Integration Testing - Gray Box)', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('POST /', () => {

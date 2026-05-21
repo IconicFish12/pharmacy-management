@@ -1,16 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MedicineCategoryService } from 'src/module/medicine-module/medicine-category/medicine-category.service';
-import { DatabaseService } from 'src/database/database.service';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { MedicineCategoryService } from '../../../../../src/module/medicine-module/medicine-category/medicine-category.service.ts';
+import { DatabaseService } from '../../../../../src/database/database.service.ts';
 import { NotFoundException } from '@nestjs/common';
 
 const mockDatabase = {
   medicineCategory: {
-    create: jest.fn(),
-    findMany: jest.fn(),
-    findUnique: jest.fn(),
-    count: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
+    create: vi.fn(),
+    findMany: vi.fn(),
+    findUnique: vi.fn(),
+    count: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
   },
 };
 
@@ -34,7 +35,7 @@ describe('MedicineCategoryService - Unit Testing - Medicine Module', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('Fuction Testing - create', () => {
