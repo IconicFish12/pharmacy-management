@@ -1,22 +1,29 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import {
+  vi,
+  beforeEach,
+  afterEach,
+  afterAll,
+  expect,
+  describe,
+  it,
+} from 'vitest';
 import { INestApplication } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/common/guards/roles.guard';
-import { EmployeeController } from 'src/module/user-manage-module/employee-module/employee.controller';
-import { EmployeeService } from 'src/module/user-manage-module/employee-module/employee.service';
-
-// ✅ Fix import supertest
+import { RolesGuard } from '../../../../../src/common/guards/roles.guard.ts';
+import { EmployeeController } from '../../../../../src/module/user-manage-module/employee-module/employee.controller.ts';
+import { EmployeeService } from '../../../../../src/module/user-manage-module/employee-module/employee.service.ts';
 import request from 'supertest';
 
 describe('EmployeeController Integration Testing', () => {
   let app: INestApplication;
 
   const mockEmployeeService = {
-    create: jest.fn(),
-    findAll: jest.fn(),
-    findOne: jest.fn(),
-    update: jest.fn(),
-    remove: jest.fn(),
+    create: vi.fn(),
+    findAll: vi.fn(),
+    findOne: vi.fn(),
+    update: vi.fn(),
+    remove: vi.fn(),
   };
 
   beforeEach(async () => {
@@ -40,7 +47,7 @@ describe('EmployeeController Integration Testing', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   afterAll(async () => {

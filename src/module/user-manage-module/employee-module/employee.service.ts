@@ -37,7 +37,7 @@ export class EmployeeService {
       const employeeData = {
         ...dto,
         password: hash,
-        provileAvatar: file.filename,
+        profileAvatar: file.filename,
       };
 
       return await this.prisma.employee.create({
