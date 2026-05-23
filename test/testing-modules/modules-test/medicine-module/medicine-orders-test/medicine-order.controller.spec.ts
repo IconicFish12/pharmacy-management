@@ -1,19 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MedicineOrderController } from 'src/module/medicine-module/medicine-order/medicine-order.controller.js';
-import { MedicineOrderService } from 'src/module/medicine-module/medicine-order/medicine-order.service.js';
-import { RolesGuard } from 'src/common/guards/roles.gaurd';
+import { vi, beforeEach, afterEach, expect, describe, it } from 'vitest';
+import { MedicineOrderController } from '../../../../../src/module/medicine-module/medicine-order/medicine-order.controller.ts';
+import { MedicineOrderService } from '../../../../../src/module/medicine-module/medicine-order/medicine-order.service.ts';
+import { RolesGuard } from '../../../../../src/common/guards/roles.guard.ts';
 import { AuthGuard } from '@nestjs/passport';
+import { supertest } from 'supertest';
 
 describe('MedicineOrderController', () => {
   let controller: MedicineOrderController;
   let service: MedicinCategoryService;
 
   const mockService = {
-    create: jest.fn(),
-    findAll: jest.fn(),
-    findOne: jest.fn(),
-    update: jest.fn(),
-    remove: jest.fn(),
+    create: vi.fn(),
+    findAll: vi.fn(),
+    findOne: vi.fn(),
+    update: vi.fn(),
+    remove: vi.fn(),
   };
 
   const mockAuthGuard = { canActivate: () => true };

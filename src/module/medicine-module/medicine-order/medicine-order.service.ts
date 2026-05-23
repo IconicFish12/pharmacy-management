@@ -32,7 +32,6 @@ export class MedicineOrderService {
     private event: EventEmitter2,
   ) {}
 
-  // Issue #1
   async create(dto: CreateMedicineOrderDto): Promise<MedicineOrder> {
     const { supplierId, employeeId, medicines, ...request } = dto;
 
@@ -47,7 +46,6 @@ export class MedicineOrderService {
       }[] = [];
 
       for (const item of medicines) {
-        // 1. Validasi medicine exist
         const medicine = await tx.medicine.findUnique({
           where: { id: item.medicineId },
         });
@@ -57,11 +55,6 @@ export class MedicineOrderService {
             `Medicine dengan ID ${item.medicineId} tidak ditemukan.`,
           );
         }
-
-        await tx.medicine.update({
-          where: { id: item.medicineId },
-          data: { stock: { increment: item.quantity } },
-        });
 
         const subtotal = item.unitPrice * item.quantity;
         grandTotal += subtotal;
@@ -74,7 +67,6 @@ export class MedicineOrderService {
         });
       }
 
-      // Generate order code
       const orderCode = `ORD-${Date.now().toString(36).toUpperCase()}-${Math.random()
         .toString(36)
         .substring(2, 6)
