@@ -20,7 +20,7 @@ jobs:
   call_app_gateway:
     uses: ./.github/workflows/app_gateway.yml
     with:
-      output_name: 'scanning_result.json'
+      output_name: 'scanning_result.sarif'
       sonar_host: 'https://sonarcloud.io'
     secrets:
       sonar_token: ${{ secrets.SONAR_TOKEN }}
