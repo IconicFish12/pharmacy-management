@@ -45,7 +45,7 @@ jobs:
         run: npm run build
 
       - name: Application test
-        run: npm run test medicine user-manage
+        run: npm run test medicine-catergor yemployee supplier   
 
       - name: Application test coverage
-        run: npm run test:cov medicine user-manage
+        run: npm run test:cov medicine-category employee supplier

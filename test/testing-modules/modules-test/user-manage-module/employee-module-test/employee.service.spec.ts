@@ -366,13 +366,13 @@ describe('EmployeeService - Unit testing (White Box testing)', () => {
 
       mockPath.join.mockReturnValue('./uploads/images/old-avatar.jpg');
       mockFs.existsSync.mockReturnValue(true);
-      mockFs.unlinkSync.mockReturnValue(undefined);
+      mockFs.unlinkSync.mockReturnValue(undefined)
 
       mockDatabase.employee.update.mockResolvedValue({
         ...existingEmployee,
         ...mockUpdateDto,
         profileAvatar: mockFile.filename,
-      });
+      })
 
       const hash = await bcrypt.hash(mockUpdateDto.password, 10);
       const result = await service.update(employeeId, mockUpdateDto, mockFile);
