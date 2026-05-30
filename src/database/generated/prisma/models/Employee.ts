@@ -49,6 +49,7 @@ export type EmployeeMinAggregateOutputType = {
   profileAvatar: string | null
   salary: number | null
   startDate: Date | null
+  refreshToken: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,6 +69,7 @@ export type EmployeeMaxAggregateOutputType = {
   profileAvatar: string | null
   salary: number | null
   startDate: Date | null
+  refreshToken: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -87,6 +89,7 @@ export type EmployeeCountAggregateOutputType = {
   profileAvatar: number
   salary: number
   startDate: number
+  refreshToken: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -116,6 +119,7 @@ export type EmployeeMinAggregateInputType = {
   profileAvatar?: true
   salary?: true
   startDate?: true
+  refreshToken?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -135,6 +139,7 @@ export type EmployeeMaxAggregateInputType = {
   profileAvatar?: true
   salary?: true
   startDate?: true
+  refreshToken?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -154,6 +159,7 @@ export type EmployeeCountAggregateInputType = {
   profileAvatar?: true
   salary?: true
   startDate?: true
+  refreshToken?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -260,6 +266,7 @@ export type EmployeeGroupByOutputType = {
   profileAvatar: string | null
   salary: number
   startDate: Date
+  refreshToken: string | null
   createdAt: Date
   updatedAt: Date
   _count: EmployeeCountAggregateOutputType | null
@@ -302,6 +309,7 @@ export type EmployeeWhereInput = {
   profileAvatar?: Prisma.StringNullableFilter<"Employee"> | string | null
   salary?: Prisma.IntFilter<"Employee"> | number
   startDate?: Prisma.DateTimeFilter<"Employee"> | Date | string
+  refreshToken?: Prisma.StringNullableFilter<"Employee"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   medicineOrders?: Prisma.MedicineOrderListRelationFilter
@@ -324,6 +332,7 @@ export type EmployeeOrderByWithRelationInput = {
   profileAvatar?: Prisma.SortOrderInput | Prisma.SortOrder
   salary?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
+  refreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   medicineOrders?: Prisma.MedicineOrderOrderByRelationAggregateInput
@@ -350,6 +359,7 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   profileAvatar?: Prisma.StringNullableFilter<"Employee"> | string | null
   salary?: Prisma.IntFilter<"Employee"> | number
   startDate?: Prisma.DateTimeFilter<"Employee"> | Date | string
+  refreshToken?: Prisma.StringNullableFilter<"Employee"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   medicineOrders?: Prisma.MedicineOrderListRelationFilter
@@ -372,6 +382,7 @@ export type EmployeeOrderByWithAggregationInput = {
   profileAvatar?: Prisma.SortOrderInput | Prisma.SortOrder
   salary?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
+  refreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.EmployeeCountOrderByAggregateInput
@@ -399,6 +410,7 @@ export type EmployeeScalarWhereWithAggregatesInput = {
   profileAvatar?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   salary?: Prisma.IntWithAggregatesFilter<"Employee"> | number
   startDate?: Prisma.DateTimeWithAggregatesFilter<"Employee"> | Date | string
+  refreshToken?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Employee"> | Date | string
 }
@@ -418,6 +430,7 @@ export type EmployeeCreateInput = {
   profileAvatar?: string | null
   salary: number
   startDate: Date | string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   medicineOrders?: Prisma.MedicineOrderCreateNestedManyWithoutEmployeeInput
@@ -440,6 +453,7 @@ export type EmployeeUncheckedCreateInput = {
   profileAvatar?: string | null
   salary: number
   startDate: Date | string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   medicineOrders?: Prisma.MedicineOrderUncheckedCreateNestedManyWithoutEmployeeInput
@@ -462,6 +476,7 @@ export type EmployeeUpdateInput = {
   profileAvatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   salary?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicineOrders?: Prisma.MedicineOrderUpdateManyWithoutEmployeeNestedInput
@@ -484,6 +499,7 @@ export type EmployeeUncheckedUpdateInput = {
   profileAvatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   salary?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicineOrders?: Prisma.MedicineOrderUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -506,6 +522,7 @@ export type EmployeeCreateManyInput = {
   profileAvatar?: string | null
   salary: number
   startDate: Date | string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -525,6 +542,7 @@ export type EmployeeUpdateManyMutationInput = {
   profileAvatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   salary?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -544,6 +562,7 @@ export type EmployeeUncheckedUpdateManyInput = {
   profileAvatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   salary?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -570,6 +589,7 @@ export type EmployeeCountOrderByAggregateInput = {
   profileAvatar?: Prisma.SortOrder
   salary?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
+  refreshToken?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -593,6 +613,7 @@ export type EmployeeMaxOrderByAggregateInput = {
   profileAvatar?: Prisma.SortOrder
   salary?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
+  refreshToken?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -612,6 +633,7 @@ export type EmployeeMinOrderByAggregateInput = {
   profileAvatar?: Prisma.SortOrder
   salary?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
+  refreshToken?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -718,6 +740,7 @@ export type EmployeeCreateWithoutMedicineOrdersInput = {
   profileAvatar?: string | null
   salary: number
   startDate: Date | string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   transactions?: Prisma.TransactionCreateNestedManyWithoutEmployeeInput
@@ -739,6 +762,7 @@ export type EmployeeUncheckedCreateWithoutMedicineOrdersInput = {
   profileAvatar?: string | null
   salary: number
   startDate: Date | string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutEmployeeInput
@@ -776,6 +800,7 @@ export type EmployeeUpdateWithoutMedicineOrdersInput = {
   profileAvatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   salary?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUpdateManyWithoutEmployeeNestedInput
@@ -797,6 +822,7 @@ export type EmployeeUncheckedUpdateWithoutMedicineOrdersInput = {
   profileAvatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   salary?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -818,6 +844,7 @@ export type EmployeeCreateWithoutTransactionsInput = {
   profileAvatar?: string | null
   salary: number
   startDate: Date | string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   medicineOrders?: Prisma.MedicineOrderCreateNestedManyWithoutEmployeeInput
@@ -839,6 +866,7 @@ export type EmployeeUncheckedCreateWithoutTransactionsInput = {
   profileAvatar?: string | null
   salary: number
   startDate: Date | string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   medicineOrders?: Prisma.MedicineOrderUncheckedCreateNestedManyWithoutEmployeeInput
@@ -876,6 +904,7 @@ export type EmployeeUpdateWithoutTransactionsInput = {
   profileAvatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   salary?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicineOrders?: Prisma.MedicineOrderUpdateManyWithoutEmployeeNestedInput
@@ -897,6 +926,7 @@ export type EmployeeUncheckedUpdateWithoutTransactionsInput = {
   profileAvatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   salary?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicineOrders?: Prisma.MedicineOrderUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -918,6 +948,7 @@ export type EmployeeCreateWithoutActivityLogsInput = {
   profileAvatar?: string | null
   salary: number
   startDate: Date | string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   medicineOrders?: Prisma.MedicineOrderCreateNestedManyWithoutEmployeeInput
@@ -939,6 +970,7 @@ export type EmployeeUncheckedCreateWithoutActivityLogsInput = {
   profileAvatar?: string | null
   salary: number
   startDate: Date | string
+  refreshToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   medicineOrders?: Prisma.MedicineOrderUncheckedCreateNestedManyWithoutEmployeeInput
@@ -976,6 +1008,7 @@ export type EmployeeUpdateWithoutActivityLogsInput = {
   profileAvatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   salary?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicineOrders?: Prisma.MedicineOrderUpdateManyWithoutEmployeeNestedInput
@@ -997,6 +1030,7 @@ export type EmployeeUncheckedUpdateWithoutActivityLogsInput = {
   profileAvatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   salary?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicineOrders?: Prisma.MedicineOrderUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -1067,6 +1101,7 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   profileAvatar?: boolean
   salary?: boolean
   startDate?: boolean
+  refreshToken?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   medicineOrders?: boolean | Prisma.Employee$medicineOrdersArgs<ExtArgs>
@@ -1090,6 +1125,7 @@ export type EmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   profileAvatar?: boolean
   salary?: boolean
   startDate?: boolean
+  refreshToken?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["employee"]>
@@ -1109,6 +1145,7 @@ export type EmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   profileAvatar?: boolean
   salary?: boolean
   startDate?: boolean
+  refreshToken?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["employee"]>
@@ -1128,11 +1165,12 @@ export type EmployeeSelectScalar = {
   profileAvatar?: boolean
   salary?: boolean
   startDate?: boolean
+  refreshToken?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "empId" | "email" | "password" | "phoneNumber" | "role" | "shift" | "status" | "dateOfBirth" | "alamat" | "profileAvatar" | "salary" | "startDate" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
+export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "empId" | "email" | "password" | "phoneNumber" | "role" | "shift" | "status" | "dateOfBirth" | "alamat" | "profileAvatar" | "salary" | "startDate" | "refreshToken" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
 export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   medicineOrders?: boolean | Prisma.Employee$medicineOrdersArgs<ExtArgs>
   transactions?: boolean | Prisma.Employee$transactionsArgs<ExtArgs>
@@ -1164,6 +1202,7 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     profileAvatar: string | null
     salary: number
     startDate: Date
+    refreshToken: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["employee"]>
@@ -1606,6 +1645,7 @@ export interface EmployeeFieldRefs {
   readonly profileAvatar: Prisma.FieldRef<"Employee", 'String'>
   readonly salary: Prisma.FieldRef<"Employee", 'Int'>
   readonly startDate: Prisma.FieldRef<"Employee", 'DateTime'>
+  readonly refreshToken: Prisma.FieldRef<"Employee", 'String'>
   readonly createdAt: Prisma.FieldRef<"Employee", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Employee", 'DateTime'>
 }

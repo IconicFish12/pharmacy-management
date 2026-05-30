@@ -1,19 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { OperationalReportController } from './operational-report.controller.js';
-import { OperationalReportService } from './operational-report.service.js';
+import { beforeEach, expect, describe, it } from 'vitest';
+import { OperationalReportController } from '../../../../../src/module/report-module/operational-report/operational-report.controller.ts';
+import { OperationalReportService } from '../../../../../src/module/report-module/operational-report/operational-report.service.ts';
 
 describe('OperationalReportController', () => {
   let controller: OperationalReportController;
 
+  const mockOperationalReportService = {};
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [OperationalReportController],
-      providers: [OperationalReportService],
+      providers: [
+        { provide: OperationalReportService, useValue: mockOperationalReportService },
+      ],
     }).compile();
 
-    controller = module.get<OperationalReportController>(
-      OperationalReportController,
-    );
+    controller = module.get<OperationalReportController>(OperationalReportController);
   });
 
   it('should be defined', () => {

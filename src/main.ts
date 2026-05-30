@@ -42,9 +42,7 @@ async function bootstrap() {
   const document = () => SwaggerModule.createDocument(app, swagger);
   SwaggerModule.setup('main api', app, document);
 
-  const logService = new ActivityLogService(
-    new DatabaseService(new ConfigService()),
-  );
+  const logService = app.get(ActivityLogService);
 
   app.useGlobalInterceptors(
     new ResponseInterceptors(),

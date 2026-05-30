@@ -47,13 +47,13 @@ export class CreateEmployeeDto {
   })
   @IsStrongPassword(
     {
-      minLength: 4,
+      minLength: 9,
       minUppercase: 2,
       minNumbers: 3,
     },
     {
       message:
-        'password must contain at least greater than 4 characters, 2 uppercase, and 3 numbers, ex: JhonDoe-123',
+        'password must contain at least greater than 9 characters, 2 uppercase, and 3 numbers, ex: JhonDoe-123',
     },
   )
   password!: string;

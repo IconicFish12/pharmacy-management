@@ -93,6 +93,7 @@ export const EmployeeScalarFieldEnum = {
   profileAvatar: 'profileAvatar',
   salary: 'salary',
   startDate: 'startDate',
+  refreshToken: 'refreshToken',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

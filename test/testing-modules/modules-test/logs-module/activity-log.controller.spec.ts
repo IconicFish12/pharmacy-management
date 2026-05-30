@@ -1,14 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ActivityLogController } from 'src/module/logs-module/activity-log.controller.js';
-import { ActivityLogService } from 'src/module/logs-module/activity-log.service.js';
+import { beforeEach, expect, describe, it, vi } from 'vitest';
+import { ActivityLogController } from '../../../../src/module/logs-module/activity-log.controller.ts';
+import { ActivityLogService } from '../../../../src/module/logs-module/activity-log.service.ts';
 
 describe('ActivityLogController', () => {
   let controller: ActivityLogController;
 
+  const mockActivityLogService = {};
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ActivityLogController],
-      providers: [ActivityLogService],
+      providers: [
+        { provide: ActivityLogService, useValue: mockActivityLogService },
+      ],
     }).compile();
 
     controller = module.get<ActivityLogController>(ActivityLogController);

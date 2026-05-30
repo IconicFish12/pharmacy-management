@@ -90,17 +90,22 @@ export class EmployeeService {
     const existingEmployee = await this.prisma.employee.findUnique({
       where: { id: id },
     });
-    const hash = await bcrypt.hash(dto.password!, saltRounds);
 
     if (!existingEmployee) {
       if (file) fs.unlinkSync(file.path);
       throw new NotFoundException(`Employee with ID ${id} not found`);
     }
 
-    const updatePayload = {
+    const updatePayload: any = {
       ...dto,
-      password: hash,
     };
+
+    if (dto.password) {
+      const hash = await bcrypt.hash(dto.password, saltRounds);
+      updatePayload.password = hash;
+    } else {
+      delete updatePayload.password;
+    }
 
     if (file) {
       updatePayload.profileAvatar = file.filename;
@@ -132,6 +137,13 @@ export class EmployeeService {
   async findByEmail(email: string): Promise<Employee | null> {
     return this.prisma.employee.findFirst({
       where: { email: email },
+    });
+  }
+
+  async updateRefreshToken(id: string, hashedToken: string | null): Promise<Employee> {
+    return this.prisma.employee.update({
+      where: { id },
+      data: { refreshToken: hashedToken },
     });
   }
 }

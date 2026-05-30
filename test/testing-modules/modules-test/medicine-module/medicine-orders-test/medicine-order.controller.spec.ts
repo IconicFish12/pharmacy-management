@@ -1,19 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MedicineOrderController } from 'src/module/medicine-module/medicine-order/medicine-order.controller.js';
-import { MedicineOrderService } from 'src/module/medicine-module/medicine-order/medicine-order.service.js';
-import { RolesGuard } from 'src/common/guards/roles.gaurd';
+import { beforeEach, expect, describe, it, vi } from 'vitest';
+import { MedicineOrderController } from '../../../../../src/module/medicine-module/medicine-order/medicine-order.controller.ts';
+import { MedicineOrderService } from '../../../../../src/module/medicine-module/medicine-order/medicine-order.service.ts';
+import { RolesGuard } from '../../../../../src/common/guards/roles.guard.ts';
 import { AuthGuard } from '@nestjs/passport';
 
 describe('MedicineOrderController', () => {
   let controller: MedicineOrderController;
-  let service: MedicinCategoryService;
+  let service: MedicineOrderService;
 
   const mockService = {
-    create: jest.fn(),
-    findAll: jest.fn(),
-    findOne: jest.fn(),
-    update: jest.fn(),
-    remove: jest.fn(),
+    create: vi.fn(),
+    findAll: vi.fn(),
+    findOne: vi.fn(),
+    update: vi.fn(),
+    remove: vi.fn(),
   };
 
   const mockAuthGuard = { canActivate: () => true };
@@ -43,33 +44,8 @@ describe('MedicineOrderController', () => {
     expect(controller).toBeDefined();
   });
 
-  /* Disabled Due to Issue #1
-    describe('POST /', () => {
-    it('should forward dto data to create function in service', async () => {
-      const dto = {
-        categoryName: 'Infus',
-        description: 'Types of drugs to relieve or eliminate pain',
-        createdAt: new Date('2026-05-15T14:44:28.088Z'),
-        updatedAt: new Date('2026-05-15T14:44:28.088Z'),
-      };
-
-      mockService.create.mockResolvedValue({
-        id: '0d060b0c-2ef5-4425-984a-2974182c1731',
-        ...dto,
-      });
-
-      const result = await controller.create(dto);
-
-      expect(service.create).toHaveBeenCalledWith(dto);
-      expect(result).toHaveProperty(
-        'id',
-        '0d060b0c-2ef5-4425-984a-2974182c1731',
-      );
-    });
-  });
-*/
   describe('GET /', () => {
-    it('should extract query parameter and call fucntion MedicineService.findAll', async () => {
+    it('should extract query parameter and call function MedicineService.findAll', async () => {
       const page = 1;
       const perPage = 10;
       mockService.findAll.mockResolvedValue({ data: [], meta: {} });
@@ -82,7 +58,7 @@ describe('MedicineOrderController', () => {
   });
 
   describe('GET /:id', () => {
-    it('should send id paramater to service', async () => {
+    it('should send id parameter to service', async () => {
       const id = '0d060b0c-2ef5-4425-984a-2974182c1731';
       mockService.findOne.mockResolvedValue({ id, name: 'Infus' });
 
@@ -107,7 +83,7 @@ describe('MedicineOrderController', () => {
 
       mockService.update.mockResolvedValue(mockUpdatedResult);
 
-      const result = await controller.update(id, updateDto);
+      const result = await controller.update(id, updateDto as any);
 
       expect(service.update).toHaveBeenCalledWith(id, updateDto);
       expect(result).toHaveProperty('description', 'Obat Infus');
@@ -116,7 +92,7 @@ describe('MedicineOrderController', () => {
   });
 
   describe('DELETE /:id', () => {
-    it(' should send parameter id to MedicineService.remove and return removed medicine category data', async () => {
+    it(' should send parameter id to service.remove', async () => {
       const id = '0d060b0c-2ef5-4425-984a-2974182c1731';
       const mockDeletedResult = {
         id,

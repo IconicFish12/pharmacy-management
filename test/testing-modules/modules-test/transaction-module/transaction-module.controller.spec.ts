@@ -1,19 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TransactionModuleController } from './transaction-module.controller.js';
-import { TransactionModuleService } from './transaction-module.service.js';
+import { beforeEach, expect, describe, it, vi } from 'vitest';
+import { TransactionController } from '../../../../src/module/transaction-module/transaction.controller.ts';
+import { TransactionService } from '../../../../src/module/transaction-module/transaction.service.ts';
 
-describe('TransactionModuleController', () => {
-  let controller: TransactionModuleController;
+describe('TransactionController', () => {
+  let controller: TransactionController;
+
+  const mockTransactionService = {};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [TransactionModuleController],
-      providers: [TransactionModuleService],
+      controllers: [TransactionController],
+      providers: [
+        { provide: TransactionService, useValue: mockTransactionService },
+      ],
     }).compile();
 
-    controller = module.get<TransactionModuleController>(
-      TransactionModuleController,
-    );
+    controller = module.get<TransactionController>(TransactionController);
   });
 
   it('should be defined', () => {

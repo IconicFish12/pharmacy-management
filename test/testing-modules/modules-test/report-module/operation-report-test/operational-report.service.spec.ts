@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { OperationalReportService } from './operational-report.service.js';
+import { beforeEach, expect, describe, it } from 'vitest';
+import { OperationalReportService } from '../../../../../src/module/report-module/operational-report/operational-report.service.ts';
 
 describe('OperationalReportService', () => {
   let service: OperationalReportService;

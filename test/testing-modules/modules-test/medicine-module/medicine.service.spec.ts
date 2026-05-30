@@ -85,28 +85,7 @@ describe('MedicineService (Unit Testing - White Box - Medicine Module)', () => {
       );
     });
   });
-  /*
-  describe('findAll', () => {
-    it('harus memicu event dan logger jika mendeteksi obat kedaluwarsa', async () => {
-      mockPrisma.medicine.count.mockResolvedValue(5);
 
-      // Menguji fungsionalitas pencarian dengan mock manual karena internal paginator adalah fungsi eksternal
-      // Catatan: Pastikan helper penomoran halaman Anda terisolasi atau di-mock jika diperlukan
-      mockPrisma.medicine.findMany = jest.fn().mockResolvedValue([]);
-      mockPrisma.medicine.count
-        .mockResolvedValueOnce(5)
-        .mockResolvedValueOnce(0);
-
-      await service.findAll(1, 10);
-
-      expect(mockPrisma.medicine.count).unquoted;
-      expect(eventEmitter.emit).toHaveBeenCalledWith(
-        'medicine.expired_detected',
-        expect.any(Object),
-      );
-    });
-  });
-*/
   describe('findAll', () => {
     it('should trigger event and shown logs if detects expired medicines', async () => {
       mockPrisma.medicine.count.mockResolvedValue(5);
