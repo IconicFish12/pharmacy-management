@@ -57,7 +57,7 @@ const mockEmployeeData = [
     email: 'ibnusyawalaliefian16@gmail.com',
     password: '',
     phoneNumber: '082162941198',
-    role: 'OWNEE',
+    role: 'OWNER',
     shift: 'DAY',
     status: 'ACTIVE',
     dateOfBirth: null,

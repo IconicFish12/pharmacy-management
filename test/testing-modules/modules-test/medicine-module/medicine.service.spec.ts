@@ -54,10 +54,14 @@ describe('MedicineService (Unit Testing - White Box - Medicine Module)', () => {
 
   describe('create', () => {
     const createDto = {
-      name: 'Paracetamol',
+      medicineName: 'Paracetamol',
+      sku: 'SKU-PARA-100',
+      price: 5000.0,
+      expiredDate: new Date('2030-01-01'),
       categoryId: 'cat-1',
       supplierId: 'sup-1',
       stock: 100,
+      description: 'Pain reliever',
     };
 
     it('should succeed create medicine data if medicine category and supplier is founded', async () => {

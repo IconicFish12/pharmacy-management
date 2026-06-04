@@ -47,7 +47,7 @@ describe('MedicineController (Integration Testing - Gray Box)', () => {
   describe('POST /', () => {
     it('should forward dto object input to MedicineService.create', async () => {
       const dto = {
-        name: 'Amoxicillin',
+        medicineName: 'Amoxicillin',
         sku: 'SKU-90',
         categoryId: 'cat-2',
         supplierId: 'sup-2',
@@ -57,7 +57,7 @@ describe('MedicineController (Integration Testing - Gray Box)', () => {
       };
       mockMedicineService.create.mockResolvedValue({ id: 'med-2', ...dto });
 
-      const result = await controller.create(dto);
+      const result = await controller.create(dto as any);
 
       expect(service.create).toHaveBeenCalledWith(dto);
       expect(result).toHaveProperty('id', 'med-2');
@@ -80,12 +80,12 @@ describe('MedicineController (Integration Testing - Gray Box)', () => {
   describe('GET /:id', () => {
     it('should send id parameter to service', async () => {
       const id = 'uuid-string';
-      mockMedicineService.findOne.mockResolvedValue({ id, name: 'Obat Batuk' });
+      mockMedicineService.findOne.mockResolvedValue({ id, medicineName: 'Obat Batuk' });
 
       const result = await controller.findOne(id);
 
       expect(service.findOne).toHaveBeenCalledWith(id);
-      expect(result).toHaveProperty('name', 'Obat Batuk');
+      expect(result).toHaveProperty('medicineName', 'Obat Batuk');
     });
   });
 
@@ -95,7 +95,7 @@ describe('MedicineController (Integration Testing - Gray Box)', () => {
       const updateDto = { stock: 150 };
       const mockUpdatedResult = {
         id,
-        name: 'Amoxicillin',
+        medicineName: 'Amoxicillin',
         sku: 'SKU-90',
         categoryId: 'cat-2',
         supplierId: 'sup-2',
@@ -119,7 +119,7 @@ describe('MedicineController (Integration Testing - Gray Box)', () => {
       const id = 'med-uuid-456';
       const mockDeletedResult = {
         id,
-        name: 'Amoxicillin',
+        medicineName: 'Amoxicillin',
         sku: 'SKU-90',
         categoryId: 'cat-2',
         supplierId: 'sup-2',

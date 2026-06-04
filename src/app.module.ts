@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD, RouterModule } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import Joi from 'joi';
 import { DatabaseModule } from './database/database.module.js';
 import { MainAppModule } from './module/main-app.module.js';
 import { HelperModule } from './common/helpers/helper.module.js';
@@ -26,6 +27,24 @@ import { SupplierModule } from './module/user-manage-module/supplier-module/supp
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
+      cache: true,
+      validationSchema: Joi.object({
+        DATABASE_URL: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
+        JWT_REFRESH_TOKEN: Joi.string().required(),
+        BACKEND_PORT: Joi.number().default(5000),
+        THROTTLE_TTL: Joi.number().required(),
+        THROTTLE_LIMIT: Joi.number().required(),
+        MAIL_HOST: Joi.string().optional(),
+        MAIL_PORT: Joi.number().optional(),
+        MAIL_USERNAME: Joi.string().optional(),
+        MAIL_PASSWORD: Joi.string().allow('').optional(),
+        MAIL_FROM: Joi.string().optional(),
+      }),
+      validationOptions: {
+        allowUnknown: true,
+        abortEarly: true,
+      },
     }),
     RouterModule.register([
       {
