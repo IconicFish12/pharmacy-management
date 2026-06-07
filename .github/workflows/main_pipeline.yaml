@@ -24,6 +24,7 @@ jobs:
       sonar_host: 'https://sonarcloud.io'
     secrets:
       sonar_token: ${{ secrets.SONAR_TOKEN }}
+      gitleaks_token: ${{ secrets.GITLEAKS_TOKEN }}
 
   call_app_container_workflow:
     needs: call_app_gateway_workflow
