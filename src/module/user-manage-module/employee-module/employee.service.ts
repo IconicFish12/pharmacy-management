@@ -140,7 +140,10 @@ export class EmployeeService {
     });
   }
 
-  async updateRefreshToken(id: string, hashedToken: string | null): Promise<Employee> {
+  async updateRefreshToken(
+    id: string,
+    hashedToken: string | null,
+  ): Promise<Employee> {
     return this.prisma.employee.update({
       where: { id },
       data: { refreshToken: hashedToken },

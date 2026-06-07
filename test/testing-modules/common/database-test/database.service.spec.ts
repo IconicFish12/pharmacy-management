@@ -9,9 +9,10 @@ describe('DatabaseService', () => {
   beforeEach(async () => {
     const mockConfigService = {
       get: (key: string) => {
-        if (key === 'DATABASE_URL') return 'postgresql://mock_user:mock_password@localhost:5432/mock_db';
+        if (key === 'DATABASE_URL')
+          return 'postgresql://mock_user:mock_password@localhost:5432/mock_db';
         return '';
-      }
+      },
     };
 
     const module: TestingModule = await Test.createTestingModule({

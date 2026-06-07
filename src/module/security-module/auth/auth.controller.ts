@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   Body,
   Controller,
@@ -31,7 +27,9 @@ export class AuthController {
     @Request() req: any,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { accessToken, refreshToken } = await this.authService.login(req.user);
+    const { accessToken, refreshToken } = await this.authService.login(
+      req.user,
+    );
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -64,10 +62,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('sign-out')
-  async logout(
-    @Request() req: any,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async logout(@Request() req: any, @Res({ passthrough: true }) res: Response) {
     if (req.user) {
       await this.authService.clearRefreshToken(req.user.id);
     }

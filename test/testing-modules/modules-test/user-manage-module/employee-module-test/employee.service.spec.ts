@@ -244,9 +244,7 @@ describe('EmployeeService - Unit testing (White Box testing)', () => {
     });
 
     it('Should throw error if bcrypt hashing fails', async () => {
-      vi.mocked(bcrypt.hash).mockRejectedValue(
-        new Error('Bcrypt Error') as never,
-      );
+      vi.mocked(bcrypt.hash).mockRejectedValue(new Error('Bcrypt Error'));
 
       await expect(service.create(mockCreateDto)).rejects.toThrow(
         'Bcrypt Error',
@@ -366,13 +364,13 @@ describe('EmployeeService - Unit testing (White Box testing)', () => {
 
       mockPath.join.mockReturnValue('./uploads/images/old-avatar.jpg');
       mockFs.existsSync.mockReturnValue(true);
-      mockFs.unlinkSync.mockReturnValue(undefined)
+      mockFs.unlinkSync.mockReturnValue(undefined);
 
       mockDatabase.employee.update.mockResolvedValue({
         ...existingEmployee,
         ...mockUpdateDto,
         profileAvatar: mockFile.filename,
-      })
+      });
 
       const hash = await bcrypt.hash(mockUpdateDto.password, 10);
       const result = await service.update(employeeId, mockUpdateDto, mockFile);

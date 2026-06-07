@@ -3,12 +3,12 @@ import { INestApplication } from '@nestjs/common';
 import { vi, describe, it, beforeEach, afterEach, expect } from 'vitest';
 import request from 'supertest';
 import { App } from 'supertest/types';
-import { AppModule } from './../src/app.module.js';
+import { AppModule } from '../../../../src/app.module.js';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '../src/common/guards/roles.guard.js';
-import { DatabaseService } from '../src/database/database.service.js';
+import { RolesGuard } from '../../../../src/common/guards/roles.guard.js';
+import { DatabaseService } from '../../../../src/database/database.service.js';
 
-describe('Reporting Modules (e2e)', () => {
+describe('Report Module (e2e)', () => {
   let app: INestApplication<App>;
 
   const mockDatabaseService = {
@@ -65,7 +65,7 @@ describe('Reporting Modules (e2e)', () => {
     vi.clearAllMocks();
   });
 
-  describe('Operational Report Module', () => {
+  describe('Operational Report', () => {
     it('/operational-report (GET) - JSON data', async () => {
       const response = await request(app.getHttpServer())
         .get('/operational-report')
@@ -88,7 +88,7 @@ describe('Reporting Modules (e2e)', () => {
     });
   });
 
-  describe('Financial Report Module', () => {
+  describe('Financial Report', () => {
     it('/financial-report (GET) - JSON data', async () => {
       const response = await request(app.getHttpServer())
         .get('/financial-report')

@@ -56,15 +56,15 @@ export class CreateSupplierDto {
     message: 'Address is Required',
   })
   @MinLength(7, {
-    message: 'Address is must lesser than 7 Character',
+    message: 'Address is must grater than 7 Character',
   })
   readonly address!: string;
 
   @IsNotEmpty({
     message: 'Supplier License number is required',
   })
-  @Max(10, {
-    message: 'Suplier License Number is must greater than 7 Character',
+  @MinLength(10, {
+    message: 'Suplier License Number is must greater than 10 Character',
   })
   readonly licenseNumber!: string;
 }

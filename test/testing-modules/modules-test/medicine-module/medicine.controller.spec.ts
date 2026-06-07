@@ -80,7 +80,10 @@ describe('MedicineController (Integration Testing - Gray Box)', () => {
   describe('GET /:id', () => {
     it('should send id parameter to service', async () => {
       const id = 'uuid-string';
-      mockMedicineService.findOne.mockResolvedValue({ id, medicineName: 'Obat Batuk' });
+      mockMedicineService.findOne.mockResolvedValue({
+        id,
+        medicineName: 'Obat Batuk',
+      });
 
       const result = await controller.findOne(id);
 

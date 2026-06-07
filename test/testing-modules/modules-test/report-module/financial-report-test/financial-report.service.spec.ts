@@ -37,15 +37,37 @@ describe('FinancialReportService', () => {
   describe('getData', () => {
     it('should calculate revenue, expenses, net profit and transactions count', async () => {
       const mockTransactions = [
-        { id: 't-1', totalPrice: 100000, transactionDate: new Date(), employee: { name: 'Alice' }, transactionDetails: [] },
-        { id: 't-2', totalPrice: 50000, transactionDate: new Date(), employee: { name: 'Bob' }, transactionDetails: [] },
+        {
+          id: 't-1',
+          totalPrice: 100000,
+          transactionDate: new Date(),
+          employee: { name: 'Alice' },
+          transactionDetails: [],
+        },
+        {
+          id: 't-2',
+          totalPrice: 50000,
+          transactionDate: new Date(),
+          employee: { name: 'Bob' },
+          transactionDetails: [],
+        },
       ];
 
       const mockOrders = [
-        { id: 'o-1', totalPrice: 80000, orderDate: new Date(), status: 'COMPLETED', employee: { name: 'Alice' }, supplier: { companyName: 'SupCorp' }, orderDetails: [] },
+        {
+          id: 'o-1',
+          totalPrice: 80000,
+          orderDate: new Date(),
+          status: 'COMPLETED',
+          employee: { name: 'Alice' },
+          supplier: { companyName: 'SupCorp' },
+          orderDetails: [],
+        },
       ];
 
-      mockDatabaseService.transaction.findMany.mockResolvedValue(mockTransactions);
+      mockDatabaseService.transaction.findMany.mockResolvedValue(
+        mockTransactions,
+      );
       mockDatabaseService.medicineOrder.findMany.mockResolvedValue(mockOrders);
 
       const result = await service.getData({});

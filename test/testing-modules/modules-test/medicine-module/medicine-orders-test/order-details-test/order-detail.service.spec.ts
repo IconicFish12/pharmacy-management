@@ -34,7 +34,9 @@ describe('OrderDetailService (Unit Testing - White Box - Order Detail Module)', 
 
   describe('delete', () => {
     it('should delete order detail matching medicineId and orderId', async () => {
-      mockDatabaseService.orderDetail.deleteMany.mockResolvedValue({ count: 1 });
+      mockDatabaseService.orderDetail.deleteMany.mockResolvedValue({
+        count: 1,
+      });
       const result = await service.delete('med-123', 'order-123');
       expect(mockDatabaseService.orderDetail.deleteMany).toHaveBeenCalledWith({
         where: { AND: [{ medicineId: 'med-123' }, { orderId: 'order-123' }] },

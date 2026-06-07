@@ -20,7 +20,9 @@ describe('TransactionService (Unit Testing - White Box - Transaction Module)', (
   };
 
   const mockDatabaseService = {
-    $transaction: vi.fn().mockImplementation((callback) => callback(mockPrismaTx)),
+    $transaction: vi
+      .fn()
+      .mockImplementation((callback) => callback(mockPrismaTx)),
     transaction: {
       findMany: vi.fn(),
       findUniqueOrThrow: vi.fn(),
@@ -83,7 +85,10 @@ describe('TransactionService (Unit Testing - White Box - Transaction Module)', (
       };
 
       mockPrismaTx.medicine.findUnique.mockResolvedValue(mockMedicine);
-      mockPrismaTx.medicine.update.mockResolvedValue({ ...mockMedicine, stock: 8 });
+      mockPrismaTx.medicine.update.mockResolvedValue({
+        ...mockMedicine,
+        stock: 8,
+      });
       mockPrismaTx.transaction.create.mockResolvedValue(mockCreatedTransaction);
 
       const result = await service.create(createDto);
@@ -137,11 +142,15 @@ describe('TransactionService (Unit Testing - White Box - Transaction Module)', (
         transactionCode: 'TRC-ABC',
         totalPrice: 50000,
       };
-      mockDatabaseService.transaction.findUniqueOrThrow.mockResolvedValue(mockTransaction);
+      mockDatabaseService.transaction.findUniqueOrThrow.mockResolvedValue(
+        mockTransaction,
+      );
 
       const result = await service.findOne('trans-123');
 
-      expect(mockDatabaseService.transaction.findUniqueOrThrow).toHaveBeenCalledWith({
+      expect(
+        mockDatabaseService.transaction.findUniqueOrThrow,
+      ).toHaveBeenCalledWith({
         where: { id: 'trans-123' },
         include: {
           _count: true,

@@ -12,11 +12,16 @@ describe('TransactionDetailController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TransactionDetailController],
       providers: [
-        { provide: TransactionDetailService, useValue: mockTransactionDetailService },
+        {
+          provide: TransactionDetailService,
+          useValue: mockTransactionDetailService,
+        },
       ],
     }).compile();
 
-    controller = module.get<TransactionDetailController>(TransactionDetailController);
+    controller = module.get<TransactionDetailController>(
+      TransactionDetailController,
+    );
   });
 
   it('should be defined', () => {

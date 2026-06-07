@@ -40,7 +40,7 @@ export class SupplierController {
   }
 
   @Patch(':id')
-  @Roles(Role.PHARMACIST)
+  @Roles(Role.PHARMACIST, Role.OWNER)
   update(
     @Param('id') id: string,
     @Body() updateSupplierDto: UpdateSupplierDto,
@@ -49,7 +49,7 @@ export class SupplierController {
   }
 
   @Delete(':id')
-  @Roles(Role.PHARMACIST)
+  @Roles(Role.PHARMACIST, Role.OWNER)
   remove(@Param('id') id: string) {
     return this.supplierService.remove(id);
   }

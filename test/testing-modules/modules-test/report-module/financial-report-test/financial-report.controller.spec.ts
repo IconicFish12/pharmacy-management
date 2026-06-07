@@ -16,11 +16,16 @@ describe('FinancialReportController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [FinancialReportController],
       providers: [
-        { provide: FinancialReportService, useValue: mockFinancialReportService },
+        {
+          provide: FinancialReportService,
+          useValue: mockFinancialReportService,
+        },
       ],
     }).compile();
 
-    controller = module.get<FinancialReportController>(FinancialReportController);
+    controller = module.get<FinancialReportController>(
+      FinancialReportController,
+    );
     service = module.get<FinancialReportService>(FinancialReportService);
   });
 
@@ -34,7 +39,11 @@ describe('FinancialReportController', () => {
 
   describe('getData', () => {
     it('should return financial report data', async () => {
-      const mockResult = { summary: {}, incomeBreakdown: [], expenseBreakdown: [] };
+      const mockResult = {
+        summary: {},
+        incomeBreakdown: [],
+        expenseBreakdown: [],
+      };
       mockFinancialReportService.getData.mockResolvedValue(mockResult);
 
       const result = await controller.getData({});
@@ -52,7 +61,9 @@ describe('FinancialReportController', () => {
         mimeType: 'application/pdf',
         filename: 'financial.pdf',
       };
-      mockFinancialReportService.exportReport.mockResolvedValue(mockExportResult);
+      mockFinancialReportService.exportReport.mockResolvedValue(
+        mockExportResult,
+      );
 
       const mockRes = {
         setHeader: vi.fn(),
@@ -63,7 +74,10 @@ describe('FinancialReportController', () => {
       await controller.exportReport({ format: 'pdf' }, mockRes);
 
       expect(service.exportReport).toHaveBeenCalledWith({ format: 'pdf' });
-      expect(mockRes.setHeader).toHaveBeenCalledWith('Content-Type', 'application/pdf');
+      expect(mockRes.setHeader).toHaveBeenCalledWith(
+        'Content-Type',
+        'application/pdf',
+      );
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.send).toHaveBeenCalledWith(mockBuffer);
     });

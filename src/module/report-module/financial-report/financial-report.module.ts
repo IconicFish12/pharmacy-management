@@ -8,4 +8,3 @@ import { DatabaseService } from '../../../database/database.service.js';
   providers: [FinancialReportService, DatabaseService],
 })
 export class FinancialReportModule {}
-

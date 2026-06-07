@@ -133,18 +133,22 @@ describe('MedicineOrderService', () => {
         supplier: { companyName: 'PT Pharma' },
         employee: { name: 'Jhon' },
       };
-      mockDatabase.medicineOrder.findUniqueOrThrow.mockResolvedValue(mockResult);
+      mockDatabase.medicineOrder.findUniqueOrThrow.mockResolvedValue(
+        mockResult,
+      );
 
       const result = await service.findOne('order-123');
 
-      expect(mockDatabase.medicineOrder.findUniqueOrThrow).toHaveBeenCalledWith({
-        where: { id: 'order-123' },
-        include: {
-          _count: true,
-          supplier: true,
-          employee: true,
+      expect(mockDatabase.medicineOrder.findUniqueOrThrow).toHaveBeenCalledWith(
+        {
+          where: { id: 'order-123' },
+          include: {
+            _count: true,
+            supplier: true,
+            employee: true,
+          },
         },
-      });
+      );
       expect(result).toEqual(mockResult);
     });
   });

@@ -28,18 +28,12 @@ export class FinancialReportController {
   }
 
   @Get('export')
-  async exportReport(
-    @Query() query: ExportQueryDto,
-    @Res() res: Response,
-  ) {
+  async exportReport(@Query() query: ExportQueryDto, @Res() res: Response) {
     const { buffer, mimeType, filename } =
       await this.financialReportService.exportReport(query);
 
     res.setHeader('Content-Type', mimeType);
-    res.setHeader(
-      'Content-Disposition',
-      `attachment; filename="${filename}"`,
-    );
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.status(HttpStatus.OK).send(buffer);
   }
 }

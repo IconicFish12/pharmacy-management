@@ -16,11 +16,16 @@ describe('OperationalReportController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [OperationalReportController],
       providers: [
-        { provide: OperationalReportService, useValue: mockOperationalReportService },
+        {
+          provide: OperationalReportService,
+          useValue: mockOperationalReportService,
+        },
       ],
     }).compile();
 
-    controller = module.get<OperationalReportController>(OperationalReportController);
+    controller = module.get<OperationalReportController>(
+      OperationalReportController,
+    );
     service = module.get<OperationalReportService>(OperationalReportService);
   });
 
@@ -52,7 +57,9 @@ describe('OperationalReportController', () => {
         mimeType: 'text/csv',
         filename: 'report.csv',
       };
-      mockOperationalReportService.exportReport.mockResolvedValue(mockExportResult);
+      mockOperationalReportService.exportReport.mockResolvedValue(
+        mockExportResult,
+      );
 
       const mockRes = {
         setHeader: vi.fn(),
@@ -63,7 +70,10 @@ describe('OperationalReportController', () => {
       await controller.exportReport({ format: 'csv' }, mockRes);
 
       expect(service.exportReport).toHaveBeenCalledWith({ format: 'csv' });
-      expect(mockRes.setHeader).toHaveBeenCalledWith('Content-Type', 'text/csv');
+      expect(mockRes.setHeader).toHaveBeenCalledWith(
+        'Content-Type',
+        'text/csv',
+      );
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.send).toHaveBeenCalledWith(mockBuffer);
     });

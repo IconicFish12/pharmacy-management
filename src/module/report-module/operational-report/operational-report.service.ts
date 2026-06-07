@@ -88,7 +88,9 @@ export class OperationalReportService {
     };
   }
 
-  async exportReport(query: ExportQueryDto): Promise<{ buffer: Buffer; mimeType: string; filename: string }> {
+  async exportReport(
+    query: ExportQueryDto,
+  ): Promise<{ buffer: Buffer; mimeType: string; filename: string }> {
     const data = await this.getData(query);
     const dateRangeStr =
       query.startDate || query.endDate
@@ -108,7 +110,8 @@ export class OperationalReportService {
       const buffer = await this.generateExcelBuffer(data);
       return {
         buffer,
-        mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        mimeType:
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         filename,
       };
     } else if (query.format === 'pdf') {
@@ -129,7 +132,9 @@ export class OperationalReportService {
     // Header Metadata
     csvLines.push('=== APOTHECARY OPERATIONAL REPORT ===');
     csvLines.push(`Generated At,${data.metadata.generatedAt}`);
-    csvLines.push(`Date Range,${data.metadata.filter.startDate || 'Start'} to ${data.metadata.filter.endDate || 'End'}`);
+    csvLines.push(
+      `Date Range,${data.metadata.filter.startDate || 'Start'} to ${data.metadata.filter.endDate || 'End'}`,
+    );
     csvLines.push('');
 
     // Summary Stats
@@ -143,7 +148,15 @@ export class OperationalReportService {
 
     // Section 1: Medicine Inventory
     csvLines.push('=== MEDICINE INVENTORY ===');
-    const medHeaders = ['SKU', 'Medicine Name', 'Category', 'Stock', 'Price', 'Supplier', 'Expiry Date'];
+    const medHeaders = [
+      'SKU',
+      'Medicine Name',
+      'Category',
+      'Stock',
+      'Price',
+      'Supplier',
+      'Expiry Date',
+    ];
     csvLines.push(medHeaders.join(','));
 
     for (const med of data.medicines) {
@@ -162,7 +175,15 @@ export class OperationalReportService {
 
     // Section 2: Activity Logs
     csvLines.push('=== EMPLOYEE ACTIVITY LOGS ===');
-    const logHeaders = ['Date & Time', 'Employee Name', 'Employee ID', 'Role', 'Action', 'Resource Type', 'Resource ID'];
+    const logHeaders = [
+      'Date & Time',
+      'Employee Name',
+      'Employee ID',
+      'Role',
+      'Action',
+      'Resource Type',
+      'Resource ID',
+    ];
     csvLines.push(logHeaders.join(','));
 
     for (const log of data.activityLogs) {
@@ -211,7 +232,12 @@ export class OperationalReportService {
     dashSheet.mergeCells('A1:D1');
     const titleCell = dashSheet.getCell('A1');
     titleCell.value = 'Pharmacy Operational Report Overview';
-    titleCell.font = { name: 'Arial', size: 16, bold: true, color: { argb: 'FFFFFF' } };
+    titleCell.font = {
+      name: 'Arial',
+      size: 16,
+      bold: true,
+      color: { argb: 'FFFFFF' },
+    };
     titleCell.fill = {
       type: 'pattern',
       pattern: 'solid',
@@ -221,7 +247,10 @@ export class OperationalReportService {
     dashSheet.getRow(1).height = 40;
 
     dashSheet.addRow([]);
-    dashSheet.addRow(['Report Generated At:', new Date(data.metadata.generatedAt).toLocaleString()]);
+    dashSheet.addRow([
+      'Report Generated At:',
+      new Date(data.metadata.generatedAt).toLocaleString(),
+    ]);
     dashSheet.addRow([
       'Date Range Filter:',
       `${data.metadata.filter.startDate || 'Beginning'} to ${data.metadata.filter.endDate || 'Present'}`,
@@ -232,14 +261,30 @@ export class OperationalReportService {
     const statHeaderRow = dashSheet.getRow(6);
     statHeaderRow.font = { bold: true, color: { argb: 'FFFFFF' } };
     statHeaderRow.eachCell((cell) => {
-      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: '2C3E50' } };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: '2C3E50' },
+      };
     });
 
-    dashSheet.addRow(['Total Medicines in Inventory', data.stats.totalMedicines]);
-    dashSheet.addRow(['Low Stock Medicines (<= 15 units)', data.stats.lowStockMedicines]);
-    dashSheet.addRow(['Out of Stock Medicines', data.stats.outOfStockMedicines]);
+    dashSheet.addRow([
+      'Total Medicines in Inventory',
+      data.stats.totalMedicines,
+    ]);
+    dashSheet.addRow([
+      'Low Stock Medicines (<= 15 units)',
+      data.stats.lowStockMedicines,
+    ]);
+    dashSheet.addRow([
+      'Out of Stock Medicines',
+      data.stats.outOfStockMedicines,
+    ]);
     dashSheet.addRow(['Expired Medicines', data.stats.expiredMedicines]);
-    dashSheet.addRow(['Total Employee Activities Logged', data.stats.totalActivityLogs]);
+    dashSheet.addRow([
+      'Total Employee Activities Logged',
+      data.stats.totalActivityLogs,
+    ]);
 
     // Border for overview table
     for (let r = 6; r <= 11; r++) {
@@ -275,7 +320,11 @@ export class OperationalReportService {
 
     medSheet.getRow(1).font = { bold: true, color: { argb: 'FFFFFF' } };
     medSheet.getRow(1).eachCell((cell) => {
-      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: '16A085' } };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: '16A085' },
+      };
       cell.alignment = { horizontal: 'center' };
     });
 
@@ -294,11 +343,19 @@ export class OperationalReportService {
       const isExpired = new Date(med.expiredDate) < new Date();
       if (isExpired) {
         row.eachCell((cell) => {
-          cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FADBD8' } }; // Soft red
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FADBD8' },
+          }; // Soft red
         });
       } else if (med.stock <= 15) {
         row.eachCell((cell) => {
-          cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FCF3CF' } }; // Soft yellow
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FCF3CF' },
+          }; // Soft yellow
         });
       }
     }
@@ -318,7 +375,11 @@ export class OperationalReportService {
 
     logSheet.getRow(1).font = { bold: true, color: { argb: 'FFFFFF' } };
     logSheet.getRow(1).eachCell((cell) => {
-      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: '2C3E50' } };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: '2C3E50' },
+      };
       cell.alignment = { horizontal: 'center' };
     });
 
@@ -338,7 +399,10 @@ export class OperationalReportService {
     return Buffer.from(buffer as any);
   }
 
-  private async generatePdfBuffer(data: any, query: ExportQueryDto): Promise<Buffer> {
+  private async generatePdfBuffer(
+    data: any,
+    query: ExportQueryDto,
+  ): Promise<Buffer> {
     const doc = new PDFDocument({ margin: 40, size: 'A4' });
 
     return new Promise((resolve, reject) => {
@@ -350,35 +414,69 @@ export class OperationalReportService {
       // Header Brand
       doc.rect(0, 0, 595.28, 90).fill('#16A085');
       doc.fillColor('#FFFFFF');
-      doc.fontSize(22).font('Helvetica-Bold').text('APOTHECARY OPERATIONAL REPORT', 40, 25);
-      doc.fontSize(10).font('Helvetica').text('Apothecary Management & Activity Tracking', 40, 52);
+      doc
+        .fontSize(22)
+        .font('Helvetica-Bold')
+        .text('APOTHECARY OPERATIONAL REPORT', 40, 25);
+      doc
+        .fontSize(10)
+        .font('Helvetica')
+        .text('Apothecary Management & Activity Tracking', 40, 52);
 
       // System Metadata
       doc.fillColor('#333333');
       doc.fontSize(9).font('Helvetica-Bold').text('Generated At:', 400, 25);
-      doc.font('Helvetica').text(new Date(data.metadata.generatedAt).toLocaleString(), 400, 37);
+      doc
+        .font('Helvetica')
+        .text(new Date(data.metadata.generatedAt).toLocaleString(), 400, 37);
       doc.font('Helvetica-Bold').text('Reporting Period:', 400, 52);
-      doc.font('Helvetica').text(
-        `${query.startDate || 'Beginning'} to ${query.endDate || 'Present'}`,
-        400,
-        64,
-      );
+      doc
+        .font('Helvetica')
+        .text(
+          `${query.startDate || 'Beginning'} to ${query.endDate || 'Present'}`,
+          400,
+          64,
+        );
 
       doc.y = 110;
 
       // Section: Overview Cards
-      doc.fontSize(14).font('Helvetica-Bold').fillColor('#2C3E50').text('Operational Summary', 40, doc.y);
+      doc
+        .fontSize(14)
+        .font('Helvetica-Bold')
+        .fillColor('#2C3E50')
+        .text('Operational Summary', 40, doc.y);
       doc.y += 15;
 
       const cardWidth = 100;
       const cardHeight = 50;
       const startX = 40;
       const metrics = [
-        { title: 'Total Medicines', value: data.stats.totalMedicines, color: '#2C3E50' },
-        { title: 'Low Stock', value: data.stats.lowStockMedicines, color: '#F39C12' },
-        { title: 'Out of Stock', value: data.stats.outOfStockMedicines, color: '#C0392B' },
-        { title: 'Expired', value: data.stats.expiredMedicines, color: '#7F8C8D' },
-        { title: 'Total Actions', value: data.stats.totalActivityLogs, color: '#2980B9' },
+        {
+          title: 'Total Medicines',
+          value: data.stats.totalMedicines,
+          color: '#2C3E50',
+        },
+        {
+          title: 'Low Stock',
+          value: data.stats.lowStockMedicines,
+          color: '#F39C12',
+        },
+        {
+          title: 'Out of Stock',
+          value: data.stats.outOfStockMedicines,
+          color: '#C0392B',
+        },
+        {
+          title: 'Expired',
+          value: data.stats.expiredMedicines,
+          color: '#7F8C8D',
+        },
+        {
+          title: 'Total Actions',
+          value: data.stats.totalActivityLogs,
+          color: '#2980B9',
+        },
       ];
 
       metrics.forEach((m, idx) => {
@@ -386,15 +484,27 @@ export class OperationalReportService {
         doc.rect(x, doc.y, cardWidth, cardHeight).fill('#F8F9F9');
         doc.rect(x, doc.y, cardWidth, 4).fill(m.color); // top accent line
 
-        doc.fillColor('#7F8C8D').fontSize(8).font('Helvetica').text(m.title, x + 5, doc.y + 10, { width: cardWidth - 10 });
-        doc.fillColor('#2C3E50').fontSize(14).font('Helvetica-Bold').text(String(m.value), x + 5, doc.y + 22);
+        doc
+          .fillColor('#7F8C8D')
+          .fontSize(8)
+          .font('Helvetica')
+          .text(m.title, x + 5, doc.y + 10, { width: cardWidth - 10 });
+        doc
+          .fillColor('#2C3E50')
+          .fontSize(14)
+          .font('Helvetica-Bold')
+          .text(String(m.value), x + 5, doc.y + 22);
       });
 
       doc.y += cardHeight + 30;
 
       // Section: Medicine Stock Inventory (Top 15 as sample or complete table)
       // Since PDF can get too long, we will print the medicines and page-break as needed
-      doc.fontSize(14).font('Helvetica-Bold').fillColor('#2C3E50').text('Medicine Stock Status', 40, doc.y);
+      doc
+        .fontSize(14)
+        .font('Helvetica-Bold')
+        .fillColor('#2C3E50')
+        .text('Medicine Stock Status', 40, doc.y);
       doc.y += 15;
 
       const drawMedicineTableHeader = (yVal: number) => {
@@ -424,23 +534,36 @@ export class OperationalReportService {
         const isExpired = new Date(med.expiredDate) < new Date();
         const isLowStock = med.stock <= 15;
         let bg = '#FFFFFF';
-        if (isExpired) bg = '#FADBD8'; // red highlight
+        if (isExpired)
+          bg = '#FADBD8'; // red highlight
         else if (isLowStock) bg = '#FCF3CF'; // yellow highlight
 
         doc.rect(40, doc.y, 515, rowHeight).fill(bg);
 
         doc.fillColor('#333333').fontSize(7.5).font('Helvetica');
         doc.text(med.sku, 45, doc.y + 5);
-        doc.text(med.medicineName, 125, doc.y + 5, { width: 115, height: rowHeight - 2, ellipsis: true });
-        doc.text(med.category?.categoryName || 'N/A', 245, doc.y + 5, { width: 105, height: rowHeight - 2, ellipsis: true });
-        
+        doc.text(med.medicineName, 125, doc.y + 5, {
+          width: 115,
+          height: rowHeight - 2,
+          ellipsis: true,
+        });
+        doc.text(med.category?.categoryName || 'N/A', 245, doc.y + 5, {
+          width: 105,
+          height: rowHeight - 2,
+          ellipsis: true,
+        });
+
         // Stock and styling
         if (isLowStock) doc.fillColor('#C0392B').font('Helvetica-Bold');
         doc.text(String(med.stock), 355, doc.y + 5);
         doc.fillColor('#333333').font('Helvetica');
 
         doc.text(med.price.toLocaleString(), 405, doc.y + 5);
-        doc.text(new Date(med.expiredDate).toLocaleDateString(), 475, doc.y + 5);
+        doc.text(
+          new Date(med.expiredDate).toLocaleDateString(),
+          475,
+          doc.y + 5,
+        );
 
         doc.y += rowHeight;
       });
@@ -453,7 +576,11 @@ export class OperationalReportService {
         doc.y = 40;
       }
 
-      doc.fontSize(14).font('Helvetica-Bold').fillColor('#2C3E50').text('Recent Employee Activity Logs', 40, doc.y);
+      doc
+        .fontSize(14)
+        .font('Helvetica-Bold')
+        .fillColor('#2C3E50')
+        .text('Recent Employee Activity Logs', 40, doc.y);
       doc.y += 15;
 
       const drawActivityTableHeader = (yVal: number) => {
@@ -478,18 +605,34 @@ export class OperationalReportService {
         }
 
         const rowHeight = 18;
-        doc.rect(40, doc.y, 515, rowHeight).fill(doc.y % 36 === 0 ? '#F8F9F9' : '#FFFFFF');
+        doc
+          .rect(40, doc.y, 515, rowHeight)
+          .fill(doc.y % 36 === 0 ? '#F8F9F9' : '#FFFFFF');
 
         doc.fillColor('#333333').fontSize(7.5).font('Helvetica');
         doc.text(new Date(log.createdAt).toLocaleString(), 45, doc.y + 5);
-        
+
         const empStr = `${log.employee?.name || 'System'} (${log.employee?.empId || '-'})`;
-        doc.text(empStr, 165, doc.y + 5, { width: 105, height: rowHeight - 2, ellipsis: true });
+        doc.text(empStr, 165, doc.y + 5, {
+          width: 105,
+          height: rowHeight - 2,
+          ellipsis: true,
+        });
         doc.text(log.employee?.role || 'N/A', 275, doc.y + 5);
-        doc.text(log.action, 345, doc.y + 5, { width: 95, height: rowHeight - 2, ellipsis: true });
-        
-        const resStr = log.resourceType ? `${log.resourceType} (${log.resourceId?.substring(0, 8)})` : '-';
-        doc.text(resStr, 445, doc.y + 5, { width: 105, height: rowHeight - 2, ellipsis: true });
+        doc.text(log.action, 345, doc.y + 5, {
+          width: 95,
+          height: rowHeight - 2,
+          ellipsis: true,
+        });
+
+        const resStr = log.resourceType
+          ? `${log.resourceType} (${log.resourceId?.substring(0, 8)})`
+          : '-';
+        doc.text(resStr, 445, doc.y + 5, {
+          width: 105,
+          height: rowHeight - 2,
+          ellipsis: true,
+        });
 
         doc.y += rowHeight;
       });
@@ -503,7 +646,7 @@ export class OperationalReportService {
           `Page ${i + 1} of ${pages.count}  |  Apothecary Management System`,
           40,
           790,
-          { align: 'center', width: 515 }
+          { align: 'center', width: 515 },
         );
       }
 
