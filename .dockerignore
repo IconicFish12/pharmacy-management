@@ -1,0 +1,7 @@
+/md/*.md
+*md
+node_modules
+.gitigonre
+.env
+.git
+npm-debug.log

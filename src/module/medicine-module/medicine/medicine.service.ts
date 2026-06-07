@@ -1,19 +1,16 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateMedicineDto } from './dto/create-medicine.dto.js';
-import { UpdateMedicineDto } from './dto//update-medicine.dto.js';
+import { UpdateMedicineDto } from './dto/update-medicine.dto.js';
 import {
   PaginatedResult,
   paginator,
 } from '../../../common/helpers/pagination/pagination.js';
-import {
-  Medicine,
-  Prisma,
-} from '../../../common/database/generated/prisma/client.js';
-import { DatabaseService } from '../../../common/database/database.service.js';
+import { Medicine, Prisma } from '../../../database/generated/prisma/client.js';
+import { DatabaseService } from '../../../database/database.service.js';
 import {
   MedicineCreateInput,
   MedicineUpdateInput,
-} from '../../../common/database/generated/prisma/models.js';
+} from '../../../database/generated/prisma/models.js';
 import { MedicineCategoryService } from '../medicine-category/medicine-category.service.js';
 
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -67,6 +64,7 @@ export class MedicineService {
     });
   }
 
+  // Fix Issue #1 A1 adding event trigger for low stock event
   async findAll(
     page: number,
     perPage: number,

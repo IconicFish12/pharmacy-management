@@ -1,47 +1,39 @@
 import {
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
+  Query,
+  Res,
+  UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { FinancialReportService } from './financial-report.service.js';
-import { CreateFinancialReportDto } from './dto/create-financial-report.dto.js';
-import { UpdateFinancialReportDto } from './dto/update-financial-report.dto.js';
+import { ReportQueryDto, ExportQueryDto } from './dto/report-query.dto.js';
+import type { Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../../../common/guards/roles.decorator.js';
+import { RolesGuard } from '../../../common/guards/roles.guard.js';
+import { Role } from '../../../database/generated/prisma/enums.js';
 
 @Controller('financial-report')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles(Role.OWNER, Role.ADMIN)
 export class FinancialReportController {
   constructor(
     private readonly financialReportService: FinancialReportService,
   ) {}
 
-  @Post()
-  create(@Body() createFinancialReportDto: CreateFinancialReportDto) {
-    return this.financialReportService.create(createFinancialReportDto);
-  }
-
   @Get()
-  findAll() {
-    return this.financialReportService.findAll();
+  async getData(@Query() query: ReportQueryDto) {
+    return this.financialReportService.getData(query);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.financialReportService.findOne(+id);
-  }
+  @Get('export')
+  async exportReport(@Query() query: ExportQueryDto, @Res() res: Response) {
+    const { buffer, mimeType, filename } =
+      await this.financialReportService.exportReport(query);
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateFinancialReportDto: UpdateFinancialReportDto,
-  ) {
-    return this.financialReportService.update(+id, updateFinancialReportDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.financialReportService.remove(+id);
+    res.setHeader('Content-Type', mimeType);
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.status(HttpStatus.OK).send(buffer);
   }
 }

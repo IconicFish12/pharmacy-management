@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   CallHandler,
   ExecutionContext,
@@ -34,7 +31,7 @@ export class ActivityTrackingInterceptor implements NestInterceptor {
 
           const createPayload: CreateActivityLogDto = {
             action: method,
-            userId: user.id,
+            employeeId: user.id,
             resourceType: resourceType[3] ?? resourceType[2],
             resourceId: resourceId,
             payloadData: body as Record<string, any>,

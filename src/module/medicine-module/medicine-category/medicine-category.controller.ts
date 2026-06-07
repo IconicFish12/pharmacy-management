@@ -13,23 +13,25 @@ import { MedicineCategoryService } from './medicine-category.service.js';
 import { CreateMedicineCategoryDto } from './dto/create-medicine-category.dto.js';
 import { UpdateMedicineCategoryDto } from './dto/update-medicine-category.dto.js';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from '../../../common/security/guards/roles.decorator.js';
+import { Roles } from '../../../common/guards/roles.decorator.js';
+import { RolesGuard } from '../../../common/guards/roles.guard.js';
+import { Role } from '../../../database/generated/prisma/enums.js';
 
 @Controller()
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class MedicineCategoryController {
   constructor(
     private readonly medicineCategoryService: MedicineCategoryService,
   ) {}
 
   @Post()
-  @Roles('PHARMACIST')
+  @Roles(Role.PHARMACIST)
   create(@Body() createMedicineCategoryDto: CreateMedicineCategoryDto) {
     return this.medicineCategoryService.create(createMedicineCategoryDto);
   }
 
   @Get()
-  @Roles('PHARMACIST', 'ADMIN', 'OWNER')
+  @Roles(Role.PHARMACIST, Role.ADMIN, Role.OWNER)
   findAll(@Query('page') page?: number, @Query('perPage') perPage?: number) {
     return this.medicineCategoryService.findAll(page!, perPage!);
   }
@@ -40,7 +42,7 @@ export class MedicineCategoryController {
   }
 
   @Patch(':id')
-  @Roles('PHARMACIST')
+  @Roles(Role.PHARMACIST)
   update(
     @Param('id') id: string,
     @Body() updateMedicineCategoryDto: UpdateMedicineCategoryDto,
@@ -49,7 +51,7 @@ export class MedicineCategoryController {
   }
 
   @Delete(':id')
-  @Roles('PHARMACIST')
+  @Roles(Role.PHARMACIST)
   remove(@Param('id') id: string) {
     return this.medicineCategoryService.remove(id);
   }

@@ -1,22 +1,27 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  NotFoundException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { CreateMedicineOrderDto } from './dto/create-medicine-order.dto.js';
 import { UpdateMedicineOrderDto } from './dto/update-medicine-order.dto.js';
 import {
   MedicineOrder,
   Prisma,
-} from '../../../common/database/generated/prisma/client.js';
-import { MedicineUpdateInput } from '../../../common/database/generated/prisma/models.js';
+} from '../../../database/generated/prisma/client.js';
+import { MedicineUpdateInput } from '../../../database/generated/prisma/models.js';
 import {
   PaginatedResult,
   paginator,
 } from '../../../common/helpers/pagination/pagination.js';
-import { DatabaseService } from '../../../common/database/database.service.js';
+import { DatabaseService } from '../../../database/database.service.js';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Medicines } from './interfaces/medicines.interface.js';
 const paginate = paginator({ perPage: 10, page: 1 });
 
 type MedicineOrderWithRelations = Prisma.MedicineOrderGetPayload<{
-  include: { _count: true; supplier: true; user: true };
+  include: { _count: true; supplier: true; employee: true };
 }>;
 
 @Injectable()
@@ -27,77 +32,61 @@ export class MedicineOrderService {
     private event: EventEmitter2,
   ) {}
 
+  // Issue #1
   async create(dto: CreateMedicineOrderDto): Promise<MedicineOrder> {
-    const { supplierId, userId, medicines, ...request } = dto;
+    const { supplierId, employeeId, medicines, ...request } = dto;
 
     return await this.prisma.$transaction(async (tx) => {
       let grandTotal = 0;
-      const orderItemsData: Medicines[] = [];
+
+      const orderItemsData: {
+        medicineId: string;
+        quantity: number;
+        unitPrice: number;
+        subtotal: number;
+      }[] = [];
 
       for (const item of medicines) {
+        // 1. Validasi medicine exist
         const medicine = await tx.medicine.findUnique({
           where: { id: item.medicineId },
         });
 
         if (!medicine) {
-          throw new BadRequestException(
+          throw new NotFoundException(
             `Medicine dengan ID ${item.medicineId} tidak ditemukan.`,
           );
         }
 
-        if (medicine.stock < item.quantity) {
-          throw new BadRequestException(
-            `Stok ${medicine.medicineName} tidak cukup. Sisa stok: ${medicine.stock}`,
-          );
-        }
-
-        const updatedMedicine = await tx.medicine.update({
+        await tx.medicine.update({
           where: { id: item.medicineId },
-          data: {
-            stock: {
-              decrement: item.quantity,
-            },
-          },
+          data: { stock: { increment: item.quantity } },
         });
 
-        const subtotal = medicine.price * item.quantity;
+        const subtotal = item.unitPrice * item.quantity;
         grandTotal += subtotal;
 
         orderItemsData.push({
           medicineId: item.medicineId,
           quantity: item.quantity,
-          unitPrice: medicine.price,
-          subtotal: subtotal,
+          unitPrice: item.unitPrice,
+          subtotal,
         });
-
-        if (updatedMedicine.stock <= 15) {
-          this.event.emit('medicine.low-stock', {
-            medicineName: medicine.medicineName,
-            medicineStock: medicine.stock,
-            orderOperation: Date.now(),
-          });
-          this.logger.warn(
-            `Peringatan: Stok obat ${medicine.medicineName} rendah (${updatedMedicine.stock}).`,
-          );
-        }
       }
 
-      // Validasi pembayaran
-      // if (dto.cashReceived < grandTotal) {
-      //   throw new BadRequestException(`Uang pembayaran kurang! Total: ${grandTotal}`);
-      // }
+      // Generate order code
+      const orderCode = `ORD-${Date.now().toString(36).toUpperCase()}-${Math.random()
+        .toString(36)
+        .substring(2, 6)
+        .toUpperCase()}`;
 
-      return await tx.medicineOrder.create({
+      const order = await tx.medicineOrder.create({
         data: {
           ...request,
-          orderCode: `ORD-${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
+          orderCode,
           totalPrice: grandTotal,
-          user: {
-            connect: { id: userId },
-          },
-          supplier: {
-            connect: { id: supplierId },
-          },
+          employee: { connect: { id: employeeId } },
+          supplier: { connect: { id: supplierId } },
           orderDetails: {
             create: orderItemsData,
           },
@@ -106,6 +95,13 @@ export class MedicineOrderService {
           orderDetails: true,
         },
       });
+
+      this.logger.log(
+        `Purchase Order ${order.orderCode} dibuat. Total: ${grandTotal}. ` +
+          `${medicines.length} item obat di-restock.`,
+      );
+
+      return order;
     });
   }
 
@@ -121,7 +117,7 @@ export class MedicineOrderService {
           supplier: { omit: { id: true } },
           user: { omit: { id: true } },
         },
-        omit: { userId: true, supplierId: true },
+        omit: { employeeId: true, supplierId: true },
       },
       { page, perPage },
     );
@@ -133,7 +129,7 @@ export class MedicineOrderService {
       include: {
         _count: true,
         supplier: true,
-        user: true,
+        employee: true,
       },
     });
   }

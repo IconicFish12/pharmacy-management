@@ -1,0 +1,35 @@
+name: main ci pipeline
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: 
+      - main
+
+jobs: 
+  call_default_workflow:
+    uses: IconicFish12/pharmacy-management/.github/workflows/default_ci.yml@main
+    with: 
+      node_version: '24.*'
+      cache_type: 'npm'
+    secrets: 
+      database_url: ${{ secrets.DATABASE_URL }}
+
+  call_app_gateway_workflow:
+    needs: call_default_workflow
+    uses: IconicFish12/pharmacy-management/.github/workflows/app_gateway.yml@main
+    with:
+      output_name: 'scanning_result.json'
+      sonar_host: 'https://sonarcloud.io'
+    secrets:
+      sonar_token: ${{ secrets.SONAR_TOKEN }}
+
+  call_app_container_workflow:
+    needs: call_app_gateway_workflow
+    uses: IconicFish12/pharmacy-management/.github/workflows/app_containering.yml@main
+    with:
+      image_tag: "${{ github.ref_name }}-${{ github.sha }}"
+    secrets: 
+      docker_username: ${{ vars.DOCKER_HUB_USERNAME }}
+      docker_token: ${{ secrets.DOCKER_HUB_PASSWORD }}

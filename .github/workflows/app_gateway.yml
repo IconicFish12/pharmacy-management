@@ -1,0 +1,71 @@
+name: security and auditing scanning pipeline
+on: 
+  workflow_call: 
+    inputs: 
+      output_name: 
+        required: false
+        type: string
+      sonar_host: 
+        required: true
+        type: string
+    secrets: 
+      sonar_token:
+        required: true
+      gitleaks_token: 
+        required: true
+    
+concurrency:
+  group: ${{ format('{0}-{1}-{2}-{3}-{4}', github.workflow, github.event_name, github.ref, github.base_ref, github.head_ref) }}
+  cancel-in-progress: true
+
+jobs:
+  auditing-and-scanninig: 
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Github Repository checkout
+        uses: actions/checkout@v4
+        with: 
+          fetch-depth: 0
+
+      - name: npm packages audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Secret credential scanning
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.gitleaks_token }}
+
+      - name: Code Static Analysis
+        uses: SonarSource/sonarqube-scan-action@v8
+        env: 
+          SONAR_TOKEN: ${{ secrets.sonar_token }}
+          SONAR_HOST: ${{ inputs.sonar_host }}
+        with: 
+          projectBaseDir: .
+
+      - name: Manual Trivy Setup
+        uses: aquasecurity/setup-trivy@v0.2.6
+        with:
+          cache: true
+          version: v0.70.0
+
+      - name: Application Image and Container Scanning
+        uses: aquasecurity/trivy-action@master
+        with: 
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: sarif
+          ignore-unfixed: true
+          output: ${{ inputs.output_name }}
+          severity: 'CRITICAL,HIGH'
+          exit-code: 1
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'scanning_result.sarif'
+
+
+      
+

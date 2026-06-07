@@ -13,12 +13,14 @@ import { MedicineOrderService } from './medicine-order.service.js';
 import { CreateMedicineOrderDto } from './dto/create-medicine-order.dto.js';
 import { UpdateMedicineOrderDto } from './dto/update-medicine-order.dto.js';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from '../../../common/security/guards/user.decorator.js';
-import { Roles } from '../../../common/security/guards/roles.decorator.js';
+import { User } from '../../../common/guards/user.decorator.js';
+import { Roles } from '../../../common/guards/roles.decorator.js';
+import { RolesGuard } from '../../../common/guards/roles.guard.js';
+import { Role } from '../../../database/generated/prisma/enums.js';
 
 @Controller()
-@Roles('PHARMACIST', 'ADMIN', 'OWNER')
 @UseGuards(AuthGuard('jwt'))
+@Roles(Role.PHARMACIST, Role.ADMIN, Role.OWNER)
 export class MedicineOrderController {
   constructor(private readonly medicineOrderService: MedicineOrderService) {}
 

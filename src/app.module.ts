@@ -1,19 +1,17 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD, RouterModule } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-// import { MailerModule } from '@nestjs-modules/mailer';
-import { DatabaseModule } from './common/database/database.module.js';
+import Joi from 'joi';
+import { DatabaseModule } from './database/database.module.js';
 import { MainAppModule } from './module/main-app.module.js';
-import { SecurityModule } from './common/security/security.module.js';
 import { HelperModule } from './common/helpers/helper.module.js';
 import { MedicineMainModule } from './module/medicine-module/medicine-main.module.js';
 import { MedicineModule } from './module/medicine-module/medicine/medicine.module.js';
 import { MedicineCategoryModule } from './module/medicine-module/medicine-category/medicine-category.module.js';
 import { MedicineOrderModule } from './module/medicine-module/medicine-order/medicine-order.module.js';
 import { ActivityLogModule } from './module/logs-module/activity-log.module.js';
-import { AuthModule } from './common/security/auth/auth.module.js';
-import { RolesGuard } from './common/security/guards/roles.guard.js';
+import { AuthModule } from './module/security-module/auth/auth.module.js';
 import { OrderDetailModule } from './module/medicine-module/medicine-order/order-detail/order-detail.module.js';
 import { TransactionModule } from './module/transaction-module/transaction.module.js';
 import { TransactionDetailModule } from './module/transaction-module/transaction-detail/transaction-detail.module.js';
@@ -24,12 +22,29 @@ import { SupplierModule } from './module/user-manage-module/supplier-module/supp
 @Module({
   imports: [
     HelperModule,
-    SecurityModule,
     MainAppModule,
     DatabaseModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
+      cache: true,
+      validationSchema: Joi.object({
+        DATABASE_URL: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
+        JWT_REFRESH_TOKEN: Joi.string().required(),
+        BACKEND_PORT: Joi.number().default(5000),
+        THROTTLE_TTL: Joi.number().required(),
+        THROTTLE_LIMIT: Joi.number().required(),
+        MAIL_HOST: Joi.string().optional(),
+        MAIL_PORT: Joi.number().optional(),
+        MAIL_USERNAME: Joi.string().optional(),
+        MAIL_PASSWORD: Joi.string().allow('').optional(),
+        MAIL_FROM: Joi.string().optional(),
+      }),
+      validationOptions: {
+        allowUnknown: true,
+        abortEarly: true,
+      },
     }),
     RouterModule.register([
       {
@@ -90,22 +105,19 @@ import { SupplierModule } from './module/user-manage-module/supplier-module/supp
         ],
       },
     ]),
-    // MailerModule.forRootAsync({}),
-    ThrottlerModule.forRoot({
-      throttlers: [
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => [
         {
-          ttl: 20000,
-          limit: 15,
+          ttl: config.get<number>('THROTTLE_TTL') as number,
+          limit: config.get<number>('THROTTLE_LIMIT') as number,
           setHeaders: true,
         },
       ],
-      errorMessage: 'Sorry you sending request to many times',
     }),
   ],
-  providers: [
-    { provide: APP_GUARD, useClass: ThrottlerGuard },
-    { provide: APP_GUARD, useClass: RolesGuard },
-  ],
+  providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
   controllers: [AppController],
 })
 export class AppModule {}

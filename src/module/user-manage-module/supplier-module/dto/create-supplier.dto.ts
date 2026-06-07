@@ -4,14 +4,18 @@ import {
   IsOptional,
   IsPhoneNumber,
   MinLength,
+  IsEmail,
+  MaxLength,
+  Max,
 } from 'class-validator';
-import { ActiveStatus } from '../../../../common/database/generated/prisma/enums.js';
+import { Type } from 'class-transformer';
+import { ActiveStatus } from '../../../../database/generated/prisma/enums.js';
 
 export class CreateSupplierDto {
   @IsNotEmpty({
-    message: 'Supplier Name is required',
+    message: 'Supplier company name is required',
   })
-  readonly supplierName!: string;
+  readonly companyName!: string;
 
   @IsNotEmpty({
     message: 'Phone Number is required',
@@ -21,11 +25,24 @@ export class CreateSupplierDto {
   })
   readonly phoneNumber!: string;
 
-  @IsOptional()
-  readonly contactPerson!: string;
+  @IsNotEmpty({
+    message: 'Supplier contact name is required',
+  })
+  readonly contactName!: string;
 
-  @IsOptional()
-  readonly contactPersonNumber!: string;
+  @IsNotEmpty()
+  @IsEmail(
+    {
+      allow_utf8_local_part: true,
+      allow_display_name: true,
+      allow_underscores: true,
+      domain_specific_validation: true,
+    },
+    {
+      message: 'Supplier email must be an valid email',
+    },
+  )
+  readonly supplierEmail!: string;
 
   @IsNotEmpty({
     message: 'Active Status is Required',
@@ -34,11 +51,20 @@ export class CreateSupplierDto {
     message: 'Active Status is not valid choose between ACTIVE and INACTIVE',
   })
   readonly status!: ActiveStatus;
+
   @IsNotEmpty({
     message: 'Address is Required',
   })
   @MinLength(7, {
-    message: 'Address is must greater than 7 Character',
+    message: 'Address is must grater than 7 Character',
   })
   readonly address!: string;
+
+  @IsNotEmpty({
+    message: 'Supplier License number is required',
+  })
+  @MinLength(10, {
+    message: 'Suplier License Number is must greater than 10 Character',
+  })
+  readonly licenseNumber!: string;
 }
