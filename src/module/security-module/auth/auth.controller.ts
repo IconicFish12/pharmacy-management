@@ -3,6 +3,7 @@ import {
   Controller,
   Logger,
   Post,
+  Get,
   Request,
   UseGuards,
   Res,
@@ -27,7 +28,7 @@ export class AuthController {
     @Request() req: any,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { accessToken, refreshToken } = await this.authService.login(
+    const { accessToken, refreshToken, user } = await this.authService.login(
       req.user,
     );
 
@@ -38,7 +39,27 @@ export class AuthController {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    return { accessToken };
+    return {
+      accessToken,
+      user,
+    };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('profile')
+  async getProfile(@Request() req: any) {
+    const { id, name, empId, email, role, shift, status, profileAvatar } =
+      req.user;
+    return {
+      id,
+      name,
+      empId,
+      email,
+      role,
+      shift,
+      status,
+      profileAvatar,
+    };
   }
 
   @Post('refresh')

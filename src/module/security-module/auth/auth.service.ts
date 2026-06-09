@@ -48,9 +48,22 @@ export class AuthService {
     const hashedToken = await bcrypt.hash(refreshToken, saltRounds);
     await this.employeeService.updateRefreshToken(employee.id, hashedToken);
 
+    const { id, name, empId, email, role, shift, status, profileAvatar } =
+      employee;
+
     return {
       accessToken,
       refreshToken,
+      user: {
+        id,
+        name,
+        empId,
+        email,
+        role,
+        shift,
+        status,
+        profileAvatar,
+      },
     };
   }
 

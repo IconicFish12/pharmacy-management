@@ -115,7 +115,7 @@ export class MedicineOrderService {
         orderBy: { createdAt: 'desc' },
         include: {
           supplier: { omit: { id: true } },
-          user: { omit: { id: true } },
+          employee: { omit: { id: true } },
         },
         omit: { employeeId: true, supplierId: true },
       },
