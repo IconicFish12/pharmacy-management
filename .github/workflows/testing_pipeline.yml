@@ -1,0 +1,28 @@
+name: Development testing CI pipeline
+on: 
+  push:
+    branches: 
+      - staging
+      - 'feature/*'
+  pull_request:
+    branches:
+      - staging
+
+jobs: 
+  call_default_workflow:
+    uses: ./.github/workflows/default_ci.yml    
+    with: 
+      node_version: '24.*'
+      cache_type: 'npm'
+    secrets: 
+      database_url: ${{ secrets.DATABASE_URL }}
+
+  call_app_gateway:
+    uses: ./.github/workflows/app_gateway.yml
+    with:
+      output_name: 'scanning_result.sarif'
+      sonar_host: 'https://sonarcloud.io'
+    secrets:
+      sonar_token: ${{ secrets.SONAR_TOKEN }}
+      gitleaks_token: ${{ secrets.GITLEAKS_TOKEN }}
+

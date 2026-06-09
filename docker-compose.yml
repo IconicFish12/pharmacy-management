@@ -1,0 +1,46 @@
+version: "3.9"
+services: 
+  psql: 
+    image: postgres:17-alpine
+    container_name: pharma-ease-db
+    restart: unless-stopped
+    environment: 
+      POSTGRES_USER: ${POSTGRE_USER}
+      POSTGRES_PASSWORD: ${POSTGRE_PASSWORD}
+      POSTGRES_DB: ${POSTGRE_DB}
+    ports: 
+      - "${POSTGRE_PORT}:5432"
+    volumes: 
+      - postgres_data:/var/lib/postgresql/data
+    networks: 
+      - prisma-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pharma-ease-backend:
+    container_name: pharma-ease-backend
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    image: pharma-ease:early-backend-61c4633
+    ports:
+      - "5000:5000"
+    depends_on: 
+      psql:
+        condition: service_healthy
+    env_file: 
+      - ./.env
+    environment:
+    - DATABASE_URL=postgresql://${POSTGRE_USER}:${POSTGRE_PASSWORD}@pharma-ease-db:5432/${POSTGRE_DB}?schema=public 
+    networks: 
+      - prisma-network
+
+volumes:
+  postgres_data:
+
+networks:
+  prisma-network:
+    driver: bridge

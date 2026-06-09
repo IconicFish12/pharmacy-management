@@ -12,12 +12,12 @@ import {
   ActiveStatus,
   Role,
   Shift,
-} from '../../../../common/database/generated/prisma/enums.js';
+} from '../../../../database/generated/prisma/enums.js';
 import { Type } from 'class-transformer';
 
 export class CreateEmployeeDto {
   @IsNotEmpty({
-    message: 'User Name is required',
+    message: 'employee name is required',
   })
   readonly name!: string;
 
@@ -27,7 +27,7 @@ export class CreateEmployeeDto {
   readonly empId!: string;
 
   @IsNotEmpty({
-    message: 'email is required',
+    message: 'employee email is required',
   })
   @IsEmail(
     {
@@ -37,7 +37,7 @@ export class CreateEmployeeDto {
       domain_specific_validation: true,
     },
     {
-      message: 'Email must be an valid email',
+      message: 'email must be an valid email',
     },
   )
   readonly email!: string;
@@ -47,13 +47,13 @@ export class CreateEmployeeDto {
   })
   @IsStrongPassword(
     {
-      minLength: 4,
+      minLength: 9,
       minUppercase: 2,
       minNumbers: 3,
     },
     {
       message:
-        'password must contain at least greater than 4 characters, 2 uppercase, and 3 numbers, ex: JhonDoe-123',
+        'password must contain at least greater than 9 characters, 2 uppercase, and 3 numbers, ex: JhonDoe-123',
     },
   )
   password!: string;
@@ -69,7 +69,7 @@ export class CreateEmployeeDto {
   })
   @IsEnum(Role, {
     message:
-      'USer Role is not valid choose between ADMIN, OWNER, PHARMACIST, and CASHIER',
+      'Employee Role is not valid choose between ADMIN, OWNER, PHARMACIST, and CASHIER',
   })
   readonly role!: Role;
 

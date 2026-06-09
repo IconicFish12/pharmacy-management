@@ -10,11 +10,10 @@ import {
 } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import { ResponseInterceptors } from './common/interceptors/response-interceptors.interceptor.js';
-import { ErrorReponseInterceptor } from './common/interceptors/error-reponse.interceptor.js';
+import { ErrorStatusInterceptor } from './common/interceptors/error-status.interceptor.js';
 import { ActivityTrackingInterceptor } from './common/interceptors/activity-tracking.interceptor.js';
 import { ActivityLogService } from './module/logs-module/activity-log.service.js';
-import { DatabaseService } from './common/database/database.service.js';
-import { RolesGuard } from './common/security/guards/roles.guard.js';
+import { DatabaseService } from './database/database.service.js';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
@@ -43,13 +42,11 @@ async function bootstrap() {
   const document = () => SwaggerModule.createDocument(app, swagger);
   SwaggerModule.setup('main api', app, document);
 
-  const logService = new ActivityLogService(
-    new DatabaseService(new ConfigService()),
-  );
+  const logService = app.get(ActivityLogService);
 
   app.useGlobalInterceptors(
     new ResponseInterceptors(),
-    new ErrorReponseInterceptor(),
+    new ErrorStatusInterceptor(),
     new ActivityTrackingInterceptor(logService),
     new ClassSerializerInterceptor(app.get(Reflector)),
   );
@@ -92,8 +89,6 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalGuards(new RolesGuard(new Reflector()));
-
-  await app.listen(process.env.BACKEND_PORT ?? 3000);
+  await app.listen(process.env.BACKEND_PORT ?? 5000);
 }
 void bootstrap();

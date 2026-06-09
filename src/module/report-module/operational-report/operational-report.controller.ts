@@ -1,50 +1,39 @@
 import {
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
+  Query,
+  Res,
+  UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { OperationalReportService } from './operational-report.service.js';
-import { CreateOperationalReportDto } from './dto/create-operational-report.dto.js';
-import { UpdateOperationalReportDto } from './dto/update-operational-report.dto.js';
+import { ReportQueryDto, ExportQueryDto } from './dto/report-query.dto.js';
+import type { Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../../../common/guards/roles.decorator.js';
+import { RolesGuard } from '../../../common/guards/roles.guard.js';
+import { Role } from '../../../database/generated/prisma/enums.js';
 
-@Controller('operational-report')
+@Controller()
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles(Role.OWNER, Role.ADMIN)
 export class OperationalReportController {
   constructor(
     private readonly operationalReportService: OperationalReportService,
   ) {}
 
-  @Post()
-  create(@Body() createOperationalReportDto: CreateOperationalReportDto) {
-    return this.operationalReportService.create(createOperationalReportDto);
-  }
-
   @Get()
-  findAll() {
-    return this.operationalReportService.findAll();
+  async getData(@Query() query: ReportQueryDto) {
+    return this.operationalReportService.getData(query);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.operationalReportService.findOne(+id);
-  }
+  @Get('export')
+  async exportReport(@Query() query: ExportQueryDto, @Res() res: Response) {
+    const { buffer, mimeType, filename } =
+      await this.operationalReportService.exportReport(query);
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateOperationalReportDto: UpdateOperationalReportDto,
-  ) {
-    return this.operationalReportService.update(
-      +id,
-      updateOperationalReportDto,
-    );
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.operationalReportService.remove(+id);
+    res.setHeader('Content-Type', mimeType);
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.status(HttpStatus.OK).send(buffer);
   }
 }

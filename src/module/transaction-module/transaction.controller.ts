@@ -12,18 +12,19 @@ import {
 import { TransactionService } from './transaction.service.js';
 import { CreateTransactionDto } from './dto/create-transaction.dto.js';
 import { UpdateTransactionDto } from './dto/update-transaction.dto.js';
-import { User } from '../../common/security/guards/user.decorator.js';
+import { User } from '../../common/guards/user.decorator.js';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from '../../common/security/guards/roles.decorator.js';
+import { Roles } from '../../common/guards/roles.decorator.js';
+import { RolesGuard } from '../../common/guards/roles.guard.js';
+import { Role } from '../../database/generated/prisma/enums.js';
 
 @Controller()
-@Roles('OWNER')
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Post()
-  @Roles('CASHIER')
+  @Roles(Role.CASHIER)
   create(
     @Body() createTransactionDto: CreateTransactionDto,
     @User('id') userId: string,
@@ -32,7 +33,7 @@ export class TransactionController {
   }
 
   @Get()
-  @Roles('CASHIER', 'ADMIN', 'OWNER')
+  @Roles(Role.CASHIER, Role.ADMIN, Role.OWNER)
   findAll(@Query('page') page?: number, @Query('perPage') perPage?: number) {
     return this.transactionService.findAll(perPage!, page!);
   }
@@ -43,7 +44,7 @@ export class TransactionController {
   }
 
   @Patch(':id')
-  @Roles('CASHIER')
+  @Roles(Role.CASHIER)
   update(
     @Param('id') id: string,
     @Body() updateTransactionDto: UpdateTransactionDto,
@@ -52,7 +53,7 @@ export class TransactionController {
   }
 
   @Delete(':id')
-  @Roles('CASHIER')
+  @Roles(Role.CASHIER)
   remove(@Param('id') id: string) {
     return this.transactionService.remove(id);
   }

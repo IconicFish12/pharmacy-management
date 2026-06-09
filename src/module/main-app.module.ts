@@ -3,8 +3,9 @@ import { MedicineMainModule } from './medicine-module/medicine-main.module.js';
 import { ReportMainModule } from './report-module/report-main.module.js';
 import { ActivityLogModule } from './logs-module/activity-log.module.js';
 import { TransactionModule } from './transaction-module/transaction.module.js';
-import { DatabaseModule } from '../common/database/database.module.js';
+import { DatabaseModule } from '../database/database.module.js';
 import { UsersManageModule } from './user-manage-module/users-manage.module.js';
+import { SecurityModule } from './security-module/security.module.js';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UsersManageModule } from './user-manage-module/users-manage.module.js';
     ActivityLogModule,
     TransactionModule,
     UsersManageModule,
+    SecurityModule,
   ],
 })
 export class MainAppModule {}

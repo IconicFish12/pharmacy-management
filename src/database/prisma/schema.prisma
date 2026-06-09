@@ -1,0 +1,204 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ActiveStatus {
+  ACTIVE
+  INACTIVE
+
+  @@map("user_status")
+}
+
+enum Shift {
+  DAY
+  EVENING
+  NIGHT
+
+  @@map("employee_work_shift")
+}
+
+enum Role {
+  ADMIN
+  OWNER
+  PHARMACIST
+  CASHIER
+
+  @@map("employee_roles")
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+
+  @@map("medicine_order_status")
+}
+
+model Employee {
+  id             String          @id @default(uuid()) @db.Uuid
+  name           String
+  empId          String          @map("emp_id")
+  email          String
+  password       String
+  phoneNumber    String?         @map("phone_number")
+  role           Role
+  shift          Shift
+  status         ActiveStatus    @default(ACTIVE)
+  dateOfBirth    DateTime?       @map("date_of_birth")
+  alamat         String?
+  profileAvatar  String?         @map("profile_avatar")
+  salary         Int
+  startDate      DateTime        @map("start_date")
+  refreshToken   String?         @map("refresh_token")
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamp()
+  medicineOrders MedicineOrder[]
+  transactions   Transaction[]
+  activityLogs   ActivityLog[]
+
+  @@unique([empId, email, phoneNumber, password])
+  @@index(fields: [name, empId, email], name: "employee_index")
+  @@map("employees")
+}
+
+model Supplier {
+  id             String          @id @default(uuid()) @db.Uuid
+  companyName    String          @map("company_name")
+  phoneNumber    String          @map("phone_number")
+  contactName    String?         @map("contact_name")
+  supplierEmail  String?         @map("supplier_number")
+  status         ActiveStatus    @default(ACTIVE)
+  address        String
+  licenseNumber  String          @map("supplier_license_number")
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamp()
+  medicines      Medicine[]
+  medicineOrders MedicineOrder[]
+
+  @@index(fields: [companyName, contactName], name: "supplier_index")
+  @@map("suppliers")
+}
+
+model MedicineCategory {
+  id           String     @id @default(uuid()) @db.Uuid
+  categoryName String     @map("category_name")
+  description  String?
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt    DateTime   @updatedAt @map("updated_at") @db.Timestamp()
+  medicines    Medicine[]
+
+  @@index(fields: [categoryName, createdAt], name: "medicine_category_index")
+  @@map("medicine_categories")
+}
+
+model Medicine {
+  id                 String              @id @default(uuid()) @db.Uuid
+  medicineName       String              @map("medicine_name")
+  sku                String              @unique
+  description        String?
+  categoryId         String              @map("category_id") @db.Uuid
+  category           MedicineCategory    @relation(fields: [categoryId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  supplierId         String              @map("supplier_id") @db.Uuid
+  supplier           Supplier            @relation(fields: [supplierId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  stock              Int
+  price              Float
+  expiredDate        DateTime            @map("expired_date")
+  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt          DateTime            @updatedAt @map("updated_at") @db.Timestamp()
+  orderDetails       OrderDetail[]
+  transactionDetails TransactionDetail[] @relation("medicine")
+
+  @@index(fields: [medicineName, sku, stock, price, categoryId], name: "medicine_index")
+  @@map("medicines")
+}
+
+model MedicineOrder {
+  id           String        @id @default(uuid()) @db.Uuid
+  orderCode    String        @unique @map("order_code")
+  orderDate    DateTime      @map("order_date") @db.Timestamp()
+  employeeId   String        @map("employee_id") @db.Uuid
+  employee     Employee      @relation(fields: [employeeId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  supplierId   String        @map("supplier_id") @db.Uuid
+  supplier     Supplier      @relation(fields: [supplierId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  totalPrice   Float         @map("total_price")
+  status       OrderStatus   @default(PENDING)
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt    DateTime      @updatedAt @map("updated_at") @db.Timestamp()
+  orderDetails OrderDetail[]
+
+  @@index(fields: [orderCode, orderDate, employeeId, supplierId], name: "order_index")
+  @@map("medicine_orders")
+}
+
+model OrderDetail {
+  orderId    String        @map("order_id") @db.Uuid
+  order      MedicineOrder @relation(fields: [orderId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  medicineId String        @map("medicine_id") @db.Uuid
+  medicine   Medicine      @relation(fields: [medicineId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  quantity   Int
+  unitPrice  Float         @map("unit_price")
+  subtotal   Float
+  createdAt  DateTime      @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt  DateTime      @updatedAt @map("updated_at") @db.Timestamp()
+
+  @@id([orderId, medicineId])
+  @@index(fields: [orderId, medicineId, quantity], name: "order_detail_index")
+  @@map("order_details")
+}
+
+model Transaction {
+  id              String   @id @default(uuid()) @db.Uuid
+  transactionCode String   @unique @map("transaction_code")
+  totalPrice      Float    @map("total_price")
+  employeeId      String   @map("employee_id") @db.Uuid
+  employee        Employee @relation(fields: [employeeId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  transactionDate DateTime @map("transaction_date") @db.Timestamp()
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamp()
+
+  transactionDetails TransactionDetail[]
+
+  @@index(fields: [transactionCode, employeeId], name: "transaction_index")
+}
+
+model TransactionDetail {
+  transactionId String      @map("transaction_id") @db.Uuid
+  transaction   Transaction @relation(fields: [transactionId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  medicineId    String      @map("medicine_id") @db.Uuid
+  medicine      Medicine    @relation("medicine", fields: [medicineId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  quantity      Int
+  unitPrice     Float       @map("unit_price")
+  subtotal      Float
+  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt     DateTime    @updatedAt @map("updated_at") @db.Timestamp()
+
+  @@id([transactionId, medicineId])
+  @@index(fields: [transactionId, medicineId, quantity], name: "transaction_detail_index")
+  @@map("transaction_details")
+}
+
+model ActivityLog {
+  id           String   @id @default(uuid()) @db.Uuid
+  action       String
+  employeeId   String   @map("employee_id") @db.Uuid
+  employee     Employee @relation(fields: [employeeId], onDelete: Cascade, onUpdate: Cascade, references: [id])
+  resourceType String?  @map("resource_type")
+  resourceId   String?  @map("resource_id")
+  payloadData  Json?    @map("payload_data")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp()
+
+  @@index(fields: [action, employeeId, resourceType, resourceId], name: "log_index")
+  @@map("activity_logs")
+}

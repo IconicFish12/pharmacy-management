@@ -1,15 +1,12 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateEmployeeDto } from './dto/create-employee.dto.js';
 import { UpdateEmployeeDto } from './dto/update-employee.dto.js';
-import { DatabaseService } from '../../../common/database/database.service.js';
+import { DatabaseService } from '../../../database/database.service.js';
 import {
   PaginatedResult,
   paginator,
 } from '../../../common/helpers/pagination/pagination.js';
-import {
-  Prisma,
-  Employee,
-} from '../../../common/database/generated/prisma/client.js';
+import { Prisma, Employee } from '../../../database/generated/prisma/client.js';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as bcrypt from 'bcrypt';
@@ -40,7 +37,7 @@ export class EmployeeService {
       const employeeData = {
         ...dto,
         password: hash,
-        provileAvatar: file.filename,
+        profileAvatar: file.filename,
       };
 
       return await this.prisma.employee.create({
@@ -57,7 +54,10 @@ export class EmployeeService {
     });
   }
 
-  async findAll(page: number, perPage: number): Promise<PaginatedResult<Employee>> {
+  async findAll(
+    page: number,
+    perPage: number,
+  ): Promise<PaginatedResult<Employee>> {
     return await paginate(
       this.prisma.employee,
       { orderBy: { createdAt: 'desc' } },
@@ -90,17 +90,22 @@ export class EmployeeService {
     const existingEmployee = await this.prisma.employee.findUnique({
       where: { id: id },
     });
-    const hash = await bcrypt.hash(dto.password!, saltRounds);
 
     if (!existingEmployee) {
       if (file) fs.unlinkSync(file.path);
       throw new NotFoundException(`Employee with ID ${id} not found`);
     }
 
-    const updatePayload = {
+    const updatePayload: any = {
       ...dto,
-      password: hash,
     };
+
+    if (dto.password) {
+      const hash = await bcrypt.hash(dto.password, saltRounds);
+      updatePayload.password = hash;
+    } else {
+      delete updatePayload.password;
+    }
 
     if (file) {
       updatePayload.profileAvatar = file.filename;
@@ -130,8 +135,18 @@ export class EmployeeService {
   }
 
   async findByEmail(email: string): Promise<Employee | null> {
-    return this.prisma.employee.findUnique({
+    return this.prisma.employee.findFirst({
       where: { email: email },
+    });
+  }
+
+  async updateRefreshToken(
+    id: string,
+    hashedToken: string | null,
+  ): Promise<Employee> {
+    return this.prisma.employee.update({
+      where: { id },
+      data: { refreshToken: hashedToken },
     });
   }
 }
