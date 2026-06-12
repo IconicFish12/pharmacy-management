@@ -1,4 +1,3 @@
-version: "3.9"
 services: 
   psql: 
     image: postgres:17-alpine
@@ -25,7 +24,8 @@ services:
     build: 
       context: .
       dockerfile: ./Dockerfile
-    image: pharma-ease:early-backend-61c4633
+    image: pharma-ease:${IMAGE_TAG:-latest}
+    restart: unless-stopped
     ports:
       - "5000:5000"
     depends_on: 
@@ -35,6 +35,11 @@ services:
       - ./.env
     environment:
     - DATABASE_URL=postgresql://${POSTGRE_USER}:${POSTGRE_PASSWORD}@pharma-ease-db:5432/${POSTGRE_DB}?schema=public 
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     networks: 
       - prisma-network
 
@@ -44,3 +49,4 @@ volumes:
 networks:
   prisma-network:
     driver: bridge
+

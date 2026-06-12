@@ -15,12 +15,14 @@ jobs:
       cache_type: 'npm'
     secrets: 
       database_url: ${{ secrets.DATABASE_URL }}
+      jwt_secret: ${{ secrets.JWT_SECRET }}
+      jwt_refresh: ${{ secrets.JWT_REFRESH }}
 
   call_app_gateway_workflow:
     needs: call_default_workflow
     uses: IconicFish12/pharmacy-management/.github/workflows/app_gateway.yml@main
     with:
-      output_name: 'scanning_result.json'
+      output_name: 'scanning_result.sarif'
       sonar_host: 'https://sonarcloud.io'
     secrets:
       sonar_token: ${{ secrets.SONAR_TOKEN }}

@@ -87,7 +87,7 @@ describe('AuthController', () => {
   });
 
   describe('getProfile', () => {
-    it('should return safe profile details of logged in user', async () => {
+    it('should return safe profile details of logged in user', () => {
       const mockUser = {
         id: 'user-123',
         name: 'John Doe',
@@ -101,7 +101,7 @@ describe('AuthController', () => {
         salary: 3000000,
       };
 
-      const result = await controller.getProfile({ user: mockUser });
+      const result = controller.getProfile({ user: mockUser });
 
       expect(result).toEqual({
         id: 'user-123',

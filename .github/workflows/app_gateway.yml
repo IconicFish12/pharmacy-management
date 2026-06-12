@@ -62,9 +62,10 @@ jobs:
           exit-code: 1
 
       - name: Upload Trivy scan results to GitHub Security tab
+        if: always()
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: 'scanning_result.sarif'
+          sarif_file: ${{ inputs.output_name }}
 
 
       

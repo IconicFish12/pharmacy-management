@@ -35,11 +35,22 @@ export class ActivityLogService {
     );
   }
 
-  async findOne(id: string): Promise<ActivityLogsWithRelation> {
+  async findOne(id: string): Promise<any> {
     return await this.prisma.activityLog.findUniqueOrThrow({
       where: { id },
       include: {
-        employee: true,
+        employee: {
+          select: {
+            id: true,
+            name: true,
+            empId: true,
+            email: true,
+            role: true,
+            shift: true,
+            status: true,
+            profileAvatar: true,
+          },
+        },
       },
     });
   }

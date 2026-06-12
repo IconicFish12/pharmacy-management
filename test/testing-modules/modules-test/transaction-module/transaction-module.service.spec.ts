@@ -155,7 +155,18 @@ describe('TransactionService (Unit Testing - White Box - Transaction Module)', (
         include: {
           _count: true,
           transactionDetails: true,
-          employee: true,
+          employee: {
+            select: {
+              id: true,
+              name: true,
+              empId: true,
+              email: true,
+              role: true,
+              shift: true,
+              status: true,
+              profileAvatar: true,
+            },
+          },
         },
       });
       expect(result).toEqual(mockTransaction);

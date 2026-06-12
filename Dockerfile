@@ -43,7 +43,11 @@ COPY --chown=node:node --from=builder /usr/src/app/dist ./dist
 COPY --chown=node:node --from=builder /usr/src/app/prisma ./prisma
 COPY --chown=node:node --from=builder /usr/src/app/prisma.config.ts ./prisma.config.ts
 
-# Jalankan aplikasi menggunakan node langsung (lebih ringan daripada npm run)
-CMD ["sh", "-c", "sleep 5 && npx prisma migrate deploy && node dist/src/main"]
-
 EXPOSE 5000
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:5000/ || exit 1
+
+# Jalankan aplikasi menggunakan node langsung (lebih ringan daripada npm run)
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main"]
+

@@ -16,6 +16,8 @@ jobs:
       cache_type: 'npm'
     secrets: 
       database_url: ${{ secrets.DATABASE_URL }}
+      jwt_secret: ${{ secrets.JWT_SECRET }}
+      jwt_refresh: ${{ secrets.JWT_REFRESH }}
 
   call_app_gateway:
     uses: ./.github/workflows/app_gateway.yml

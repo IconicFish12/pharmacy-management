@@ -11,10 +11,23 @@ on:
     secrets: 
       database_url:
         required: true
-
+      jwt_secret:
+        required: true
+      jwt_refresh:
+        required: true
+      throttle_ttl: 
+        required: false
+      throttle_limit:
+        required: false
 jobs: 
   ci-verification: 
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.database_url }}
+      JWT_SECRET: ${{ secrets.jwt_secret }}
+      JWT_REFRESH_TOKEN: ${{ secrets.jwt_refresh }}
+      THROTTLE_TTL: ${{ secrets.throttle_ttl }}
+      THROTTLE_LIMIT: ${{ secrets.throttle_limit }}
     steps: 
       - name: Git Repository Checkout
         uses: actions/checkout@v4
