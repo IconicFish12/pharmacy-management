@@ -15,10 +15,12 @@ tsconfig.build.json
 package.json
 package-lock.json
 sonar-project.properties
+nest-cli.json
 
 # Containerization & Docker
 docker-compose.yml
 docker-compose.postgres.yml
+docker-compose.prod.yml
 Dockerfile
 .dockerignore
 
