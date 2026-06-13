@@ -36,3 +36,52 @@ jobs:
     secrets: 
       docker_username: ${{ vars.DOCKER_HUB_USERNAME }}
       docker_token: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+  deploy:
+    needs: call_app_container_workflow
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Copy docker-compose.prod.yml to VM
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.AZURE_VM_IP }}
+          username: ${{ secrets.AZURE_VM_USER }}
+          key: ${{ secrets.AZURE_SSH_KEY }}
+          source: "docker-compose.prod.yml"
+          target: "~/pharma-ease/"
+
+      - name: Deploy to Azure VM via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AZURE_VM_IP }}
+          username: ${{ secrets.AZURE_VM_USER }}
+          key: ${{ secrets.AZURE_SSH_KEY }}
+          script: |
+            mkdir -p ~/pharma-ease
+            cd ~/pharma-ease
+
+            # Create helper to set env values
+            set_env() {
+              key=$1
+              val=$2
+              touch .env
+              if grep -q "^${key}=" .env; then
+                escaped_val=$(echo "$val" | sed 's/\//\\\//g')
+                sed -i "s/^${key}=.*/${key}=${escaped_val}/" .env
+              else
+                echo "${key}=${val}" >> .env
+              fi
+            }
+
+            set_env DOCKER_USERNAME "${{ vars.DOCKER_HUB_USERNAME }}"
+            set_env IMAGE_TAG "${{ github.ref_name }}-${{ github.sha }}"
+
+            # Pull and restart services
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            docker image prune -f
+
