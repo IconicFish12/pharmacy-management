@@ -32,7 +32,7 @@ jobs:
         continue-on-error: true
 
       - name: Secret credential scanning
-        uses: gitleaks/gitleaks-action@v6
+        uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.gitleaks_token }}
 
