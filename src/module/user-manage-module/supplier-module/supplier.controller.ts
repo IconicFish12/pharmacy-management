@@ -18,18 +18,17 @@ import { Roles } from '../../../common/guards/roles.decorator.js';
 import { Role } from '../../../database/generated/prisma/enums.js';
 
 @Controller()
+@Roles(Role.OWNER, Role.PHARMACIST)
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 export class SupplierController {
   constructor(private readonly supplierService: SupplierService) {}
 
   @Post()
-  @Roles(Role.PHARMACIST, Role.OWNER)
   create(@Body() createSupplierDto: CreateSupplierDto) {
     return this.supplierService.create(createSupplierDto);
   }
 
   @Get()
-  @Roles(Role.OWNER)
   findAll(@Query('page') page?: number, @Query('perPage') perPage?: number) {
     return this.supplierService.findAll(page!, perPage!);
   }
@@ -40,7 +39,6 @@ export class SupplierController {
   }
 
   @Patch(':id')
-  @Roles(Role.PHARMACIST, Role.OWNER)
   update(
     @Param('id') id: string,
     @Body() updateSupplierDto: UpdateSupplierDto,
@@ -49,7 +47,6 @@ export class SupplierController {
   }
 
   @Delete(':id')
-  @Roles(Role.PHARMACIST, Role.OWNER)
   remove(@Param('id') id: string) {
     return this.supplierService.remove(id);
   }

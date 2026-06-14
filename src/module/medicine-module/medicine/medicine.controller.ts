@@ -23,7 +23,7 @@ export class MedicineController {
   constructor(private readonly medicineService: MedicineService) {}
 
   @Post()
-  @Roles(Role.PHARMACIST)
+  @Roles(Role.PHARMACIST, Role.ADMIN)
   create(@Body() createMedicineDto: CreateMedicineDto) {
     return this.medicineService.create(createMedicineDto);
   }
@@ -35,12 +35,13 @@ export class MedicineController {
   }
 
   @Get(':id')
+  @Roles(Role.PHARMACIST, Role.ADMIN, Role.OWNER)
   findOne(@Param('id') id: string) {
     return this.medicineService.findOne(id);
   }
 
   @Patch(':id')
-  @Roles(Role.PHARMACIST)
+  @Roles(Role.PHARMACIST, Role.ADMIN)
   update(
     @Param('id') id: string,
     @Body() updateMedicineDto: UpdateMedicineDto,
@@ -49,7 +50,7 @@ export class MedicineController {
   }
 
   @Delete(':id')
-  @Roles(Role.PHARMACIST)
+  @Roles(Role.PHARMACIST, Role.ADMIN)
   remove(@Param('id') id: string) {
     return this.medicineService.remove(id);
   }

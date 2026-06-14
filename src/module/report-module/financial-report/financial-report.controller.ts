@@ -16,7 +16,7 @@ import { Role } from '../../../database/generated/prisma/enums.js';
 
 @Controller()
 @UseGuards(AuthGuard('jwt'), RolesGuard)
-@Roles(Role.OWNER, Role.ADMIN)
+@Roles(Role.OWNER)
 export class FinancialReportController {
   constructor(
     private readonly financialReportService: FinancialReportService,
