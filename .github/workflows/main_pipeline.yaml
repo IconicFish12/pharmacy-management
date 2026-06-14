@@ -80,6 +80,9 @@ jobs:
             set_env DOCKER_USERNAME "${{ vars.DOCKER_HUB_USERNAME }}"
             set_env IMAGE_TAG "${{ github.ref_name }}-${{ github.sha }}"
 
+            # Authenticate to docker
+            docker login -u ${{ vars.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
+
             # Pull and restart services
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
