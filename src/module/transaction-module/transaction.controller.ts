@@ -39,6 +39,7 @@ export class TransactionController {
   }
 
   @Get(':id')
+  @Roles(Role.CASHIER, Role.ADMIN, Role.OWNER)
   findOne(@Param('id') id: string) {
     return this.transactionService.findOne(id);
   }

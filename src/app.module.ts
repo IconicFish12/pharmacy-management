@@ -18,6 +18,9 @@ import { TransactionDetailModule } from './module/transaction-module/transaction
 import { AppController } from './app.controller.js';
 import { EmployeeModule } from './module/user-manage-module/employee-module/employee.module.js';
 import { SupplierModule } from './module/user-manage-module/supplier-module/supplier.module.js';
+import { ReportMainModule } from './module/report-module/report-main.module.js';
+import { FinancialReportModule } from './module/report-module/financial-report/financial-report.module.js';
+import { OperationalReportModule } from './module/report-module/operational-report/operational-report.module.js';
 
 @Module({
   imports: [
@@ -99,6 +102,20 @@ import { SupplierModule } from './module/user-manage-module/supplier-module/supp
               {
                 path: 'transaction-details',
                 module: TransactionDetailModule,
+              },
+            ],
+          },
+          {
+            path: 'reports',
+            module: ReportMainModule,
+            children: [
+              {
+                path: 'operational-report',
+                module: OperationalReportModule,
+              },
+              {
+                path: 'transaction-details',
+                module: FinancialReportModule,
               },
             ],
           },

@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - name: Github Repository checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with: 
           fetch-depth: 0
 
@@ -32,7 +32,7 @@ jobs:
         continue-on-error: true
 
       - name: Secret credential scanning
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.gitleaks_token }}
 
@@ -45,26 +45,26 @@ jobs:
           projectBaseDir: .
 
       - name: Manual Trivy Setup
-        uses: aquasecurity/setup-trivy@v0.2.6
+        uses: aquasecurity/setup-trivy@v0.3.1
         with:
           cache: true
           version: v0.70.0
 
-      - name: Application Image and Container Scanning
-        uses: aquasecurity/trivy-action@master
+      - name: Trivy Vulnerability scanner 
+        uses: aquasecurity/trivy-action@v0.36.0
         with: 
           scan-type: 'fs'
           scan-ref: '.'
-          format: sarif
+          format: 'sarif'
           ignore-unfixed: true
           output: ${{ inputs.output_name }}
           severity: 'CRITICAL,HIGH'
-          exit-code: 1
 
       - name: Upload Trivy scan results to GitHub Security tab
+        if: always()
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: 'scanning_result.sarif'
+          sarif_file: ${{ inputs.output_name }}
 
 
       

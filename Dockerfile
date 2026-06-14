@@ -6,12 +6,12 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm ci
 
-# Copy prisma directory to root project
-COPY /src/database/prisma ./prisma
+# Copy prisma directory to its original database folder path
+COPY src/database/prisma ./src/database/prisma
 
 # Pasang dummy URL agar prisma generate berhasil tanpa membocorkan kredensial asli
 ENV DATABASE_URL="postgresql://mock_user:mock_password@localhost:5432/mock_db"
-RUN npx prisma generate 
+RUN npx prisma generate --schema=./src/database/prisma/schema.prisma
 
 # Salin semua source code aplikasi
 COPY . .
@@ -40,10 +40,14 @@ USER node
 COPY --chown=node:node --from=builder /usr/src/app/package*.json ./
 COPY --chown=node:node --from=builder /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=builder /usr/src/app/dist ./dist
-COPY --chown=node:node --from=builder /usr/src/app/prisma ./prisma
+COPY --chown=node:node --from=builder /usr/src/app/src/database/prisma ./src/database/prisma
 COPY --chown=node:node --from=builder /usr/src/app/prisma.config.ts ./prisma.config.ts
 
-# Jalankan aplikasi menggunakan node langsung (lebih ringan daripada npm run)
-CMD ["sh", "-c", "sleep 5 && npx prisma migrate deploy && node dist/src/main"]
-
 EXPOSE 5000
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:5000/ || exit 1
+
+# Jalankan aplikasi menggunakan node langsung (lebih ringan daripada npm run)
+CMD ["sh", "-c", "npx prisma migrate deploy && npx prisma db seed && node dist/src/main"]
+

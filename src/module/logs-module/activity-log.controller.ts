@@ -14,7 +14,7 @@ import { Role } from '../../database/generated/prisma/enums.js';
 
 @Controller()
 @UseGuards(AuthGuard('jwt'), RolesGuard)
-@Roles(Role.ADMIN, Role.OWNER)
+@Roles(Role.OWNER)
 export class ActivityLogController {
   constructor(private readonly activityLogService: ActivityLogService) {}
 

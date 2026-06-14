@@ -66,9 +66,9 @@ describe('Report Module (e2e)', () => {
   });
 
   describe('Operational Report', () => {
-    it('/operational-report (GET) - JSON data', async () => {
+    it('/api/reports/operational-report (GET) - JSON data', async () => {
       const response = await request(app.getHttpServer())
-        .get('/operational-report')
+        .get('/api/reports/operational-report')
         .expect(200);
 
       expect(response.body).toHaveProperty('stats');
@@ -77,9 +77,9 @@ describe('Report Module (e2e)', () => {
       expect(response.body.medicines[0].medicineName).toBe('Paracetamol');
     });
 
-    it('/operational-report/export (GET) - CSV export', async () => {
+    it('/api/reports/operational-report/export (GET) - CSV export', async () => {
       const response = await request(app.getHttpServer())
-        .get('/operational-report/export?format=csv')
+        .get('/api/reports/operational-report/export?format=csv')
         .expect(200);
 
       expect(response.header['content-type']).toContain('text/csv');
@@ -89,9 +89,9 @@ describe('Report Module (e2e)', () => {
   });
 
   describe('Financial Report', () => {
-    it('/financial-report (GET) - JSON data', async () => {
+    it('/api/reports/transaction-details (GET) - JSON data', async () => {
       const response = await request(app.getHttpServer())
-        .get('/financial-report')
+        .get('/api/reports/transaction-details')
         .expect(200);
 
       expect(response.body).toHaveProperty('summary');
@@ -99,9 +99,9 @@ describe('Report Module (e2e)', () => {
       expect(response.body.incomeBreakdown).toHaveLength(1);
     });
 
-    it('/financial-report/export (GET) - PDF export', async () => {
+    it('/api/reports/transaction-details/export (GET) - PDF export', async () => {
       const response = await request(app.getHttpServer())
-        .get('/financial-report/export?format=pdf')
+        .get('/api/reports/transaction-details/export?format=pdf')
         .expect(200);
 
       expect(response.header['content-type']).toContain('application/pdf');

@@ -11,18 +11,31 @@ on:
     secrets: 
       database_url:
         required: true
-
+      jwt_secret:
+        required: true
+      jwt_refresh:
+        required: true
+      throttle_ttl: 
+        required: false
+      throttle_limit:
+        required: false
 jobs: 
   ci-verification: 
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.database_url }}
+      JWT_SECRET: ${{ secrets.jwt_secret }}
+      JWT_REFRESH_TOKEN: ${{ secrets.jwt_refresh }}
+      THROTTLE_TTL: ${{ secrets.throttle_ttl }}
+      THROTTLE_LIMIT: ${{ secrets.throttle_limit }}
     steps: 
       - name: Git Repository Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with: 
           fetch-depth: 0
 
       - name: Node Js Setup 
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with: 
           node-version: ${{ inputs.node_version }}
           cache: ${{ inputs.cache_type }}
@@ -45,7 +58,7 @@ jobs:
         run: npm run build
 
       - name: Application test
-        run: npm run test medicine-catergor yemployee supplier   
+        run: npm run test 
 
       - name: Application test coverage
-        run: npm run test:cov medicine-category employee supplier
+        run: npm run test:cov

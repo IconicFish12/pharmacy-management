@@ -66,7 +66,20 @@ describe('ActivityLogService (Unit Testing - White Box - Activity Log Module)', 
       const result = await service.findOne(logId);
       expect(mockPrisma.activityLog.findUniqueOrThrow).toHaveBeenCalledWith({
         where: { id: logId },
-        include: { employee: true },
+        include: {
+          employee: {
+            select: {
+              id: true,
+              name: true,
+              empId: true,
+              email: true,
+              role: true,
+              shift: true,
+              status: true,
+              profileAvatar: true,
+            },
+          },
+        },
       });
       expect(result).toEqual(mockResult);
     });

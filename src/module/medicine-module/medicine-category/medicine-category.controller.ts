@@ -25,7 +25,7 @@ export class MedicineCategoryController {
   ) {}
 
   @Post()
-  @Roles(Role.PHARMACIST)
+  @Roles(Role.PHARMACIST, Role.ADMIN)
   create(@Body() createMedicineCategoryDto: CreateMedicineCategoryDto) {
     return this.medicineCategoryService.create(createMedicineCategoryDto);
   }
@@ -37,12 +37,13 @@ export class MedicineCategoryController {
   }
 
   @Get(':id')
+  @Roles(Role.PHARMACIST, Role.ADMIN, Role.OWNER)
   findOne(@Param('id') id: string) {
     return this.medicineCategoryService.findOne(id);
   }
 
   @Patch(':id')
-  @Roles(Role.PHARMACIST)
+  @Roles(Role.PHARMACIST, Role.ADMIN)
   update(
     @Param('id') id: string,
     @Body() updateMedicineCategoryDto: UpdateMedicineCategoryDto,
@@ -51,7 +52,7 @@ export class MedicineCategoryController {
   }
 
   @Delete(':id')
-  @Roles(Role.PHARMACIST)
+  @Roles(Role.PHARMACIST, Role.ADMIN)
   remove(@Param('id') id: string) {
     return this.medicineCategoryService.remove(id);
   }

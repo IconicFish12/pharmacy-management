@@ -21,20 +21,17 @@ services:
 
   pharma-ease-backend:
     container_name: pharma-ease-backend
-    build: 
-      context: .
-      dockerfile: ./Dockerfile
-    image: pharma-ease:${IMAGE_TAG:-latest}
+    image: ${DOCKER_USERNAME}/pharma-ease:${IMAGE_TAG:-latest}
     restart: unless-stopped
     ports:
-      - "5000:5000"
+      - "${BACKEND_PORT:-5000}:5000"
     depends_on: 
       psql:
         condition: service_healthy
     env_file: 
       - ./.env
     environment:
-    - DATABASE_URL=postgresql://${POSTGRE_USER}:${POSTGRE_PASSWORD}@pharma-ease-db:5432/${POSTGRE_DB}?schema=public 
+      - DATABASE_URL=postgresql://${POSTGRE_USER}:${POSTGRE_PASSWORD}@pharma-ease-db:5432/${POSTGRE_DB}?schema=public 
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5000/ || exit 1"]
       interval: 10s
@@ -49,4 +46,3 @@ volumes:
 networks:
   prisma-network:
     driver: bridge
-

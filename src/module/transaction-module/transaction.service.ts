@@ -117,7 +117,17 @@ export class TransactionService {
       {
         orderBy: { createdAt: 'desc' },
         include: {
-          employee: { omit: { id: true, password: true } },
+          employee: {
+            select: {
+              name: true,
+              empId: true,
+              email: true,
+              role: true,
+              shift: true,
+              status: true,
+              profileAvatar: true,
+            },
+          },
           transactionDetails: true,
         },
       },
@@ -125,13 +135,24 @@ export class TransactionService {
     );
   }
 
-  async findOne(id: string): Promise<TransactionDataWithRelation> {
+  async findOne(id: string): Promise<any> {
     return await this.prisma.transaction.findUniqueOrThrow({
       where: { id: id },
       include: {
         _count: true,
         transactionDetails: true,
-        employee: true,
+        employee: {
+          select: {
+            id: true,
+            name: true,
+            empId: true,
+            email: true,
+            role: true,
+            shift: true,
+            status: true,
+            profileAvatar: true,
+          },
+        },
       },
     });
   }
