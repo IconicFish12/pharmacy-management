@@ -14,16 +14,13 @@ async function main() {
   // Check if admin already exists
   const existingAdmin = await prisma.employee.findFirst({
     where: {
-      OR: [
-        { email: adminEmail },
-        { empId: adminEmpId }
-      ]
-    }
+      OR: [{ email: adminEmail }, { empId: adminEmpId }],
+    },
   });
 
   if (!existingAdmin) {
     const hashedPassword = await bcrypt.hash('AdminPharma-12345', 10);
-    
+
     await prisma.employee.create({
       data: {
         name: 'System Administrator',
@@ -37,7 +34,7 @@ async function main() {
         status: 'ACTIVE',
         phoneNumber: '081234567890',
         alamat: 'Office HQ',
-      }
+      },
     });
     console.log('✅ Default admin user created successfully.');
   } else {

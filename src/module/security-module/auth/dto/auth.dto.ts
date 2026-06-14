@@ -8,6 +8,6 @@ export class AuthDto {
 
   @IsNotEmpty({
     message: 'password is required',
-  }) 
+  })
   readonly password!: string;
 }
