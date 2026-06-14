@@ -52,7 +52,7 @@ jobs:
           username: ${{ secrets.AZURE_VM_USER }}
           key: ${{ secrets.AZURE_SSH_KEY }}
           source: "docker-compose.prod.yml"
-          target: "~/pharma-ease/"
+          target: "~/pharma-ease-backend/"
 
       - name: Deploy to Azure VM via SSH
         uses: appleboy/ssh-action@master
@@ -61,8 +61,8 @@ jobs:
           username: ${{ secrets.AZURE_VM_USER }}
           key: ${{ secrets.AZURE_SSH_KEY }}
           script: |
-            mkdir -p ~/pharma-ease
-            cd ~/pharma-ease
+            mkdir -p ~/pharma-ease-backend
+            cd ~/pharma-ease-backend
 
             # Create helper to set env values
             set_env() {
