@@ -21,7 +21,7 @@ services:
 
   pharma-ease-backend:
     container_name: pharma-ease-backend
-    image: ${DOCKER_USERNAME}/pharma-ease:${IMAGE_TAG:-latest}
+    image: ${DOCKER_USERNAME}/pharma-ease-backend:${IMAGE_TAG:-latest}
     restart: unless-stopped
     ports:
       - "${BACKEND_PORT:-5000}:5000"
