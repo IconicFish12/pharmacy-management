@@ -43,4 +43,4 @@ jobs:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: ${{ secrets.docker_username }}/pharma-ease:${{ inputs.image_tag }}
+          tags: ${{ secrets.docker_username }}/pharma-ease-backend:${{ inputs.image_tag }}

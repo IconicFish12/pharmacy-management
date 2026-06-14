@@ -35,7 +35,7 @@ jobs:
       image_tag: "${{ github.ref_name }}-${{ github.sha }}"
     secrets: 
       docker_username: ${{ vars.DOCKER_HUB_USERNAME }}
-      docker_token: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      docker_token: ${{ secrets.DOCKER_HUB_TOKEN }}
 
   deploy:
     needs: call_app_container_workflow
