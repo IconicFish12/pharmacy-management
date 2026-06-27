@@ -160,6 +160,22 @@ describe('MedicineService (Unit Testing - White Box - Medicine Module)', () => {
       });
       expect(result).toHaveProperty('stock', 80);
     });
+
+    it('should accept boundary stock value of 0 as valid update', async () => {
+      const id = 'med-123';
+      const updateDto = { stock: 0 };
+      const mockUpdatedResult = { id, name: 'Amoxicillin', stock: 0 };
+
+      mockPrisma.medicine.update.mockResolvedValue(mockUpdatedResult);
+
+      const result = await service.update(id, updateDto);
+
+      expect(mockPrisma.medicine.update).toHaveBeenCalledWith({
+        where: { id },
+        data: updateDto,
+      });
+      expect(result).toHaveProperty('stock', 0);
+    });
   });
 
   describe('remove', () => {
